@@ -1,0 +1,13 @@
+<label for="record_<%= c[:name] %>" class="col-md-4 control-label">
+  <%= c[:label] %>
+</label>
+<div class="col-md-4 input-group input-group-sm">
+  <span class="input-group-addon">
+    <span class="glyphicon glyphicon-plus-sign"></span>
+  </span>
+  <input type="number"
+    class="form-control"
+    id="record_<%= c[:name] %>" 
+    ng-model="record.<%= c[:name] %>"
+  />
+</div>

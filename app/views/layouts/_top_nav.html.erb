@@ -1,0 +1,47 @@
+<div class="navbar-collapse collapse">
+  <ul class="nav navbar-nav">
+    <% AppTpl.modules.each do |k, m| %>
+      <% if m[:dropdown] %>
+        <li class="dropdown" ng-class='{ active: hasUrl("#/<%= m[:url] %>") }'>
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-calendar"></span>
+            <%= m[:text] %><b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <% m[:links].each do |c| %>
+              <li>
+                <a href="#/<%= m[:url] %>/<%= c[:url] %>">
+                  <span class="<%= c[:icon] || 'fa fa-briefcase' %>"></span>
+                  <%= c[:text] %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
+        </li>
+      <% else %>
+        <li ng-class='{ active: hasUrl("#/<%= m[:url] %>") }'>
+          <a href="#/<%= m[:url] %>">
+            <span class="<%= m[:icon] %>"></span>
+            <%= m[:text] %>
+          </a>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown active">
+      <a href="#" class="dropdown-toggle nav-h" data-toggle="dropdown">
+        <i class="fa fa-user fa-lg"></i>
+        <%= current_user.name %>
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu dropdown-inverse">
+        <li><a href="<%= edit_user_registration_path %>">My Account</a></li>
+        <li class="divider"></li>
+        <li>
+          <a data-method="delete" href="/account/logout" rel="nofollow">Logout</a> 
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

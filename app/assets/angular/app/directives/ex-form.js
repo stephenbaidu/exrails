@@ -1,0 +1,109 @@
+angular.module("app").directive("exForm", ['$compile', function ($compile) {
+  var linkFn = function (scope, element, attrs, ctrl) {
+    scope.columns = scope.columns || [];
+    scope.noOfCols  = (attrs['noOfCols'] || 3);
+    // scope.exType  = (attrs['exType'] || '');
+
+    var tpls = {
+      lookup:          '<div style="width: 70%" class="input-group input-group-sm select2-bootstrap-prepend"><span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span><select <%= attributes %> ui-select2="{allowClear: true}" ng-disabled="<%= disabled %>" class="form-control input-sm select2" id="record_<%= name %>" ng-model="ngModel.<%= name %>"><option ng-repeat="l in lookup_<%= lookup %>" value="{{ l.id }}"> {{ l.name }} </option></select></div>',
+      lookup_text:     '<div style="width: 70%" class="input-group input-group-sm select2-bootstrap-prepend"><span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span><select <%= attributes %> ui-select2="{allowClear: true}" ng-disabled="<%= disabled %>" class="form-control input-sm select2" id="record_<%= name %>" ng-model="ngModel.<%= name %>"><option ng-repeat="l in lookup_<%= lookup %>" value="{{ l.name }}"> {{ l.name }} </option></select></div>',
+      bs_switch:       '<br> <bs-switch switch-type="checkbox"switch-size=" "switch-animate="true"switch-icon="check"switch-on-label="Yes"switch-off-label="No"switch-on="default" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/>',
+      number_input:    '<div style="width: 40%" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-plus-sign"></span></span><input type="text" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      date_picker:     '<div style="width: 50%" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text"datepicker-popup="dd-MMMM-yyyy" ng-disabled="<%= disabled %>" class="form-control"show-weeks="false"datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      time_picker:     '<div style="width: 40%" class="input-group input-group-sm bootstrap-timepicker"><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span><div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;"><div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)"><timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker></div></div><input type="text" mo-format="hh : mm a" ng-disabled="<%= disabled %>" class="form-control dropdown-toggle" data-toggle="dropdown" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      datetime_picker: '<div style="width: 80%" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text" style="width: 50%"datepicker-popup="dd-MMMM-yyyy" ng-disabled="<%= disabled %>" class="form-control"show-weeks="false"datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/><div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;"><div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)"><timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker></div></div><input type="text" mo-format="hh : mm a" style="width: 35%" ng-disabled="<%= disabled %>" class="form-control dropdown-toggle" data-toggle="dropdown" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      password_input:  '<div style="width: 90%" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-unchecked"></span></span><input type="password" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      text_input:      '<div style="width: 90%" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-unchecked"></span></span><input type="text" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>'
+    }
+
+    var type_tpl = {
+      _boolean:  'bs_switch',
+      _integer:  'number_input',
+      _decimal:  'number_input',
+      _float:    'number_input',
+      _date:     'date_picker',
+      _time:     'time_picker',
+      _datetime: 'datetime_picker',
+      _password: 'password_input'
+    }
+    
+    function updateView() {
+      var html = "", tpl = "", col_data = {};
+
+      html += '<form class="" role="form">';
+      
+      _.each(scope.columns, function(column, key) {
+        if(column.type == 'blank') {
+          html += '<div class="form-group col-md-4">&nbsp;</div>';
+          return;
+        }
+        
+        if(scope.noOfCols == 1)
+          html += '<div class="form-group col-md-12">';
+        else if(scope.noOfCols == 2)
+          html += '<div class="form-group col-md-6">';
+        else
+          html += '<div class="form-group col-md-4">';
+
+        html += '  <label for="record_' + column.name + '" class="control-label">';
+        html +=      column.label;
+        html += '  </label>';
+
+        col_data = {
+          name: column['name'],
+          attributes: column['attributes'],
+          lookup: column['lookup'],
+          disabled: (attrs['disabled'] || column['disabled'])
+        };
+
+        if(column['lookup']) {
+          tpl = (column.type == 'integer')? "lookup" : "lookup_text";
+        } else if(type_tpl['_' + column.type]) {
+          tpl = type_tpl['_' + column.type];
+        } else {
+          tpl = "text_input";
+        }
+
+        html += _.template(tpls[tpl], col_data);
+
+        html += '</div>';
+      });
+
+      html += '</form>';
+
+      element.html(html);
+      $compile(element.contents())(scope);
+    }
+
+    scope.$watch('columns', function () {
+      updateView();
+    }, true);
+  };
+
+  var controllerFn = ['$scope', '$element', function($scope, $element) {
+
+    $scope.timepicker_clicked = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    $scope.$watch('lookups', function () {
+      angular.forEach($scope.lookups, function(value, key) {
+        $scope['lookup_' + key] = value;
+      });
+    }, true);
+    
+  }];
+
+  return {
+    restrict: 'E',
+    scope: {
+      columns: "=",
+      ngModel: "=",
+      lookups: "="
+    },
+    replace: true,
+    link: linkFn,
+    controller: controllerFn
+  };
+}]);

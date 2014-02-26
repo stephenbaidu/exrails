@@ -1,0 +1,23 @@
+<div style="width: 80%" class="input-group input-group-sm">
+  <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+  </span>
+  <input type="text" style="width: 50%"
+    datepicker-popup="dd-MMMM-yyyy"
+    class="form-control"
+    show-weeks="false"
+    datepicker-append-to-body="true"
+    id="record_<%= name %>"
+    ng-model="ngModel.<%= name %>"
+  />
+  <div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;">
+    <div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)">
+      <timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker>
+    </div>
+  </div>
+  <input type="text" mo-format="hh : mm a" style="width: 35%"
+    class="form-control dropdown-toggle" data-toggle="dropdown"
+    id="record_<%= name %>" 
+    ng-model="ngModel.<%= name %>"
+  />
+</div>

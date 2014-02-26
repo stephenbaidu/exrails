@@ -1,0 +1,14 @@
+<label for="record_<%= c[:name] %>" class="col-md-4 control-label">
+  <%= c[:label] %>
+</label>
+<bs-switch 
+  switch-type="checkbox"
+  switch-size=""
+  switch-animate="true"
+  switch-icon="check"
+  switch-on-label="Yes"
+  switch-off-label="No"
+  switch-on="default"
+  id="record_<%= c[:name] %>" 
+  ng-model="record.<%= c[:name] %>"
+/>

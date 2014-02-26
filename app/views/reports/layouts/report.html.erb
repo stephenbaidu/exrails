@@ -1,0 +1,25 @@
+<div id="page_header" class="clearfix content-header">
+  <h3 class="pull-left"> 
+    <i class="glyphicon glyphicon-list"></i>
+    <%= @report_title %>
+  </h3>
+  <div class="btn-group pull-right" style="margin-left: 15px;">
+    <a class="btn btn-sm btn-primary" ng-click="generateReport()">
+      <span class="fa fa-download"></span> Generate
+    </a>
+  </div>
+  <div class="row pull-right" style="width: 550px; padding-top: 10px;">
+    <% @filters.each do |key, cfg| %>
+      <% _locals = { size: @filters.count, name: key, label: (cfg[:label] || cfg[:lookup].klass.name.titleize ) } %>
+      <% if cfg[:lookup] %>
+        <% _locals[:lookup] = cfg[:lookup] %>
+        <%= render partial: 'reports/layouts/filter_lookup', locals: _locals %>
+      <% else %>
+        <%= render partial: 'reports/layouts/filter_text', locals: { label: 'Select:' } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<div class="view-container">
+  <iframe ng-src="{{report_source}}" width="100%" height="1000px" style="border: 0px; padding-top: 5px;"></iframe>
+</div>

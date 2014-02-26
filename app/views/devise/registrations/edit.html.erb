@@ -1,0 +1,52 @@
+<div class="col-sm-6 col-sm-offset-3 login-box-margin">
+  <div class="flat-ui login">
+    <div class="login-screen">
+      <div class="login-icon">
+        <img src="<%= asset_path('illustrations/' + ['bag', 'book', 'calendar', 'clipboard', 'colors', 'compass', 'gift', 'mail', 'map', 'news', 'paper', 'settings', 'share', 'time'].sample + '.png') %>" alt="Welcome to eXRails">
+        <h4>Welcome to <small>eXRails App</small></h4>
+      </div>
+      <div class="login-form">
+        <%= form_for(resource, :as => resource_name, :url => user_registration_path(resource), :html => { :method => :put, :class => "form-horizontal" }) do |f| %>
+          <div class="form-group">
+            <label for="user_current_password" class="col-sm-4 control-label">Password</label>
+            <div class="col-sm-offset-4- col-sm-8">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                <input type="password" name="user[current_password]" class="form-control" id="user_current_password" placeholder="Current Password" autofocus="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user_password" class="col-sm-4 control-label">New</label>
+            <div class="col-sm-offset-4- col-sm-8">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                <input type="password" name="user[password]" class="form-control" id="user_password" placeholder="New Password">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user_password_confirmation" class="col-sm-4 control-label">Confirm</label>
+            <div class="col-sm-offset-4- col-sm-8">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                <input type="password" name="user[password_confirmation]" class="form-control" id="user_password_confirmation" placeholder="Password Confirmation">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-12">
+              <button type="submit" class="btn btn-default">Change Password</button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<% if size == 1 %>
+<div class="input-group input-group-sm select2-bootstrap-prepend col-md-6 col-md-offset-6">
+<% else %>
+<div class="input-group input-group-sm select2-bootstrap-prepend col-md-6">
+<% end %>
+  <span class="input-group-addon"><%= label %></span>
+  <select ui-select2="{}" class="form-control input-sm select2" ng-model="filter.<%= name %>">
+    <% lookup.each do |e| %>
+      <option value="<%= e[:id] %>"><%= e[:name] %></option>
+    <% end %>
+  </select>
+</div>

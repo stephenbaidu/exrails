@@ -1,0 +1,27 @@
+<form class="" role="form">
+  <div class="form-group col-md-4">
+    <label for="record_name" class="control-label">Name</label>
+    <div style="width: 90%" class="input-group input-group-sm">
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-unchecked"></span>
+      </span>
+      <input type="text" class="form-control" id="record_name" ng-model="record.name">
+    </div>
+  </div>
+  <div class="form-group col-md-8">
+    <label for="record_permissions" class="control-label">Permissions</label>
+    <div style="width: 100%" class="input-group input-group-sm select2-bootstrap-prepend">
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </span>
+      <select multiple ui-select2="{width: '100%', closeOnSelect: false}"
+        class="form-control input-sm select2"
+        id="record_' + column.name + '"
+        ng-model="record.permissions">
+        <option ng-repeat="l in lookups.permission" value="{{ l.name }}">
+          {{ l.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+</form>

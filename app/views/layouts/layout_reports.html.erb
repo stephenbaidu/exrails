@@ -1,0 +1,18 @@
+<div id="sidebar" class="sidebar-a">
+  <ul style="border-bottom: 2px solid #e2d7f1; padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px;">
+    <li class="dropdown-header" style="font-size: 20px; padding: 0px;">Monthly Reports</li>
+  </ul>
+  <ul class="nav nav-pills nav-stacked">
+    <% AppTpl.modules[:reports][:links].each do |l|  %>
+      <li ng-class='{ active: hasUrl("#/reports/<%= l[:url] %>") }'>
+        <a href="#reports/<%= l[:url] %>">
+          <span class="<%= l[:icon] || 'fa fa-briefcase' %>"></span>
+          <span class="link-text"><%= l[:text] %></span>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<div id="page_content" class="content-a">
+  <ui-view></ui-view>
+</div>

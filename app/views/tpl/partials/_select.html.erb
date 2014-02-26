@@ -1,0 +1,18 @@
+<label for="record_<%= c[:name] %>" class="col-md-4 control-label">
+  <%= c[:label] %>
+</label>
+<div class="col-md-7 input-group input-group-sm select2-bootstrap-prepend">
+  <span class="input-group-addon">
+    <span class="glyphicon glyphicon-th-list"></span>
+  </span>
+  <select ui-select2="{width: 'resolve'}"
+    class="form-control input-sm select2"
+    id="record_<%= c[:name] %>"
+    ng-model="record.<%= c[:name] %>">
+    <option
+      ng-repeat="l in lookup<%= c[:lookup].classify.pluralize %>"
+      value="{{ l.id }}">
+      {{ l.name }}
+    </option>
+  </select>
+</div>

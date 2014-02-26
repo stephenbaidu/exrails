@@ -1,0 +1,8 @@
+<% if size == 1 %>
+<div class="input-group input-group-sm col-md-6 col-md-offset-6">
+<% else %>
+<div class="input-group input-group-sm col-md-6">
+<% end %>
+  <span class="input-group-addon"><%= label %></span>
+  <input type="text" class="form-control" ng-model="filter.<%= name %>"/>
+</div>

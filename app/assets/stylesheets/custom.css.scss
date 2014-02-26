@@ -1,0 +1,399 @@
+@import "bootstrap";
+@import "font-awesome";
+
+.flat-ui {
+  @import "flat-ui";
+
+  // a {
+  //   color: #16a085;
+  //   text-decoration: none;
+  //   -webkit-transition: 0.25s;
+  //   transition: 0.25s;
+  // }
+
+  // .navbar .nav ul {
+  //   left: 0px;
+  //   padding-left: 1px;
+  // }
+}
+
+// Color variables
+$ex-color-light:  #F3EFFA;
+$ex-color-deep: #E2D7F1;
+$ex-color-low: rgba(111,40,156,0.3);
+$ex-color-bar: #463265;
+
+// New theme
+$ex-color-light:  white;
+// $ex-color-deep: #F3EFFA;
+$ex-color-low: #F3EFFA;
+// $ex-color-bar: #463265;
+
+.login {
+
+  .panel-body {
+    padding: 5px !important;
+    color: #34495E;
+  }
+
+  .panel-title {
+    font-weight: bold;
+  }
+
+  .login-header {
+    text-align: center;
+    background-color: $ex-color-deep !important;
+  }
+
+  .login-icon {
+    left: 40px;
+    position: absolute;
+    top: 30px;
+    width: 115px;
+  }
+
+  .login-screen {
+    background-color: $ex-color-light;
+    min-height: 245px;
+    padding: 30px 20px 33px 156px;
+  }
+
+  .login-form {
+    background-color: $ex-color-low;
+
+    legend {
+      font-size: 16px;
+      color: #34495E;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
+
+  .login-form:before {
+    border-right-color: $ex-color-low;
+  }
+}
+
+body {
+  padding-top: 50px;
+  background-color: $ex-color-light;
+  font-size: 14px;
+}
+
+.dropdown-menu > li > a {
+  padding: 3px 15px;
+}
+
+.login-box-margin {
+  margin-top: 160px;
+}
+
+.ex-modal {
+  display: block;
+  width:600px;
+  height:300px;
+  top: 120px;
+  font-size: 12pt;
+  overflow-y: hidden !important;
+
+  .modal-header {
+    background-color: $ex-color-deep;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    
+    .close {
+      margin-top: -5px;
+    }
+    
+    button {
+      font-size: 30px;
+    }
+  }
+  
+  .modal-body {
+    height: 100%;
+    max-height: 190px;
+  }
+
+  .modal-footer {
+    .btn {
+      width: 100px
+    }
+  }
+}
+
+.modal-content {
+  border: 0px;
+}
+
+.pagination, .pager {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.records-per-page {
+  // padding-top: 0px;
+}
+
+.container {
+  width: auto;
+
+  .navbar-header {
+    width: auto;
+  }
+
+  .navbar-nav {
+    font-size: 14px;
+  }
+}
+
+.left-box {
+  padding-right: 5px;
+}
+
+.right-box {
+  padding-left: 5px;
+}
+
+.ex-grid, .ex-form {
+  margin-top: 10px;
+
+  .form-control[disabled], .select2-container.select2-container-disabled .select2-choice, .select2-container.select2-container-disabled .select2-choices {
+    cursor: not-allowed;
+    background-color: #fafafa;
+  }
+}
+
+.ex-grid {
+  font-size: 12px;
+  
+  input[type="radio"], input[type="checkbox"] {
+    margin: 0px 0 0;
+  }
+
+  .table {
+    margin-bottom: 10px;
+  }
+}
+
+.ex-form {
+  border: 2px solid $ex-color-deep;
+  border-radius: 0px;
+
+  .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8 {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .ex-array-input {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .has-switch {
+    // margin-left: 5px;
+    min-width: 70px;
+    width: 70px;
+  }
+
+  .panel-heading {
+    padding: 10px;
+    .close {
+      margin-top: -3px;
+    }
+  }
+
+  .panel-heading, .panel-footer {
+    background-color: $ex-color-deep;
+    border-color: $ex-color-deep;
+    color: black;
+    border-radius: 0px;
+  }
+
+  .panel-body {
+    padding: 10px 5px 0px 5px;
+  }
+  .panel-footer {
+    padding: 5px 10px;
+  }
+}
+
+.nav-h {
+  height: 50px
+}
+
+.ex-nav {
+  // text-shadow: 0 -1px 0 rgba(0,0,0,.15);
+  background-color: #563d7c;
+  border-color: $ex-color-bar;
+  box-shadow: 0 1px 0 rgba(255,255,255,.1);
+}
+
+.ex-nav .navbar-collapse {
+  border-color: $ex-color-bar;
+}
+
+.ex-nav .navbar-brand {
+  color: #fff;
+}
+
+.ex-nav .navbar-nav > li > a {
+  color: #cdbfe3;
+}
+
+.ex-nav .navbar-nav > li > a:hover {
+  color: #fff;
+}
+
+.ex-nav .navbar-nav > .active > a,
+.ex-nav .navbar-nav > .active > a:hover {
+  color: #fff;
+  background-color: $ex-color-bar !important;
+}
+
+.ex-nav .navbar-toggle {
+  border-color: #563d7c;
+}
+
+.ex-nav .navbar-toggle:hover {
+  background-color: $ex-color-bar;
+  border-color: $ex-color-bar;
+}
+
+.grid-action-1 {
+  width: 26px;
+}
+
+.grid-action-2 {
+  width: 52px;
+}
+
+.grid-action-3 {
+  width: 78px;
+}
+
+.table-bordered {
+  border: 2px solid $ex-color-deep;
+}
+
+.table-bordered thead th {
+  background-color: $ex-color-deep;
+  border: 2px solid white;
+}
+
+.sidebar-a, .sidebar-b {
+  margin-left: -15px;
+  padding-top: 10px;
+  height: 100%;
+  position: fixed;
+  background-color: $ex-color-low;
+
+}
+
+.sidebar-a {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 250px;
+
+  ul {
+    li a {
+      // border-radius: 0px;
+      color: #0A3872;
+      // color: #376B94;
+    }
+
+    li a span {
+      color: #3F6883;
+    }
+
+    li.active a {
+      color: black;
+      background-color: white;
+    }
+
+    li.active:before {
+      content: "";
+      border-style: solid;
+      border-width: 10px 8px 10px 0;
+      border-color: transparent $ex-color-low transparent transparent;
+      position: absolute;
+      right: -13px;
+      top: 12px;
+      -webkit-transform: rotate(180deg);
+    }
+  }
+
+  .fa, .glyphicon {
+    font-size: 1.5em;
+  }
+}
+
+.sidebar-b {
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 100px;
+
+  ul {
+    text-align: center;
+    li a {
+      border-radius: 0px;
+      color: #0A3872;
+    }
+
+    li a span {
+      color: #3F6883;
+    }
+
+    li.active a {
+      color: white;
+      background-color: $ex-color-deep;
+    }
+
+    li.active:before {
+      content: "";
+      border-style: solid;
+      border-width: 10px 8px 10px 0;
+      border-color: transparent $ex-color-deep transparent transparent;
+      position: absolute;
+      right: -8px;
+      top: 34px;
+      -webkit-transform: rotate(180deg);
+    }
+  }
+
+  .fa, .glyphicon {
+    font-size: 3em;
+  }
+}
+
+.content-a, .content-b {
+  padding: 0px;
+
+  .content-header {
+    border-bottom: 2px solid $ex-color-deep;
+
+    .btn, h3 {
+      margin-top: 10px;
+    }
+  }
+}
+
+.content-a {
+  margin-left: 250px;
+}
+
+.content-b {
+  margin-left: 100px;
+}
+
+.link-text {
+  text-align: left;
+}
+
+.alert .glyphicon {
+  color: black;
+}
+
+.ex-search-remove {
+  color: black;
+}

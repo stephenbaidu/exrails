@@ -1,0 +1,15 @@
+<div id="sidebar" class="sidebar-b">
+  <ul class="nav nav-pills nav-stacked">
+    <% AppTpl.modules[:app][:links].each do |l|  %>
+      <li ng-class='{ active: $stateParams.url=="<%= l[:url] %>" }'>
+        <a href="#/app/<%= l[:url] %>">
+          <span class="<%= l[:icon] || 'fa fa-briefcase' %>"></span>
+          <br><label><%= l[:text] %></label>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<div id="page_content" class="content-b">
+  <ui-view></ui-view>
+</div>
