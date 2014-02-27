@@ -20,6 +20,7 @@ gem 'pundit'
 gem 'paper_trail', '~> 3.0.0'
 gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git'
 gem 'active_model_serializers'
+gem 'faker'
 
 gem 'wicked_pdf'
 gem 'awesome_nested_set'

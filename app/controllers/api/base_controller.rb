@@ -71,7 +71,7 @@ class Api::BaseController < ApplicationController
 
   public
     def index
-      authorize _RC
+      authorize _RC.new
 
       recs = policy_scope(_RC.all)
 
