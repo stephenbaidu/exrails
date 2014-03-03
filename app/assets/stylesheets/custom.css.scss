@@ -3,23 +3,10 @@
 
 .flat-ui {
   @import "flat-ui";
-
-  // a {
-  //   color: #16a085;
-  //   text-decoration: none;
-  //   -webkit-transition: 0.25s;
-  //   transition: 0.25s;
-  // }
-
-  // .navbar .nav ul {
-  //   left: 0px;
-  //   padding-left: 1px;
-  // }
 }
 
 // Color variables
 $ex-color-navbar: #563D7C;
-$ex-color-navbar-a: #cdbfe3;
 $ex-color-header: #E2D7F1;
 $ex-color-deeper: #E2D7F1;
 $ex-color-sidebar: #F3EFFA;
@@ -27,13 +14,12 @@ $ex-color-arrow: white;
 $ex-color-bar: #463265;
 
 // New theme
-$ex-color-navbar: rgba(47,47,47,0.98);
-$ex-color-navbar-a: #999999;
-$ex-color-header: rgba(0,0,0,0.1);
-$ex-color-deeper: rgba(0,0,0,0.17);
-$ex-color-sidebar: rgba(0,0,0,0.07);
-$ex-color-arrow: rgba(0,0,0,0.07);
-$ex-color-bar: rgba(39,39,39,0.98);
+// $ex-color-navbar: rgba(47,47,47,0.98);
+// $ex-color-header: rgba(0,0,0,0.1);
+// $ex-color-deeper: rgba(0,0,0,0.17);
+// $ex-color-sidebar: rgba(0,0,0,0.07);
+// $ex-color-arrow: rgba(0,0,0,0.07);
+// $ex-color-bar: rgba(39,39,39,0.98);
 
 .login {
 
@@ -83,8 +69,7 @@ $ex-color-bar: rgba(39,39,39,0.98);
 body {
   padding-top: 50px;
   font-size: 14px;
-  // background: #f0f0f0 url(/assets/background.gif) repeat -70% 0;
-  background: #f0f0f0 url(/assets/background.jpg) repeat -70% 0;
+  // background: #f0f0f0 url(/assets/background.jpg) repeat -70% 0;
 }
 
 .dropdown-menu > li > a {
@@ -138,10 +123,6 @@ body {
   margin-bottom: 10px;
 }
 
-.records-per-page {
-  // padding-top: 0px;
-}
-
 .container {
   width: auto;
 
@@ -181,6 +162,10 @@ body {
   .table {
     margin-bottom: 10px;
   }
+
+  .table-bordered thead th {
+    background-color: $ex-color-header;
+  }
 }
 
 .ex-form {
@@ -198,7 +183,6 @@ body {
   }
 
   .has-switch {
-    // margin-left: 5px;
     min-width: 70px;
     width: 70px;
   }
@@ -230,46 +214,17 @@ body {
 }
 
 .ex-nav {
-  // text-shadow: 0 -1px 0 rgba(0,0,0,.15);
   background-color: $ex-color-navbar;
   border-color: $ex-color-bar;
   box-shadow: 0 1px 0 rgba(255,255,255,.1);
 
   .navbar-nav > .active > a {
-    // color: #fff;
     background-color: $ex-color-bar !important;
   }
-}
 
-// .ex-nav .navbar-collapse {
-//   border-color: $ex-color-bar;
-// }
-
-.ex-nav .navbar-brand {
-  // color: #fff;
-}
-
-.ex-nav .navbar-nav > li > a {
-  color: $ex-color-navbar-a;
-}
-
-.ex-nav .navbar-nav > li > a:hover {
-  // color: #fff;
-}
-
-// .ex-nav .navbar-nav > .active > a,
-// .ex-nav .navbar-nav > .active > a:hover {
-//   // color: #fff;
-//   background-color: $ex-color-bar !important;
-// }
-
-.ex-nav .navbar-toggle {
-  // border-color: #563d7c;
-}
-
-.ex-nav .navbar-toggle:hover {
-  // background-color: $ex-color-bar;
-  // border-color: $ex-color-bar;
+  .navbar-nav > li > a:hover {
+    color: #fff;
+  }
 }
 
 .grid-action-1 {
@@ -282,15 +237,6 @@ body {
 
 .grid-action-3 {
   width: 78px;
-}
-
-.table-bordered {
-  // border: 2px solid $ex-color-header;
-}
-
-.table-bordered thead th {
-  background-color: $ex-color-header;
-  // border: 2px solid white;
 }
 
 .sidebar-a, .sidebar-b, .sidebar-c {
@@ -425,3 +371,186 @@ body {
 .ex-search-remove {
   color: black;
 }
+
+
+
+
+// Themes
+.theme-ashly {
+  background: #f0f0f0 url(/assets/background.jpg) repeat -70% 0;
+
+  .ex-modal {
+    .modal-header {
+      background-color: rgba(0,0,0,0.1);
+    }
+  }
+
+  .ex-grid {
+    .table-bordered thead th {
+      background-color: rgba(0,0,0,0.1);
+    }
+  }
+
+  .ex-form {
+    border-color: rgba(0,0,0,0.1);
+    .panel-heading, .panel-footer {
+      background-color: rgba(0,0,0,0.1);
+      border-color: rgba(0,0,0,0.1);
+    }
+  }
+
+  .ex-nav {
+    background-color: rgba(47,47,47,0.98);
+    border-color: rgba(39,39,39,0.98);
+
+    .navbar-nav > .active > a {
+      background-color: rgba(39,39,39,0.98) !important;
+    }
+  }
+
+  .sidebar-a, .sidebar-b, .sidebar-c {
+    background-color: rgba(0,0,0,0.07);
+    ul {
+      li.active a {
+        background-color: rgba(0,0,0,0.1);
+      }
+      li.active:before {
+        border-color: transparent rgba(0,0,0,0.17) transparent transparent;
+      }
+    }
+  }
+
+  .sidebar-a {
+    ul {
+      li.active:before {
+        border-color: transparent rgba(0,0,0,0.07) transparent transparent;
+      }
+    }
+  }
+
+  .content-a, .content-b, .content-c {
+    .content-header {
+      border-bottom: 2px solid rgba(0,0,0,0.1);
+    }
+  }
+}
+
+
+.them-alive {
+  background: #f0f0f0 url(/assets/background.gif) repeat -70% 0;
+  
+  .ex-modal {
+    .modal-header {
+      background-color: #E2D7F1;
+    }
+  }
+
+  .ex-grid {
+    .table-bordered thead th {
+      background-color: #E2D7F1;
+    }
+  }
+
+  .ex-form {
+    border-color: #E2D7F1;
+    .panel-heading, .panel-footer {
+      background-color: #E2D7F1;
+      border-color: #E2D7F1;
+    }
+  }
+
+  .ex-nav {
+    background-color: #563D7C;
+    border-color: #463265;
+
+    .navbar-nav > .active > a {
+      background-color: #463265 !important;
+    }
+  }
+
+  .sidebar-a, .sidebar-b, .sidebar-c {
+    background-color: #F3EFFA;
+    ul {
+      li.active a {
+        background-color: #E2D7F1;
+      }
+      li.active:before {
+        border-color: transparent #E2D7F1 transparent transparent;
+      }
+    }
+  }
+
+  .sidebar-a {
+    ul {
+      li.active:before {
+        border-color: transparent white transparent transparent;
+      }
+    }
+  }
+
+  .content-a, .content-b, .content-c {
+    .content-header {
+      border-bottom: 2px solid $ex-color-header;
+    }
+  }
+}
+
+
+// .them-lively {
+//   background: #f0f0f0 url(/assets/background.gif) repeat -70% 0;
+//   
+//   .ex-modal {
+//     .modal-header {
+//       background-color: col-header;
+//     }
+//   }
+
+//   .ex-grid {
+//     .table-bordered thead th {
+//       background-color: col-header;
+//     }
+//   }
+
+//   .ex-form {
+//     border-color: col-header;
+//     .panel-heading, .panel-footer {
+//       background-color: col-header;
+//       border-color: col-header;
+//     }
+//   }
+
+//   .ex-nav {
+//     background-color: col-navbar;
+//     border-color: col-bar;
+
+//     .navbar-nav > .active > a {
+//       background-color: col-bar !important;
+//     }
+//   }
+
+//   .sidebar-a, .sidebar-b, .sidebar-c {
+//     background-color: col-sidebar;
+//     ul {
+//       li.active a {
+//         background-color: col-header;
+//       }
+//       li.active:before {
+//         border-color: transparent col-deeper transparent transparent;
+//       }
+//     }
+//   }
+
+//   .sidebar-a {
+//     ul {
+//       li.active:before {
+//         border-color: transparent col-arrow transparent transparent;
+//       }
+//     }
+//   }
+
+//   .content-a, .content-b, .content-c {
+//     .content-header {
+//       border-bottom: 2px solid $ex-color-header;
+//     }
+//   }
+// }
