@@ -11,7 +11,6 @@ var app = angular.module("app", [
 app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
   // default redirects
   $urlRouterProvider.when("/admin", "/admin/users");
-  $urlRouterProvider.when("/dashboard", "/admin/users");
 
   $stateProvider
   .state("dashboard", {

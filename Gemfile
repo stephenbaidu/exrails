@@ -3,13 +3,12 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 gem 'rails', '4.0.2'
 
-gem 'pg'
-
 gem 'jquery-rails'
 gem 'haml-rails', '~> 0.4'
 gem 'bootstrap-sass', '~> 3.0.2.0'
 gem 'angularjs-rails'
 gem 'select2-rails'
+# gem 'pnotify-rails'
 gem 'bootstrap-datepicker-rails'
 gem 'angular-ui-bootstrap-rails'
 gem 'font-awesome-rails'
@@ -20,10 +19,13 @@ gem 'pundit'
 gem 'paper_trail', '~> 3.0.0'
 gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git'
 gem 'active_model_serializers'
-gem 'faker'
+gem 'resourcify', :git => 'git://github.com/stephenbaidu/resourcify.git'
 
 gem 'wicked_pdf'
+# gem 'closure_tree'
 gem 'awesome_nested_set'
+gem 'sidekiq'
+gem 'devise-async'
 
 group :assets do
   gem 'sass-rails', '~> 4.0.0'
@@ -32,6 +34,7 @@ group :assets do
 end
 
 group :development, :test do
+  gem 'sqlite3'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
 end
@@ -47,6 +50,7 @@ group :development do
 end
 
 group :production do
+  gem 'pg'
   gem 'rails_12factor'
   gem 'newrelic_rpm'
 end

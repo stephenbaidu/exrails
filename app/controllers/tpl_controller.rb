@@ -1,4 +1,5 @@
 class TplController < ActionController::Base
+  include ::BaseInterop
   
   layout false
   

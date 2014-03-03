@@ -22,9 +22,9 @@
 #  locked_at              :datetime
 #  created_at             :datetime
 #  updated_at             :datetime
+#  name                   :string(255)
 #  username               :string(255)
-#  last_name              :string(255)
-#  first_name             :string(255)
+#  role_ids               :string(255)      default("--- []\n")
 #
 # Indexes
 #
@@ -35,13 +35,17 @@
 #
 
 class User < ActiveRecord::Base
-  include Resourcify
+  
+  resourcify
+
+  serialize :role_ids, Array
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # :registerable,
   devise :database_authenticatable, :recoverable,
-         :rememberable, :trackable, :validatable
+         :rememberable, :trackable, :validatable,
+         :async
 
   def admin?
     roles.map(&:name).include? "Admin"

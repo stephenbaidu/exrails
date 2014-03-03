@@ -1,5 +1,13 @@
 <div class="navbar-collapse collapse">
   <ul class="nav navbar-nav">
+    <% _app.list.each do |a| %>
+      <li>
+        <a href="/<%= a[:url] %>">
+          <span class="<%= a[:icon] || 'fa fa-home' %>"></span>
+          <%= a[:name] %>
+        </a>
+      </li>
+    <% end %>
     <% AppTpl.modules.each do |k, m| %>
       <% if m[:dropdown] %>
         <li class="dropdown" ng-class='{ active: hasUrl("#/<%= m[:url] %>") }'>
@@ -27,6 +35,10 @@
         </li>
       <% end %>
     <% end %>
+    <!-- <li class="visible-xs"><a>xs</a></li>
+    <li class="visible-sm"><a>sm</a></li>
+    <li class="visible-md"><a>md</a></li>
+    <li class="visible-lg"><a>lg</a></li> -->
   </ul>
   <ul class="nav navbar-nav navbar-right">
     <li class="dropdown active">

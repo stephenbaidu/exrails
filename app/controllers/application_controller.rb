@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ::BaseInterop
   
   # Disable layout
   layout -> {

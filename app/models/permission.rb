@@ -7,6 +7,10 @@
 #  created_at :datetime
 #  updated_at :datetime
 #
+# Indexes
+#
+#  index_permissions_on_name  (name) UNIQUE
+#
 
 class Permission < ActiveRecord::Base
 

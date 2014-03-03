@@ -53,17 +53,38 @@ class ReportTpl
   private
     def self.config
       {
-        paye: { title: 'Sample 1',
+        paye: { title: 'PAYE Report',
           filters: {
-            user_id: { label: 'User', lookup: User.all }
+            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+          }
+        },
+        summary_report: {
+          filters: {
+            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
           }
         },
         bank_report: { orientation: 'Landscape', page_numbers: false,
-          title: 'Sample 2',
+          title: 'Bank Deposit',
           filters: {
-            user_id: { label: 'User', lookup: User.all },
-            role_id: { lookup: Role.all }
+            bank_id: { lookup: Bank.all },
+            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
           }
+        },
+        ssnit_1st_tier: {
+          title: 'SSNIT Report (1st Tier)',
+          filters: {
+            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+          }
+        },
+        ssnit_2nd_tier: {
+          title: 'SSNIT Report (2nd Tier)',
+          filters: {
+            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+          }
+        },
+        payslips: {
+          title_: 'Payslip',
+          filters: { id: { label: 'Select employee', lookup: Payroll.current.approved } }
         }
       }
     end

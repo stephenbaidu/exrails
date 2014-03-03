@@ -22,9 +22,9 @@
 #  locked_at              :datetime
 #  created_at             :datetime
 #  updated_at             :datetime
+#  name                   :string(255)
 #  username               :string(255)
-#  last_name              :string(255)
-#  first_name             :string(255)
+#  role_ids               :string(255)      default("--- []\n")
 #
 # Indexes
 #
