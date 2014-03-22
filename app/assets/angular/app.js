@@ -8,10 +8,22 @@ var app = angular.module("app", [
   "ui.layout"
 ]);
 
-app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
-  // default redirects
+app.constant('APP', {
+  root: '/',
+  tplPrefix: '/tpl/',
+  apiPrefix: '/api/'
+});
+
+app.config(['$urlRouterProvider', '$stateProvider', 'APP', function ($urlRouterProvider, $stateProvider, APP) {
+
+  // ********************************************
+  // Default redirects
+  // ********************************************
   $urlRouterProvider.when("/admin", "/admin/users");
 
+  // ********************************************
+  // Custom states can be added
+  // ********************************************
   $stateProvider
   .state("dashboard", {
     url: "/dashboard",
@@ -20,58 +32,64 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
   .state('reports', {
     url: '/reports',
     templateUrl: function (stateParams) {
-      return '/app/reports';
+      return APP.root + 'app/reports';
     },
     controller: 'ReportsController'
   })
   .state('reports.report', {
     url: '/:report{id:(?:/[^/]+)?}?q',
     templateUrl: function (stateParams) {
-      return '/reports/' + stateParams.report
+      return APP.root + 'reports/' + stateParams.report
     },
     controller: 'ReportsController'
   })
   .state('app', {
     url: '/:app',
     templateUrl: function (stateParams) {
-      return '/app/' + stateParams.app;
+      return APP.root + 'app/' + stateParams.app;
     },
     controller: 'AppController'
   })
   .state('app.index', {
     url: '/:url',
     templateUrl: function (stateParams) {
-      return '/tpl/' + stateParams.url + '?app=' + stateParams.app;
+      return APP.tplPrefix + stateParams.url + '?app=' + stateParams.app;
     },
     controller: 'AppIndexController'
   })
   .state('app.index.new', {
     url: '/new',
     templateUrl: function (stateParams) {
-      return '/tpl/' + stateParams.url + '/new?app=' + stateParams.app;
+      return APP.tplPrefix + stateParams.url + '/new?app=' + stateParams.app;
     },
     controller: 'AppFormController'
   })
   .state('app.index.search', {
     url: '/search?query',
     templateUrl: function (stateParams) {
-      return '/tpl/' + stateParams.url + '/search?app=' + stateParams.app;
+      return APP.tplPrefix + stateParams.url + '/search?app=' + stateParams.app;
     },
     controller: 'AppSearchController'
   })
   .state('app.index.edit', {
     url: '/:id/edit',
     templateUrl: function (stateParams) {
-      return '/tpl/' + stateParams.url + '/' + stateParams.id + '/edit?app=' + stateParams.app;
+      return APP.tplPrefix + stateParams.url + '/' + stateParams.id + '/edit?app=' + stateParams.app;
     },
     controller: 'AppFormController'
   })
   .state('app.index.show', {
-    url: '/:id',
+    url: '/:id/show',
     templateUrl: function (stateParams) {
-      return '/tpl/' + stateParams.url + '/:id?app=' + stateParams.app;
+      return APP.tplPrefix + stateParams.url + '/:id?app=' + stateParams.app;
     },
     controller: 'AppFormController'
+  })
+  .state('app.view', {
+    url: '/:url/:view?q',
+    templateUrl: function (stateParams) {
+      return APP.tplPrefix + stateParams.url + '/' + stateParams.view + '?app=' + stateParams.app;
+    }
   });
   $urlRouterProvider.otherwise("/dashboard");
 

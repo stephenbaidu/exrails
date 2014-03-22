@@ -5,7 +5,7 @@ var UserController = function ($scope, ResMgr, ExMsgBox, $http, $state, $statePa
 
   var col_attrs = 'style="width: 100px; text-align: right"';
 
-  $scope.r_cols = [
+  $scope.rCols = [
     { name: "id", header: "Name", lookup: "role"},
     { name: "permissions", header: "Permissions", attrs: col_attrs, fixed: true }
   ];

@@ -35,14 +35,15 @@ app.service("ExMsgBox", ['$modal', '$q', function ($modal, $q) {
     info: function (message, title) { // Alias for notice
       this.notice(message);
     },
-    errorSummary: function(messages) {
+    errorSummary: function(messages, title) {
+      title = title || 'Error Summary';
       var message = "<ul>";
       angular.forEach(messages, function(value){
         message += "<li>" + value + "</li>";
       });
       message += "</ul>";
       $.pnotify({
-        title: 'Error Summary',
+        title: title,
         text:  message,
         type: 'error',
         hide: false

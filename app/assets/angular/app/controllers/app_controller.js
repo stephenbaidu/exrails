@@ -1,7 +1,7 @@
 var app = angular.module("app");
 
-app.controller("AppController", ['$scope', '$rootScope', 'ResMgr', '$state', '$stateParams',
-  function ($scope, $rootScope, ResMgr, $state, $stateParams) {
+app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$state', '$stateParams',
+  function ($scope, APP, $rootScope, ResMgr, $state, $stateParams) {
   window.AppController = $scope;
 
   // Global configurations
@@ -9,15 +9,15 @@ app.controller("AppController", ['$scope', '$rootScope', 'ResMgr', '$state', '$s
   $.pnotify.defaults.delay = 2000;
 }]);
 
-app.controller("AppIndexController", ['$scope', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
-  function ($scope, $q, ResMgr, ExMsgBox, $state, $stateParams, $http) {
+app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
+  function ($scope, APP, $q, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppIndexController = $scope;
   $scope.records = [];
   $scope.totalRecords = 0;
   $scope.recordsPerPage = 15;
   $scope.currentPage = 1;
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
-  $scope.model = ResMgr.register($stateParams.url, '/api/' + $stateParams.url.replace('-', '_') + '/:id');
+  $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace('-', '_') + '/:id');
 
   $scope.queryRecords = function (page, size) {
     page = page || 1;
@@ -56,7 +56,7 @@ app.controller("AppIndexController", ['$scope', '$q', 'ResMgr', 'ExMsgBox', '$st
     });
   };
 
-  $http.get('/tpl/' + $scope.model.url + '/config')
+  $http.get(APP.tplPrefix + $scope.model.url + '/config')
     .success(function(res) {
       if(res.success) {
         $scope.columns = _.clone(res.data.columns);
@@ -72,12 +72,12 @@ app.controller("AppIndexController", ['$scope', '$q', 'ResMgr', 'ExMsgBox', '$st
 }]);
 
 
-app.controller("AppSearchController", ['$scope', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
-  function ($scope, ResMgr, ExMsgBox, $state, $stateParams, $http) {
+app.controller("AppSearchController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
+  function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppSearchController = $scope;
   $scope.query = [];
 
-  $http.get('/tpl/' + $scope.model.url + '/config')
+  $http.get(APP.tplPrefix + $scope.model.url + '/config')
     .success(function(res) {
       if(res.success) {
         $scope.lookups = _.clone(res.data.lookups);
@@ -101,13 +101,13 @@ app.controller("AppSearchController", ['$scope', 'ResMgr', 'ExMsgBox', '$state',
 }]);
 
 
-app.controller("AppFormController", ['$scope', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
-  function ($scope, ResMgr, ExMsgBox, $state, $stateParams, $http) {
+app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
+  function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppFormController = $scope;
   $scope.record = {};
 
   $scope.loadConfig = function () {
-    $http.get('/tpl/' + $scope.model.url + '/config')
+    $http.get(APP.tplPrefix + $scope.model.url + '/config')
       .success(function(res) {
         if(res.success) {
           $scope.lookups = _.clone(res.data.lookups);
@@ -150,7 +150,12 @@ app.controller("AppFormController", ['$scope', 'ResMgr', 'ExMsgBox', '$state', '
   };
 
   $scope.errorAlert = function (res, action) {
-    ExMsgBox.errorSummary(res.error.messages);
+    if(res.error.type == 'validation') {
+      ExMsgBox.errorSummary(res.error.messages, 'Validation Errors');
+    } else {
+      var msg = res.error.messages[0] || 'An error occured';
+      ExMsgBox.error(msg, 'Sorry');
+    }
   };
 
   $scope.create = function () {

@@ -1,8 +1,16 @@
-angular.module("app").directive("exArray", ['$compile', function ($compile) {
+angular.module("app").directive("exArray", ['$compile', '$sce', function ($compile, $sce) {
   var linkFn = function (scope, element, attrs, ctrl) {
     scope.ngModel = scope.ngModel || [];
     scope.columns = scope.columns || [];
     scope.title   = attrs.title || "";
+
+    scope.isViewOnly = function () {
+      return (attrs.typeView != undefined);
+    }
+
+    scope.bindHtml = function (val) {
+      return $sce.trustAsHtml(val);
+    };
 
     function inputEditor(column) {
       var html = "", tpl = "";
@@ -22,7 +30,9 @@ angular.module("app").directive("exArray", ['$compile', function ($compile) {
         "date": " | date",
         "time": " | date:'shortTime'",
         "datetime": " | date:'medium'",
-        "money": " | number:'2'"
+        "money": " | number:'2'",
+        "decimal3": " | number:'3'",
+        "decimal4": " | number:'4'"
       };
       return (type_filters[column.type] || "");
     }
@@ -33,35 +43,36 @@ angular.module("app").directive("exArray", ['$compile', function ($compile) {
       html += '<a href="" ng-show="editorEnabled($index)" ng-click="cancelEdit()"><i class="glyphicon glyphicon-remove"></i></a>';
       html += '<a href="" ng-hide="editorEnabled($index)" ng-click="startEdit($index)"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;';
       
-      // Do not show delete button for fixed lists
-      if(attrs.fixed == undefined) {
+      // Do not show delete button for typeFixed lists
+      if(attrs.typeFixed == undefined) {
         html += '<a href="" ng-hide="editorEnabled($index)" ng-click="removeItem($index)"><i class="glyphicon glyphicon-trash"></i></a>';
       }
       return html;
     }
 
     function updateView() {
-      var html = "";
+      var html = '<div class="ex-array">';
       var _header = "<th class='grid-action-1'>#</th>";
       var _body   = "<td>{{ $index + 1}}.</td>";
 
       // Add New button
-      if(attrs.fixed == undefined) {
-        html += '<div ng-show="editorIndex == -1" class="pull-right">';
-        html += '  <a href="" ng-click="newItem()" class="btn btn-primary btn-xs">';
+      if(attrs.typeFixed == undefined) {
+        html += '<div ng-show="editorIndex == -1" class="pull-right" style="margin-top: -3px">';
+        html += '  <a href="" ng-click="newItem()" class="btn btn-primary btn-xs" ng-hide="isViewOnly()">';
         html += '    <span class="glyphicon glyphicon-plus"></span> New';
         html += '  </a>';
         html += '</div>';
       }
 
       // Set title
-      html += '<label>' + (attrs.title || '&nbsp;') + '</label>';
+      html += '<label><u>' + (attrs.title || '&nbsp;') + '</u></label>';
       
       angular.forEach(scope.columns, function(c) {
         _header += '<th ' + c.attrs + '>' + c.header + '</th>';
-
         if(c.fixed) {
           _body += '<td ' + c.attrs + '>{{ item.' + c.name + getFilter(c) + ' }}</td>';
+        } else if(c['type'] == 'html') {
+          _body += "<td " + c.attrs + " ng-bind-html=\"bindHtml(item." + c.name + ")\"></td>";
         } else {
           if(c['lookup']) {
             _body += '<td ' + c.attrs + ' ng-hide="editorEnabled($index)">{{ (lookup_' + c['lookup'] + ' | getLookupById:item.' + c.name + ').name' + getFilter(c) + ' }}</td>';
@@ -72,25 +83,27 @@ angular.module("app").directive("exArray", ['$compile', function ($compile) {
         }
       });
 
-      _header += '<th class="grid-action-2"></th>';
+      _header += '<th class="grid-action-2" ng-hide="isViewOnly()"></th>';
 
       // Action buttons
-      _body   += '<td>' + getButtons() + '</td>';
+      _body   += '<td ng-hide="isViewOnly()">' + getButtons() + '</td>';
 
       html += '<table style="font-size: 12px;">';
       html += '  <thead>';
-      html +=      _header;
+      html += '    <tr>';
+      html +=        _header;
+      html += '    </tr>';
       html += '  </thead>';
       html += '  <tbody>';
       html += '    <tr ng-repeat="item in ngModel">';
       html +=        _body;
       html += '    </tr>';
       html += '  </tbody>';
-      html += '</table>';
+      html += '</table></div>';
 
       element.html(html);
       element.attr("class", "");
-      angular.element(element).find("table").attr("class", attrs.class || "table table-bordered table-condensed table-striped table-hover");
+      angular.element(element).find("table").attr("class", attrs.class || "table table-condensed table-striped table-hover");
       $compile(element.contents())(scope);
     }
 
@@ -103,7 +116,7 @@ angular.module("app").directive("exArray", ['$compile', function ($compile) {
     });
   };
 
-  var controllerFn = ['$scope', '$element', 'ExMsgBox', '$filter', function($scope, $element, ExMsgBox, $filter) {
+  var controllerFn = ['$scope', '$element', 'ExMsgBox', '$filter', '$sce', function($scope, $element, ExMsgBox, $filter, $sce) {
     $scope.editorIndex = -1;
     $scope.isNewItem = false;
 

@@ -1,5 +1,5 @@
-angular.module("app").controller("MainController", ['$rootScope', '$state', '$stateParams', 'ResMgr',
-  function ($rootScope, $state, $stateParams, ResMgr) {
+angular.module("app").controller("MainController", ['$rootScope', 'APP', '$state', '$stateParams', 'ResMgr',
+  function ($rootScope, APP, $state, $stateParams, ResMgr) {
   window.MainController = $rootScope;
   $rootScope.$state = $state;
   $rootScope.$stateParams = $stateParams;
@@ -15,7 +15,16 @@ angular.module("app").controller("MainController", ['$rootScope', '$state', '$st
   ];
 
   angular.forEach($rootScope.lookups, function (url) {
-    ResMgr.register(url, '/api/' + url + '/:id', null, { type: "l" });
+    ResMgr.register(url, APP.apiPrefix + url + '/:id', null, { type: "l" });
   });
+
+  $rootScope.modules = {
+    admin: { text: "Admin Center", url: "admin", dropdown: true, 
+      links: [
+        { text: "Users", url: "users", icon: "fa fa-users" },
+        { text: "Roles", url: "roles", icon: "fa fa-sort-numeric-asc" }
+      ]
+    }
+  }
   
 }]);
