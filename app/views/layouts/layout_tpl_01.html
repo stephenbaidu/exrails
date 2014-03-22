@@ -1,7 +1,7 @@
 <div id="sidebar" class="sidebar-a">
   <ul class="nav nav-pills nav-stacked">
-    <li ng-repeat="l in modules.admin.links" ng-class='{ active: hasUrl("#/admin/{{ l.url }}") }'>
-      <a href="#/admin/{{ l.url }}">
+    <li ng-repeat="l in modules.setup.links" ng-class='{ active: hasUrl("#/setup/{{ l.url }}") }'>
+      <a href="#/setup/{{ l.url }}">
         <span class="{{ l.icon || 'fa fa-briefcase' }}"></span>
         <span class="link-text">{{ l.text }}</span>
       </a>

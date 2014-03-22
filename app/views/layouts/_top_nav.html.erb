@@ -8,33 +8,24 @@
         </a>
       </li>
     <% end %>
-    <% AppTpl.modules.each do |k, m| %>
-      <% if m[:dropdown] %>
-        <li class="dropdown" ng-class='{ active: hasUrl("#/<%= m[:url] %>") }'>
-          <a class="dropdown-toggle" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-calendar"></span>
-            <%= m[:text] %><b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <% m[:links].each do |c| %>
-              <li>
-                <a href="#/<%= m[:url] %>/<%= c[:url] %>">
-                  <span class="<%= c[:icon] || 'fa fa-briefcase' %>"></span>
-                  <%= c[:text] %>
-                </a>
-              </li>
-            <% end %>
-          </ul>
-        </li>
-      <% else %>
-        <li ng-class='{ active: hasUrl("#/<%= m[:url] %>") }'>
-          <a href="#/<%= m[:url] %>">
-            <span class="<%= m[:icon] %>"></span>
-            <%= m[:text] %>
+    <li ng-repeat="m in modules" ng-class='{ active: hasUrl("#/{{ m.url }}"), dropdown: m.dropdown }'>
+      <a href="#/{{ m.url }}" ng-hide="m.dropdown">
+        <span class="{{ m.icon || 'fa fa-briefcase' }}"></span>
+        {{ m.text }}
+      </a>
+      <a class="dropdown-toggle" data-toggle="dropdown" ng-show="m.dropdown">
+        <span class="glyphicon glyphicon-calendar"></span>
+        {{ m.text }}<b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu" ng-show="m.dropdown">
+        <li ng-repeat="l in m.links">
+          <a href="#/{{ m.url }}/{{ l.url }}">
+            <span class="{{ l.icon || 'fa fa-briefcase' }}"></span>
+            {{ l.text }}
           </a>
         </li>
-      <% end %>
-    <% end %>
+      </ul>
+    </li>
     <!-- <li class="visible-xs"><a>xs</a></li>
     <li class="visible-sm"><a>sm</a></li>
     <li class="visible-md"><a>md</a></li>

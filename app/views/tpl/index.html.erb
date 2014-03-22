@@ -41,7 +41,7 @@
           <thead>
             <tr>
               <th class='grid-action-1'></th>
-              <% AppTpl.grid_columns(@model).each do |c| %>
+              <% @model_class.tpl.grid_columns.each do |c| %>
                 <th><%= c[:label] %></th>
               <% end %>
               <th class="grid-action-3">Actions</th>
@@ -50,7 +50,7 @@
           <tbody>
             <tr ng-repeat="rec in records">
               <td>{{ (currentPage - 1) * recordsPerPage + $index + 1 }}.</td>
-              <% AppTpl.grid_columns(@model).each do |c| %>
+              <% @model_class.tpl.grid_columns.each do |c| %>
                 <% if c[:lookup] %>
                   <td>{{ rec.<%= c[:lookup] %>.name }}</td>
                 <% elsif ["date"].include? c[:type] %>

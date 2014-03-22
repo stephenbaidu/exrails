@@ -7,7 +7,7 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
-<body ng-app="app" ng-controller="MainController">
+<body ng-app="app" ng-controller="MainController" class="theme-ashly">
   <!-- <div class="flat-ui"> -->
   <div class="navbar navbar-inverse navbar-fixed-top ex-nav" role="navigation">
     <div class="container">
@@ -20,7 +20,7 @@
         </button>
         <a class="navbar-brand nav-h" href="/">
           <span class="glyphicon glyphicon-leaf"></span>
-          eXRails App
+          eXRails
         </a>
       </div>
       <%= yield :top_navigation %>

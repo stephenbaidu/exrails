@@ -1,19 +1,9 @@
 class UserTpl
 
   def lookups
-    lookups = {}
-    
-    begin
-      associations = User.reflect_on_all_associations(:belongs_to).map { |a| a.name }
-      associations.each do |assoc|
-        lookups[assoc.to_s.to_sym] = assoc.to_s.classify.constantize.all
-      end
-    rescue Exception => e
-    end
-    
-    lookups[:role] = Role.all
-
-    lookups
+    {
+      role: Role.all
+    }
   end
 
   def form_columns
@@ -46,7 +36,7 @@ class UserTpl
     [
       {:name=>"name", :type=>"string", :label=>"Name"},
       {:name=>"username", :type=>"string", :label=>"Username"},
-      {:name=>"roles.length", :type=>"integer", :label=>"No. of Roles"},
+      {:name=>"role_ids.length", :type=>"integer", :label=>"No. of Roles"},
       {:name=>"current_sign_in_at", :type=>"datetime", :label=>"Last Sign In"},
       {:name=>"current_sign_in_ip", :type=>"string", :label=>"Last IP"},
       {:name=>"email", :type=>"string", :label=>"Email"}

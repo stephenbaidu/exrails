@@ -3,14 +3,12 @@
     <li class="dropdown-header" style="font-size: 20px; padding: 0px;">Monthly Reports</li>
   </ul>
   <ul class="nav nav-pills nav-stacked">
-    <% AppTpl.modules[:reports][:links].each do |l|  %>
-      <li ng-class='{ active: hasUrl("#/reports/<%= l[:url] %>") }'>
-        <a href="#reports/<%= l[:url] %>">
-          <span class="<%= l[:icon] || 'fa fa-briefcase' %>"></span>
-          <span class="link-text"><%= l[:text] %></span>
-        </a>
-      </li>
-    <% end %>
+    <li ng-repeat="l in modules.reports.links" ng-class='{ active: hasUrl("#/reports/{{ l.url }}") }'>
+      <a href="#/reports/{{ l.url }}">
+        <span class="{{ l.icon || 'fa fa-briefcase' }}"></span>
+        <span class="link-text">{{ l.text }}</span>
+      </a>
+    </li>
   </ul>
 </div>
 <div id="page_content" class="content-a">

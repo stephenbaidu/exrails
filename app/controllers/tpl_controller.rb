@@ -1,20 +1,15 @@
 class TplController < ActionController::Base
   include ::BaseInterop
-  
+
   layout false
   
-  before_action -> {
-    @app   = params[:app]
-    @model = params[:model]
-    @model.gsub!('-', '_') if @model
-    @model = @model.underscore.pluralize if @model
-  }
+  before_action :initialize_variables
 
   before_action :render_view, except: [:create, :update]
 
   def index
-    render "layouts/layout_#{@app}" and return if (@app and !@model and layout_exists?)
-    render "layouts/layout_tpl_01"  and return if (@app and !@model and !layout_exists?)
+    render "layouts/#{@namespace_prefix}layout_#{@app}" and return if (@app and !@model and layout_exists?)
+    render "layouts/#{@namespace_prefix}layout_tpl_01"  and return if (@app and !@model and !layout_exists?)
   end
 
   def new
@@ -30,40 +25,57 @@ class TplController < ActionController::Base
     render json: {
       success: true,
       data: {
-        formColumns: AppTpl.form_columns(@model),
-        gridColumns: AppTpl.grid_columns(@model),
-        columns: AppTpl.form_columns(@model),
-        lookups: AppTpl.lookups(@model),
-        options: AppTpl.options(@model)
+        formColumns: @model_class.tpl.form_columns,
+        gridColumns: @model_class.tpl.grid_columns,
+        columns: @model_class.tpl.form_columns,
+        lookups: @model_class.tpl.lookups,
+        options: @model_class.tpl.options
       }
     }
   end
 
   def _columns
-    render json: AppTpl.form_columns(@model)
+    render json: @model_class.tpl.form_columns
   end
 
   def _lookups(get = false)
-    render json: AppTpl.lookups(@model)
+    render json: @model_class.tpl.lookups
   end
 
   private
-    def _RC
-      @model.classify.constantize
+    def initialize_variables
+      # ****************************************************************
+      # @namespace_prefix, eg: 'pos/', 'erp/pos/', ''
+      # Blank for normal apps but must be specified for isolated engines
+      # ****************************************************************
+      @namespace_prefix = ''
+
+      # Module name
+      @app   = params[:app]
+
+      # Model url, like underscored plural of model name
+      @model = params[:model]
+
+      # Sanitization
+      @model.gsub!('-', '_') if @model
+      @model = @model.underscore.pluralize if @model
+
+      # Implied model resource class
+      @model_class = "#{@model.classify}".constantize if @model
     end
+
+    def layout_exists?() template_exists? "layouts/#{@namespace_prefix}layout_#{@app}" end
 
     def render_view
       return unless @app and @model && (@action = params[:action])
 
-      # Load search template
-      render "tpl/search" and return if (@action == "show" && params[:id] == "search")
-
-      if template_exists? "#{@model}/#{@action}"
-        render "#{@model}/#{@action}"
+      paths = [
+        "#{@namespace_prefix}#{@model}/#{params[:id]}",
+        "#{@namespace_prefix}tpl/#{params[:id]}",
+        "#{@namespace_prefix}#{@model}/#{@action}"
+      ].each do |path|
+        render path and return if template_exists? path
       end
     end
 
-    def layout_exists?
-      template_exists? "layouts/layout_#{@app}"
-    end
 end
