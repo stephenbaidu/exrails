@@ -11,9 +11,11 @@
         <ex-form ng-model="record" columns="formColumns" lookups="lookups" no-of-cols="1">
         </ex-form>
       </div>
-      <div class="col-md-5" ng-controller="UserController">
-        <ex-array title="Assigned Roles" ng-model="$parent.record.user_roles_attributes" columns="r_cols" lookups="lookups">
-        </ex-array>
+      <div class="col-md-6 right-box">
+        <div class="" ng-controller="UserController">
+          <ex-array title="Assigned Roles" ng-model="$parent.record.user_roles_attributes" columns="rCols" lookups="lookups">
+          </ex-array>
+        </div>
       </div>
     </div>
   </div>

@@ -8,6 +8,11 @@ namespace :app do
       r.permissions = []
     end
 
+    # Create member role
+    Role.where(name: "Member").first_or_create do |r|
+      r.permissions = ['Member:index', 'Member:view']
+    end
+
     # Create admin user
     user = User.where(:username => 'admin').first_or_create do |u|
       u.name = "System Admin"

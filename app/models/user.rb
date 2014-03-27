@@ -47,6 +47,8 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :validatable,
          :async
 
+  validates :username, presence: true
+
   def admin?
     roles.map(&:name).include? "Admin"
   end
