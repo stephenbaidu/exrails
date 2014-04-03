@@ -44,7 +44,12 @@ class ReportTpl
       :layout       => 'layout_pdf.html',
       :orientation  => self.orientation(report_id),
       :page_size    => self.page_size(report_id),
-      :header       => { html: { template: 'reports/layouts/header.pdf.erb' } },
+      :margin       => {
+        :top => 35, :bottom => 20, :left => 10, :right => 10
+      },
+      :header       => {
+        html: { template: 'reports/layouts/header.pdf.erb' }
+      },
       :footer       => {
         html: { template: 'reports/layouts/footer.pdf.erb' }
       },

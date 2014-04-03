@@ -39,28 +39,32 @@
         text-align: center
       }
 
-      .report-title {
-        text-align: center;
-        font-size: 20px;
-        background-color: rgb(236, 235, 235);
-        margin: 50px 0px 20px 0px;
-        padding: 5px;
-        font-weight: bold;
-      }
-
-      .logo {
-        float: right;
-      }
-
       .header {
-        /**/
+        height: 100px;
+      }
+
+      .content {
+        padding-top: 5px;
       }
 
       .footer {
         font-size: 9px;
         text-align: center;
         border-top: dotted 1px #EC8888;
-        padding-top: 2px;
+        padding-top: 5px;
+      }
+
+      .title {
+        text-align: center;
+        font-size: 20px;
+        background-color: rgb(236, 235, 235);
+        margin: 5px 0px 10px 0px;
+        padding: 5px;
+        font-weight: bold;
+      }
+
+      .logo {
+        float: right;
       }
 
       .report-table {
@@ -75,14 +79,10 @@
       .report-table th {
         font-size: 14px;
       }
-
-      .report {
-        padding-top: 80px;
-      }
     </style>
   </head>
-  <body onload="number_pages()">
-    <div class="report">
+  <body onload="number_pages()" class="report">
+    <div class="content">
       <%= yield %>
     </div>
     <!-- Page <span class="page"></span> of <span class="topage"></span> -->
