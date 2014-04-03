@@ -19,24 +19,15 @@
 //= require angular-animate
 //= require angular-resource
 
-//Bootstrap
-//= require bootstrap
-
-//Angular UI
-//= require bootstrap-datepicker
-//= require angular-ui-bootstrap-tpls
-//= require_tree ../angular/libs/angular-ui/js
-
 //Libraries
 //= require select2
-//= require ../angular/libs/inflection
-//= require ../angular/libs/pnotify/jquery.pnotify
+//= require bootstrap
+//= require bootstrap-datepicker
+//= require angular-ui-bootstrap-tpls
+//= require_tree ../angular/libs
 
 //Angular App
 //= require ../angular/app.js
-//= require_tree ../angular/app/services
-//= require_tree ../angular/app/directives
-//= require_tree ../angular/app/controllers
-//= require_tree ../angular/app/filters
+//= require_tree ../angular/app
 
 //= require_tree .

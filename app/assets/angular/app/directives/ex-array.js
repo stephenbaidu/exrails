@@ -57,7 +57,7 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
 
       // Add New button
       if(attrs.typeFixed == undefined) {
-        html += '<div ng-show="editorIndex == -1" class="pull-right" style="margin-top: -3px">';
+        html += '<div ng-show="editorIndex == -1" class="pull-right" style="margin-top: -3px;">';
         html += '  <a href="" ng-click="newItem()" class="btn btn-primary btn-xs" ng-hide="isViewOnly()">';
         html += '    <span class="glyphicon glyphicon-plus"></span> New';
         html += '  </a>';
@@ -90,9 +90,7 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
 
       html += '<table style="font-size: 12px;">';
       html += '  <thead>';
-      html += '    <tr>';
-      html +=        _header;
-      html += '    </tr>';
+      html +=      _header;
       html += '  </thead>';
       html += '  <tbody>';
       html += '    <tr ng-repeat="item in ngModel">';

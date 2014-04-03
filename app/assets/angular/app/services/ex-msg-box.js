@@ -32,18 +32,26 @@ app.service("ExMsgBox", ['$modal', '$q', function ($modal, $q) {
         nonblock_opacity: .5
       });
     },
-    info: function (message, title) { // Alias for notice
-      this.notice(message);
+    info: function (message, title) {
+      title = title || 'Info';
+      $.pnotify({
+        title: title,
+        text: message,
+        addclass: 'custom',
+        // icon: 'picon picon-32 picon-fill-color',
+        opacity: .8,
+        nonblock: true,
+        nonblock_opacity: .2
+      });
     },
-    errorSummary: function(messages, title) {
-      title = title || 'Error Summary';
+    errorSummary: function(messages) {
       var message = "<ul>";
       angular.forEach(messages, function(value){
         message += "<li>" + value + "</li>";
       });
       message += "</ul>";
       $.pnotify({
-        title: title,
+        title: 'Error Summary',
         text:  message,
         type: 'error',
         hide: false

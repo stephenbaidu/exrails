@@ -11,19 +11,29 @@ var app = angular.module("app", [
 app.constant('APP', {
   root: '/',
   tplPrefix: '/tpl/',
-  apiPrefix: '/api/'
+  apiPrefix: '/api/',
+  modules: {
+    admin: { text: "Admin Center", url: "admin", dropdown: true, 
+      links: [
+        { text: "Users", url: "users", icon: "fa fa-users" },
+        { text: "Roles", url: "roles", icon: "fa fa-sort-numeric-asc" }
+      ]
+    },
+    reports:  {
+      text: "Reports", url: "reports", icon: "glyphicon glyphicon-stats",
+      links: [
+        { text: "Users",      url: "users",      icon: "fa fa-files-o" },
+        { text: "Roles",      url: "roles",      icon: "fa fa-clipboard" },
+        { text: "Role Users", url: "role_users", icon: "fa fa-clipboard" }
+      ]
+    }
+  }
 });
 
 app.config(['$urlRouterProvider', '$stateProvider', 'APP', function ($urlRouterProvider, $stateProvider, APP) {
-
-  // ********************************************
-  // Default redirects
-  // ********************************************
+  // default redirects
   $urlRouterProvider.when("/admin", "/admin/users");
 
-  // ********************************************
-  // Custom states can be added
-  // ********************************************
   $stateProvider
   .state("dashboard", {
     url: "/dashboard",

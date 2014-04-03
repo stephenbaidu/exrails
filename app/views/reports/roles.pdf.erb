@@ -1,0 +1,17 @@
+<div class="report-title"><%= @report_title %></div>
+<table width="100%" class="table table-condensed">
+  <thead>
+    <tr>
+      <th width="5%">#</th>
+      <th width="50%">Name</th>
+      <th width="45%" class="center">Users</th>
+    </tr>
+  </thead>
+<% @data.roles.each_with_index do |u, i| %>
+  <tr>
+    <td><%= i + 1 %></td>
+    <td><%= u.name %></td>
+    <td align="center"><%= u.users %></td>
+  </tr>
+<% end %>
+</table>

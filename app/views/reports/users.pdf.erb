@@ -1,0 +1,21 @@
+<div class="report-title"><%= @report_title %></div>
+<table width="100%" class="table table-condensed">
+  <thead>
+    <tr>
+      <th width="5%">#</th>
+      <th width="25%">Name</th>
+      <th width="20%">Username</th>
+      <th width="35%">Email</th>
+      <th width="15%" class="center">Roles</th>
+    </tr>
+  </thead>
+<% @data.users.each_with_index do |u, i| %>
+  <tr>
+    <td><%= i + 1 %></td>
+    <td><%= u.name %></td>
+    <td><%= u.username %></td>
+    <td><%= u.email %></td>
+    <td align="center"><%= u.role_ids.count %></td>
+  </tr>
+<% end %>
+</table>

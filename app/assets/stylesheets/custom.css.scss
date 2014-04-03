@@ -1,4 +1,47 @@
-body {
-  padding-top: 50px;
-  font-size: 14px;
+.callout-cards {
+  list-style: none;
+  padding-left: 0px;
+
+  li {
+    a {
+      text-decoration: none;
+      color: black !important;
+    }
+    a:hover {
+      .bs-callout {
+        background-color: #fff !important;
+      }
+    }
+  }
+
+  li.active {
+    .bs-callout {
+      background-color: #fff !important;
+    }
+  }
+
+  li.active:before {
+    content: "";
+    border-style: solid;
+    border-width: 10px 8px 10px 0;
+    border-color: transparent white transparent transparent;
+    position: absolute;
+    -webkit-transform: rotate(180deg);
+    border-color: transparent white transparent transparent;
+    right: 7px;
+    margin-top: 28px;
+  }
+}
+
+.status-header {
+  margin-top: -8px;
+  margin-right: 10px;
+  .wizard a {
+    padding: 7px 10px 7px 25px;
+    text-decoration: none;
+  }
+  .wizard a:before, .wizard a:after {
+    border-top: 15px inset transparent;
+    border-bottom: 16px inset transparent;
+  }
 }

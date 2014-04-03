@@ -1,8 +1,0 @@
-<div class="input-group input-group-sm select2-bootstrap-prepend">
-  <span class="input-group-addon"><%= label %></span>
-  <select ui-select2="{}" class="form-control input-sm select2" ng-model="report_id">
-    <% reports.each do |e| %>
-      <option value="<%= e[:id] %>"><%= e[:name] %></option>
-    <% end %>
-  </select>
-</div>

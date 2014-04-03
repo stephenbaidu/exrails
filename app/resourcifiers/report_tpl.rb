@@ -1,28 +1,67 @@
+class ReportData < Struct.new(:values_hash)
+  def method_missing(var)
+    values_hash[var.to_s.to_sym]
+  rescue
+    nil
+  end
+
+  def append_data_point(key, value)
+    values_hash[key.to_s.to_sym] = value
+    true
+  rescue
+    false
+  end
+end
+
 class ReportTpl
 
-  def self.pdf_options(report, options = {})
+  def self.set_report_data(controller_instance, report_id, filter_string = "")
+    # set filter
+    values_hash = {}
+    filter_string.to_s.split(',').each do |q|
+      vals = q.split(':')
+      if vals.count == 2
+        values_hash[vals.first.to_sym] = vals.last
+      end
+    end
+    @filter = ReportData.new(values_hash)
+    controller_instance.instance_variable_set '@filter', @filter
+
+    # set data
+    @data = ReportData.new({})
+    controller_instance.instance_variable_set '@data', @data
+    if report_data = self.report_data(report_id)
+      report_data.call(@filter, @data)
+    end
+  rescue Exception => e
+    BaseInterop.log(e, 'Exception')
+  end
+
+  def self.pdf_options(_directory, report_id, options = {})
     defaults = {
-      :pdf          => "#{report.dasherize}-#{Time.now.to_formatted_s(:number)}",
-      :template     => ReportTpl.template(report),
+      :pdf          => "#{report_id.classify}-#{Time.now.to_formatted_s(:number)}",
+      :template     => self.template(_directory, report_id),
       :layout       => 'layout_pdf.html',
-      :orientation  => ReportTpl.orientation(report),
-      :page_size    => ReportTpl.page_size(report),
+      :orientation  => self.orientation(report_id),
+      :page_size    => self.page_size(report_id),
       :header       => { html: { template: 'reports/layouts/header.pdf.erb' } },
       :footer       => {
         html: { template: 'reports/layouts/footer.pdf.erb' }
       },
-      :locals       => ReportTpl.locals(report)
+      :locals       => self.locals(report_id)
     }
     options.reverse_merge!(defaults)
   end
 
-  def self.template(report_id)
+  def self.template(_directory, report_id)
     _val = value(report_id, :template)
 
-    if !_val and File.exists? Rails.root.join('app', 'views', 'reports', "#{report_id}.pdf.erb")
+    if !_val and File.exists? File.join(_directory, "#{report_id}.pdf.erb")
       "reports/#{report_id}.pdf"
     elsif !_val
-      'reports/partials/_error.pdf'
+      'reports/layouts/error.pdf'
+    else
+      _val
     end
   end
 
@@ -46,6 +85,10 @@ class ReportTpl
     value(report_id, :filters) || {}
   end
 
+  def self.report_data(report_id)
+    value(report_id, :report_data) || {}
+  end
+
   def self.locals(report_id)
     value(report_id, :locals) || {}
   end
@@ -53,38 +96,31 @@ class ReportTpl
   private
     def self.config
       {
-        paye: { title: 'PAYE Report',
-          filters: {
-            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+        users: {
+          title: 'Users',
+          template: 'reports/users.pdf',
+          report_data: -> (filter, data) {
+            data.append_data_point(:users, User.all)
           }
         },
-        summary_report: {
-          filters: {
-            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+        roles: {
+          title: 'Roles',
+          template: 'reports/roles.pdf',
+          report_data: -> (filter, data) {
+            data.append_data_point(:roles, Role.all)
           }
         },
-        bank_report: { orientation: 'Landscape', page_numbers: false,
-          title: 'Bank Deposit',
+        role_users: {
+          title: 'Role Users',
+          template: 'reports/role_users.pdf',
           filters: {
-            bank_id: { lookup: Bank.all },
-            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
+            role_id: { label: 'Role', lookup: Role.all }
+          },
+          report_data: -> (filter, data) {
+            role = Role.where(id: filter.role_id).first
+            data.append_data_point(:role, role)
+            data.append_data_point(:users, User.all.select { |e| e.role_ids.include? role.id })
           }
-        },
-        ssnit_1st_tier: {
-          title: 'SSNIT Report (1st Tier)',
-          filters: {
-            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
-          }
-        },
-        ssnit_2nd_tier: {
-          title: 'SSNIT Report (2nd Tier)',
-          filters: {
-            payroll_month_id: { label: 'Payroll Period', lookup: PayrollMonth.all }
-          }
-        },
-        payslips: {
-          title_: 'Payslip',
-          filters: { id: { label: 'Select employee', lookup: Payroll.current.approved } }
         }
       }
     end

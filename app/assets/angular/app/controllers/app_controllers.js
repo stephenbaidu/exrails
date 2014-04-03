@@ -5,6 +5,7 @@ app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$stat
   window.AppController = $scope;
 
   // Global configurations
+  $.pnotify.defaults.styling = "bootstrap3";
   $.pnotify.defaults.history = false;
   $.pnotify.defaults.delay = 2000;
 }]);
@@ -150,12 +151,7 @@ app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$st
   };
 
   $scope.errorAlert = function (res, action) {
-    if(res.error.type == 'validation') {
-      ExMsgBox.errorSummary(res.error.messages, 'Validation Errors');
-    } else {
-      var msg = res.error.messages[0] || 'An error occured';
-      ExMsgBox.error(msg, 'Sorry');
-    }
+    ExMsgBox.errorSummary(res.error.messages);
   };
 
   $scope.create = function () {

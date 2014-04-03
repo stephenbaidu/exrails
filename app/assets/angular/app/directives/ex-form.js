@@ -54,8 +54,6 @@ angular.module("app").directive("exForm", ['$compile', function ($compile) {
           html += '<div class="form-group col-md-12">';
         else if(scope.noOfCols == 2)
           html += '<div class="form-group col-md-6">';
-        else if(scope.noOfCols == 4)
-          html += '<div class="form-group col-md-3">';
         else
           html += '<div class="form-group col-md-4">';
 

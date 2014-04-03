@@ -147,6 +147,10 @@ $ex-color-bar: #463265;
     cursor: not-allowed;
     background-color: #fafafa;
   }
+  
+  table thead th {
+    background-color: #E2D7F1;
+  }
 }
 
 .ex-grid {
@@ -520,17 +524,17 @@ border-color: #c2dfa9;
     }
   }
 
-  .ex-grid {
-    table thead th {
-      background-color: rgba(0,0,0,0.1);
-    }
-  }
-
   .ex-form {
     border-color: rgba(0,0,0,0.1);
     .panel-heading, .panel-footer {
       background-color: rgba(0,0,0,0.1);
       border-color: rgba(0,0,0,0.1);
+    }
+  }
+
+  .ex-grid, .ex-form {
+    table thead th {
+      background-color: rgba(0,0,0,0.1);
     }
   }
 
@@ -588,17 +592,17 @@ border-color: #c2dfa9;
     }
   }
 
-  .ex-grid {
-    table thead th {
-      background-color: #E2D7F1;
-    }
-  }
-
   .ex-form {
     border-color: #E2D7F1;
     .panel-heading, .panel-footer {
       background-color: #E2D7F1;
       border-color: #E2D7F1;
+    }
+  }
+
+  .ex-grid, .ex-form {
+    table thead th {
+      background-color: #E2D7F1;
     }
   }
 
@@ -645,67 +649,3 @@ border-color: #c2dfa9;
     }
   }
 }
-
-
-// .them-lively {
-//   background: #f0f0f0 url(/images/background.gif) repeat -70% 0;
-//   
-//   .ex-modal {
-//     .modal-header {
-//       background-color: col-header;
-//     }
-//   }
-
-//   .ex-grid {
-//     .table-bordered thead th {
-//       background-color: col-header;
-//     }
-//   }
-
-//   .ex-form {
-//     border-color: col-header;
-//     .panel-heading, .panel-footer {
-//       background-color: col-header;
-//       border-color: col-header;
-//     }
-//   }
-
-//   .ex-nav {
-//     background-color: col-navbar;
-//     border-color: col-bar;
-
-//     .navbar-nav > .active > a {
-//       background-color: col-bar !important;
-//     }
-//   }
-
-//   table thead th {
-//     background-color: col-header;
-//   }
-
-//   .sidebar-a, .sidebar-b, .sidebar-c {
-//     background-color: col-sidebar;
-//     ul {
-//       li.active a {
-//         background-color: col-header;
-//       }
-//       li.active:before {
-//         border-color: transparent col-deeper transparent transparent;
-//       }
-//     }
-//   }
-
-//   .sidebar-a {
-//     ul {
-//       li.active:before {
-//         border-color: transparent col-arrow transparent transparent;
-//       }
-//     }
-//   }
-
-//   .content-a, .content-b, .content-c {
-//     .content-header {
-//       border-bottom: 2px solid $ex-color-header;
-//     }
-//   }
-// }
