@@ -16,14 +16,19 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
   $scope.records = [];
   $scope.totalRecords = 0;
   $scope.recordsPerPage = 15;
+  $scope.queryString = '';
   $scope.currentPage = 1;
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
   $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace('-', '_') + '/:id');
 
-  $scope.queryRecords = function (page, size) {
+  $scope.queryRecords = function (page, size, query) {
     page = page || 1;
     size = size || $scope.recordsPerPage;
-    ResMgr.query($scope.model.name, { page: page, size: size })
+    if(query || query == '') {
+      $scope.queryString = query;
+    }
+    query = query || '';
+    ResMgr.query($scope.model.name, { page: page, size: size, query: $scope.queryString })
       .then(function (res) {
         $scope.totalRecords = res.data.total;
         $scope.records = res.data.rows;
@@ -76,7 +81,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
 app.controller("AppSearchController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
   function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppSearchController = $scope;
-  $scope.query = [];
+  $scope.query = '';
 
   $http.get(APP.tplPrefix + $scope.model.url + '/config')
     .success(function(res) {
@@ -90,9 +95,7 @@ app.controller("AppSearchController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$
     });
 
   $scope.search = function () {
-    ResMgr.query($scope.model.name, { query: $scope.query })
-      .then(function (res) { $scope.$parent.records = res.data.rows; })
-      .catch(function (res) {});
+    $scope.queryRecords(null, null, $scope.query);
   };
 
   $scope.close = function () {
