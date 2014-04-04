@@ -7,7 +7,7 @@ app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$stat
   // Global configurations
   $.pnotify.defaults.styling = "bootstrap3";
   $.pnotify.defaults.history = false;
-  $.pnotify.defaults.delay = 2000;
+  $.pnotify.defaults.delay   = 2000;
 }]);
 
 app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',

@@ -27,6 +27,7 @@ module Api
 
     def update
       authorize @record
+      sleep 3
 
       if @record.update(permitted_params.except!(:username))
         @response_data[:success] = true
