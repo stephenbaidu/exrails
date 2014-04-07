@@ -1,6 +1,6 @@
 class ReportData < Struct.new(:values_hash)
   def method_missing(var)
-    values_hash[var.to_s.to_sym]
+    values_hash[var.to_s.to_sym] || {}
   rescue
     nil
   end
