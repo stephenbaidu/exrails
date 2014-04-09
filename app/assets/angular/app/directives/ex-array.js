@@ -3,10 +3,8 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
     scope.ngModel = scope.ngModel || [];
     scope.columns = scope.columns || [];
     scope.title   = attrs.title || "";
-
-    scope.isViewOnly = function () {
-      return (attrs.typeView != undefined);
-    }
+    scope.typeView  = !!scope.typeView;
+    scope.typeFixed = !!scope.typeFixed;
 
     scope.bindHtml = function (val) {
       return $sce.trustAsHtml(val);
@@ -44,7 +42,7 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
       html += '<a href="" ng-hide="editorEnabled($index)" ng-click="startEdit($index)"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;';
       
       // Do not show delete button for typeFixed lists
-      if(attrs.typeFixed == undefined) {
+      if(!scope.typeFixed) {
         html += '<a href="" ng-hide="editorEnabled($index)" ng-click="removeItem($index)"><i class="glyphicon glyphicon-trash"></i></a>';
       }
       return html;
@@ -53,12 +51,12 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
     function updateView() {
       var html = '<div class="ex-array">';
       var _header = "<th class='grid-action-1'>#</th>";
-      var _body   = "<td>{{ $index + 1}}.</td>";
+      var _body   = "<td>{{ $index + 1 }}.</td>";
 
       // Add New button
-      if(attrs.typeFixed == undefined) {
+      if(!scope.typeFixed) {
         html += '<div ng-show="editorIndex == -1" class="pull-right" style="margin-top: -3px;">';
-        html += '  <a href="" ng-click="newItem()" class="btn btn-primary btn-xs" ng-hide="isViewOnly()">';
+        html += '  <a href="" ng-click="newItem()" class="btn btn-primary btn-xs" ng-hide="typeView">';
         html += '    <span class="glyphicon glyphicon-plus"></span> New';
         html += '  </a>';
         html += '</div>';
@@ -83,10 +81,10 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
         }
       });
 
-      _header += '<th class="grid-action-2" ng-hide="isViewOnly()"></th>';
+      _header += '<th class="grid-action-2" ng-hide="typeView"></th>';
 
       // Action buttons
-      _body   += '<td ng-hide="isViewOnly()">' + getButtons() + '</td>';
+      _body   += '<td ng-hide="typeView">' + getButtons() + '</td>';
 
       html += '<table style="font-size: 12px;">';
       html += '  <thead>';
@@ -110,6 +108,14 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
     });
 
     scope.$watch('columns', function () {
+      updateView();
+    });
+
+    scope.$watch('typeView', function () {
+      updateView();
+    });
+
+    scope.$watch('typeFixed', function () {
       updateView();
     });
   };
@@ -181,6 +187,8 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
       columns: "=",
       ngModel: "=",
       lookups: "=",
+      typeView: "@",
+      typeFixed: "@",
       onCreate: "=",
       onUpdate: "=",
       onDelete: "="

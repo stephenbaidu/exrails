@@ -110,6 +110,6 @@ app.config(['$httpProvider', function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
-app.config(function(cfpLoadingBarProvider) {
+app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
   cfpLoadingBarProvider.includeSpinner = false;
-});
+}]);
