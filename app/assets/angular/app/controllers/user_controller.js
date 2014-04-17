@@ -11,7 +11,7 @@ var UserController = function ($scope, ResMgr, ExMsgBox, $http, $state, $statePa
   ];
 
   var permissionCount = function (role_id) {
-    var role = $filter('getLookupById')($scope.lookups['role'], role_id)
+    var role = $filter('filterById')($scope.lookups['role'], role_id)
     return (role && _.size(role.permissions) || 0)
   }
 

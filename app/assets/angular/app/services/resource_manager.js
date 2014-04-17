@@ -30,6 +30,7 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
       if(!this.models[model]) {
         app.factory(model, ['$resource', function ($resource) {
           return $resource(api_url, params, {
+            query:  { method: 'GET', isArray: true },
             update: { method: 'PUT' }
           });
         }]);
@@ -40,42 +41,44 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
       return this.models[model];
     },
     query: function (model, data, callback) {
-      return this.get(model, data, callback);
+      var d = $q.defer(); model = this.getName(model);
+      this.models[model]["klass"].query(data, function (response, headers) {
+        response.error? d.reject(response) : d.resolve(response);
+        callback && callback(response, headers('_meta_total'));
+      }, function (response) { console.log(response) });
+      return d.promise;
     },
     get: function (model, data, callback) {
-      var d = $q.defer();
-      model = this.getName(model);
-      this.models[model]["klass"].get(data, function (res) {
-        res.success? d.resolve(res) : d.reject(res);
-        callback && callback(res);
-      });
+      var d = $q.defer(); model = this.getName(model);
+      this.models[model]["klass"].get(data, function (response, headers) {
+        response.error? d.reject(response) : d.resolve(response);
+        callback && callback(response);
+      }, function (response) { console.log(response) });
       return d.promise;
     },
     create: function (model, data, callback) {
-      var d = $q.defer();
-      model = this.getName(model);
-      new this.models[model]["klass"](data).$save(function (res) {
-        res.success? d.resolve(res) : d.reject(res);
-        callback && callback(res);
-      });
+      var d = $q.defer(); model = this.getName(model);
+      new this.models[model]["klass"](data).$save(function (response) {
+        response.error? d.reject(response) : d.resolve(response);
+        callback && callback(response);
+      }, function (response) { console.log(response) });
       return d.promise;
     },
     update: function (model, data, callback) {
-      var d = $q.defer();
-      model = this.getName(model);
-      new this.models[model]["klass"](data).$update(function (res) {
-        res.success? d.resolve(res) : d.reject(res);
-        callback && callback(res);
-      });
+      var d = $q.defer(); model = this.getName(model);
+      new this.models[model]["klass"](data).$update(function (response) {
+        console.log(response);
+        response.error? d.reject(response) : d.resolve(response);
+        callback && callback(response);
+      }, function (response) { console.log(response) });
       return d.promise;
     },
     delete: function (model, data, callback) {
-      var d = $q.defer();
-      model = this.getName(model);
-      new this.models[model]["klass"](data).$delete(function (res) {
-        res.success? d.resolve(res) : d.reject(res);
-        callback && callback(res);
-      });
+      var d = $q.defer(); model = this.getName(model);
+      new this.models[model]["klass"](data).$delete(function (response) {
+        response.error? d.reject(response) : d.resolve(response);
+        callback && callback(response);
+      }, function (response) { console.log(response) });
       return d.promise;
     }
   };

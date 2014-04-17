@@ -73,7 +73,7 @@ angular.module("app").directive("exArray", ['$compile', '$sce', function ($compi
           _body += "<td " + c.attrs + " ng-bind-html=\"bindHtml(item." + c.name + ")\"></td>";
         } else {
           if(c['lookup']) {
-            _body += '<td ' + c.attrs + ' ng-hide="editorEnabled($index)">{{ (lookup_' + c['lookup'] + ' | getLookupById:item.' + c.name + ').name' + getFilter(c) + ' }}</td>';
+            _body += '<td ' + c.attrs + ' ng-hide="editorEnabled($index)">{{ (lookup_' + c['lookup'] + ' | filterById:item.' + c.name + ').name' + getFilter(c) + ' }}</td>';
           } else {
             _body += '<td ' + c.attrs + ' ng-hide="editorEnabled($index)">{{ item.' + c.name + getFilter(c) + ' }}</td>';
           }

@@ -1,7 +1,7 @@
 module Api
   class UsersController < ApplicationController
-    resourcify
-
+    resourcify actions: [:index]
+    
     def create
       @record = _RC.new(permitted_params)
 
@@ -12,34 +12,28 @@ module Api
       authorize @record
 
       if @record.save
-        @response_data[:success] = true
-        @response_data[:data]    = @record
+        render json: @record
       else
-        @response_data[:error]   = {
-          type: 'validation',
-          errors: @record.errors.messages,
-          messages: @record.errors.full_messages
-        }
-      end
+        @error[:type]     = 'Validation'
+        @error[:errors]   = @record.errors.messages
+        @error[:messages] = @record.errors.full_messages
 
-      render json: @response_data
+        render json: @error
+      end
     end
 
     def update
       authorize @record
 
       if @record.update(permitted_params.except!(:username))
-        @response_data[:success] = true
-        @response_data[:data]    = @record
+        render json: @record
       else
-        @response_data[:error]   = {
-          type: 'validation',
-          errors: @record.errors.messages,
-          messages: @record.errors.full_messages
-        }
-      end
+        @error[:type]     = 'Validation'
+        @error[:errors]   = @record.errors.messages
+        @error[:messages] = @record.errors.full_messages
 
-      render json: @response_data
+        render json: @error
+      end
     end
   end
 end

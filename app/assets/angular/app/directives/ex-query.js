@@ -28,8 +28,18 @@ angular.module("app").directive("exQuery", ['$http', '$compile', function ($http
 
     $scope.$watch('modelList', function() {
       var filter = function(c) { return c.on == true && !!c.value }
-      var map = function(c) { return c.name + '::' + c.op + '::' + c.value + '::' + c.type; }
-      $scope.ngModel = _.chain($scope.modelList).filter(filter).map(map).value().join(';;');
+      var reduce = function(memo, c) {
+        var key = c.name + '.' + c.op;
+        if (c.type == "date" || c.type == "datetime") {
+          memo[key] = new Date(c.value).toISOString();
+        } else if (c.value instanceof Array) {
+          if(c.value.length > 0) memo[key] = c.value.join(',');
+        } else {
+          memo[key] = c.value;
+        }
+        return memo;
+      }
+      $scope.ngModel = _.chain($scope.modelList).filter(filter).reduce(reduce, {}).value();
     }, true);
 
     $scope.$watch('column_name', function () {

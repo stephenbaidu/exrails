@@ -23,14 +23,17 @@ class TplController < ActionController::Base
 
   def _config
     render json: {
-      success: true,
-      data: {
-        formColumns: @model_class.tpl.form_columns,
-        gridColumns: @model_class.tpl.grid_columns,
-        columns: @model_class.tpl.form_columns,
-        lookups: @model_class.tpl.lookups,
-        options: @model_class.tpl.options
-      }
+      formColumns: @model_class.tpl.form_columns,
+      gridColumns: @model_class.tpl.grid_columns,
+      columns: @model_class.tpl.form_columns,
+      lookups: @model_class.tpl.lookups,
+      options: @model_class.tpl.options
+    }
+  rescue
+    render json: {
+      error: true,
+      type: 'Error',
+      message: 'Sorry, an error occurred.'
     }
   end
 

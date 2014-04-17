@@ -52,7 +52,7 @@
               <td>{{ (currentPage - 1) * recordsPerPage + $index + 1 }}.</td>
               <% @model_class.tpl.grid_columns.each do |c| %>
                 <% if c[:lookup] %>
-                  <td>{{ rec.<%= c[:lookup] %>.name }}</td>
+                  <td>{{ (lookups.<%= c[:lookup] %> | filterById:rec.<%= c[:name] %>).name }}</td>
                 <% elsif ["date"].include? c[:type] %>
                   <td align="right">{{ rec.<%= c[:name] %> | date }}</td>
                 <% elsif ["time"].include? c[:type] %>

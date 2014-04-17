@@ -2,7 +2,7 @@ module Api
   class ApiController < ApplicationController
     resourcify
 
-    before_action :validate_resource_url
+    before_action :validate_resource
 
     private
       # Only allow a trusted parameter "white list" through.
@@ -15,17 +15,20 @@ module Api
         end
       end
 
-      def validate_resource_url
-        if params[:resource_url].classify.underscore.pluralize == params[:resource_url]
-          true
-        else
-          @response_data[:error]   = {
-            type: 'routing',
-            messages: ['Sorry, resource does not exist.']
-          }
-          render json: @response_data
-          false
+      def validate_resource
+        if !_RC.respond_to? 'resourcified?'
+          @error[:type]    = 'Routing'
+          @error[:message] = 'Sorry, no route exists'
+          render json: @error and return false
+        elsif _RC.name.underscore.pluralize != params[:resource_url]
+          @error[:type]    = 'Routing'
+          @error[:message] = 'Sorry, resource does not exist.'
+          render json: @error and return false
         end
+        true
+      rescue
+        render json: @error
+        false
       end
 
       def _RC

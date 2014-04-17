@@ -1,14 +1,24 @@
 GIT
   remote: git://github.com/ctran/annotate_models.git
-  revision: ed327d5a15226d0b5f78ab1d47649c0fdab66c8f
+  revision: c60fa282d74051e2fb5d41b600f919a39d9edcb4
   specs:
-    annotate (2.6.2)
+    annotate (2.6.3)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
 
 GIT
+  remote: git://github.com/stephenbaidu/resourcify.git
+  revision: 0ce988336171bd49b97c75a3f5476d8ba09f3d05
+  branch: version-01x
+  specs:
+    resourcify (0.0.3)
+      active_model_serializers (~> 0.8.1)
+      pundit (~> 0.2.2)
+      rails (~> 4.0.0)
+
+GIT
   remote: git://github.com/thoughtbot/paperclip.git
-  revision: 113198f979bc793882506114fcc3dc9f6c4e4575
+  revision: 41da3a3c4c139964a9877c77220f94200d73c87a
   specs:
     paperclip (4.1.1)
       activemodel (>= 3.0.0)
@@ -46,13 +56,12 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     angular-ui-bootstrap-rails (0.10.0)
-    angularjs-rails (1.2.14)
+    angularjs-rails (1.2.16)
     arel (4.0.2)
-    atomic (1.1.16)
     awesome_nested_set (2.1.6)
       activerecord (>= 3.0.0)
     bcrypt (3.1.7)
-    bootstrap-datepicker-rails (1.3.0.1)
+    bootstrap-datepicker-rails (1.3.0.2)
       railties (>= 3.0)
     bootstrap-sass (3.0.2.1)
       sass (~> 3.2)
@@ -64,7 +73,7 @@ GEM
       nio4r (>= 0.5.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
-    cocaine (0.5.3)
+    cocaine (0.5.4)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coffee-rails (4.0.1)
@@ -101,9 +110,9 @@ GEM
     font-awesome-rails (4.0.3.1)
       railties (>= 3.2, < 5.0)
     formatador (0.2.4)
-    guard (2.5.1)
+    guard (2.6.0)
       formatador (>= 0.2.4)
-      listen (~> 2.6)
+      listen (~> 2.7)
       lumberjack (~> 1.0)
       pry (>= 0.9.12)
       thor (>= 0.18.1)
@@ -150,7 +159,7 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pundit (0.2.2)
+    pundit (0.2.3)
       activesupport (>= 3.0.0)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -173,7 +182,7 @@ GEM
       activesupport (= 4.0.2)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.1.1)
+    rake (10.2.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.3)
       ffi (>= 0.5.0)
@@ -182,15 +191,11 @@ GEM
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
-    resourcify (0.0.3)
-      active_model_serializers (~> 0.8.1)
-      pundit (~> 0.2.2)
-      rails (~> 4.0.0)
     rspec-core (2.14.8)
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.6)
-    rspec-rails (2.14.1)
+    rspec-rails (2.14.2)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
       activesupport (>= 3.0)
@@ -198,22 +203,22 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    sass (3.2.17)
-    sass-rails (4.0.2)
+    sass (3.2.19)
+    sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
-      sprockets-rails (~> 2.0.0)
+      sprockets-rails (~> 2.0)
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
     select2-rails (3.5.4)
       thor (~> 0.14)
-    shoulda-matchers (2.5.0)
+    shoulda-matchers (2.6.0)
       activesupport (>= 3.0.0)
-    sidekiq (2.17.7)
+    sidekiq (3.0.0)
       celluloid (>= 0.15.2)
-      connection_pool (>= 1.0.0)
+      connection_pool (>= 2.0.0)
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
@@ -228,9 +233,8 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
-    thor (0.18.1)
-    thread_safe (0.3.1)
-      atomic (>= 1.1.7, < 2)
+    thor (0.19.1)
+    thread_safe (0.3.3)
     tilt (1.4.1)
     timers (1.1.0)
     treetop (1.4.15)
@@ -242,7 +246,7 @@ GEM
       json (>= 1.8.0)
     warden (1.2.3)
       rack (>= 1.0)
-    wicked_pdf (0.9.10)
+    wicked_pdf (0.10.0)
       rails
 
 PLATFORMS
@@ -273,7 +277,7 @@ DEPENDENCIES
   pundit
   rails (= 4.0.2)
   rails_12factor
-  resourcify (= 0.0.3)
+  resourcify!
   rspec-rails
   sass-rails (~> 4.0.0)
   sdoc
