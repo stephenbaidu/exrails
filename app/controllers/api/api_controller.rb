@@ -5,8 +5,7 @@ module Api
     before_action :validate_resource
 
     private
-      # Only allow a trusted parameter "white list" through.
-      def api_params
+      def permitted_params
         param_key        = _RC.name.split('::').last.singularize.underscore.to_sym
         excluded_fields  = ["id", "created_at", "updated_at", "lft", "rgt", "depth"]
         permitted_fields = (_RC.column_names - excluded_fields).map { |f| f.to_sym }

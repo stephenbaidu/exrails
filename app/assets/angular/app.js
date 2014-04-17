@@ -14,10 +14,16 @@ app.constant('APP', {
   tplPrefix: '/tpl/',
   apiPrefix: '/api/',
   modules: {
+    app: { text: 'Menu', url: 'app', icon: 'fa fa-list-ul',
+      links: [
+        { text: 'Users', url: 'users', icon: 'fa fa-users' },
+        { text: 'Roles', url: 'roles', icon: 'fa fa-list-ul' }
+      ]
+    },
     admin: { text: 'Admin Center', url: 'admin', dropdown: true, 
       links: [
         { text: 'Users', url: 'users', icon: 'fa fa-users' },
-        { text: 'Roles', url: 'roles', icon: 'fa fa-sort-numeric-asc' }
+        { text: 'Roles', url: 'roles', icon: 'fa fa-list-ul' }
       ]
     },
     reports:  {
