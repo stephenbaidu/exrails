@@ -20,7 +20,7 @@ app.constant('APP', {
         { text: 'Roles', url: 'roles', icon: 'fa fa-list-ul' }
       ]
     },
-    admin: { text: 'Admin Center', url: 'admin', dropdown: true, 
+    admin: { text: 'Admin Panel', url: 'admin', dropdown: true, 
       links: [
         { text: 'Users', url: 'users', icon: 'fa fa-users' },
         { text: 'Roles', url: 'roles', icon: 'fa fa-list-ul' }
