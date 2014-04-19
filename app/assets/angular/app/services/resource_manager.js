@@ -67,7 +67,6 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
     update: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
       new this.models[model]["klass"](data).$update(function (response) {
-        console.log(response);
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response);
       }, function (response) { console.log(response) });
