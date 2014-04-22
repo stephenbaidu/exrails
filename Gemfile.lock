@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/ctran/annotate_models.git
-  revision: c60fa282d74051e2fb5d41b600f919a39d9edcb4
-  specs:
-    annotate (2.6.3)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
-
-GIT
   remote: git://github.com/stephenbaidu/resourcify.git
   revision: 0ce988336171bd49b97c75a3f5476d8ba09f3d05
   branch: version-01x
@@ -57,6 +49,9 @@ GEM
       tzinfo (~> 0.3.37)
     angular-ui-bootstrap-rails (0.10.0)
     angularjs-rails (1.2.16)
+    annotate (2.6.1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
     arel (4.0.2)
     awesome_nested_set (2.1.6)
       activerecord (>= 3.0.0)
@@ -235,6 +230,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
+    table_print (1.5.1)
     thor (0.19.1)
     thread_safe (0.3.3)
     tilt (1.4.1)
@@ -258,7 +254,7 @@ DEPENDENCIES
   active_model_serializers
   angular-ui-bootstrap-rails
   angularjs-rails
-  annotate!
+  annotate
   awesome_nested_set
   bootstrap-datepicker-rails
   bootstrap-sass (~> 3.0.2.0)
@@ -289,5 +285,6 @@ DEPENDENCIES
   sidekiq
   sprockets (~> 2.8, <= 2.11.0)
   sqlite3
+  table_print
   uglifier (>= 1.3.0)
   wicked_pdf
