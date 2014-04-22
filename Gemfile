@@ -17,6 +17,7 @@ gem 'flat-ui-rails'
 
 gem 'devise'
 gem 'pundit'
+gem 'faker'
 gem 'paper_trail', '~> 3.0.0'
 gem 'paperclip', :git => 'git://github.com/thoughtbot/paperclip.git'
 gem 'active_model_serializers'
@@ -47,7 +48,6 @@ end
 group :development do
   gem 'annotate', :git => 'git://github.com/ctran/annotate_models.git'
   gem 'guard-livereload'
-  gem 'faker'
 end
 
 group :production do
