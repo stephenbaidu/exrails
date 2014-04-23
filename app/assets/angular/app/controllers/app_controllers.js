@@ -21,7 +21,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
   $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace('-', '_') + '/:id');
 
-  $scope.queryRecords = function (page, size, query) {
+  $scope.queryRecords = function (query, page, size) {
     query = query || {};
     query['page'] = page  || 1;
     query['size'] = size  || $scope.recordsPerPage;
@@ -94,7 +94,7 @@ app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$
     });
 
   $scope.search = function () {
-    $scope.queryRecords(null, null, $scope.query);
+    $scope.queryRecords($scope.query);
   };
 
   $scope.close = function () {
