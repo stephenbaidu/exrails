@@ -19,7 +19,7 @@ module Api
           @error[:type]    = 'Routing'
           @error[:message] = 'Sorry, no route exists'
           render json: @error and return false
-        elsif _RC.name.underscore.pluralize != params[:resource_url]
+        elsif _RC.name.split('::').last.underscore.pluralize != params[:resource_url]
           @error[:type]    = 'Routing'
           @error[:message] = 'Sorry, resource does not exist.'
           render json: @error and return false

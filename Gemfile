@@ -20,7 +20,7 @@ gem 'faker'
 gem 'paper_trail', '~> 3.0.0'
 gem 'paperclip', '~> 4.1'
 gem 'active_model_serializers'
-gem 'resourcify', '~> 0.1.0'
+gem 'resourcify', '~> 0.1.1'
 
 gem 'wicked_pdf'
 gem 'awesome_nested_set'
