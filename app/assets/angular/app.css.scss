@@ -10,6 +10,10 @@ body {
   font-size: 14px;
 }
 
+.btn:focus {
+  outline: none;
+}
+
 // Color variables
 $ex-color-navbar: #563D7C;
 $ex-color-header: #E2D7F1;
