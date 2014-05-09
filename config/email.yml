@@ -1,0 +1,15 @@
+development:
+  :address: smtp.gmail.com
+  :port: 587
+  :authentication: plain
+  :user_name: my_email@gmail.com
+  :password: my_password
+  :enable_starttls_auto: true
+production:
+  :address: smtp.sendgrid.net
+  :port: 587
+  :authentication: plain
+  :user_name: appXXXXXXX@heroku.com
+  :password: *******
+  :domain: myapp.herokuapp.com
+  :enable_starttls_auto: true
