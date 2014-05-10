@@ -104,16 +104,16 @@ class ReportTpl
         users: {
           title: 'Users',
           template: 'reports/users.pdf',
-          report_data: -> (filter, data) {
+          report_data: lambda do |filter, data|
             data.append_data_point(:users, User.all)
-          }
+          end
         },
         roles: {
           title: 'Roles',
           template: 'reports/roles.pdf',
-          report_data: -> (filter, data) {
+          report_data: lambda do |filter, data|
             data.append_data_point(:roles, Role.all)
-          }
+          end
         },
         role_users: {
           title: 'Role Users',
@@ -121,11 +121,11 @@ class ReportTpl
           filters: {
             role_id: { label: 'Role', lookup: Role.all }
           },
-          report_data: -> (filter, data) {
+          report_data: lambda do |filter, data|
             role = Role.where(id: filter.role_id).first
             data.append_data_point(:role, role)
             data.append_data_point(:users, User.all.select { |e| e.role_ids.include? role.id })
-          }
+          end
         }
       }
     end
