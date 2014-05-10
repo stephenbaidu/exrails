@@ -11,33 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140416001220) do
-
-  create_table "member_statuses", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "member_types", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "members", force: true do |t|
-    t.string   "surname"
-    t.string   "othernames"
-    t.date     "date_of_birth"
-    t.integer  "age"
-    t.integer  "member_type_id"
-    t.integer  "member_status_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "members", ["member_status_id"], name: "index_members_on_member_status_id"
-  add_index "members", ["member_type_id"], name: "index_members_on_member_type_id"
+ActiveRecord::Schema.define(version: 20140109145327) do
 
   create_table "permissions", force: true do |t|
     t.string   "name"
