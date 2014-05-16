@@ -3,6 +3,9 @@
 
 .flat-ui {
   @import "flat-ui";
+  input[type="password"] {
+    padding-top: 5px;
+  }
 }
 
 body {
