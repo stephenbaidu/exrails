@@ -15,7 +15,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
   window.AppIndexController = $scope;
   $scope.records = [];
   $scope.totalRecords = 0;
-  $scope.recordsPerPage = 15;
+  $scope.recordsPerPage = 20;
   $scope.queryString = '';
   $scope.currentPage = 1;
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
