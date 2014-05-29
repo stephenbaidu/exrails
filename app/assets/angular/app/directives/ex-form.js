@@ -2,16 +2,15 @@ angular.module("app").directive("exForm", ['$compile', function ($compile) {
   var linkFn = function (scope, element, attrs, ctrl) {
     scope.columns = scope.columns || [];
     scope.noOfCols  = (attrs['noOfCols'] || 3);
-    // scope.exType  = (attrs['exType'] || '');
 
     var tpls = {
       lookup:          '<div style="width: <%= width %>" class="input-group input-group-sm select2-bootstrap-prepend"><span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span><select <%= attributes %> ui-select2="{allowClear_: true}" ng-disabled="<%= disabled %>" class="form-control input-sm select2" id="record_<%= name %>" ng-model="ngModel.<%= name %>"><option></option><option ng-repeat="l in lookup_<%= lookup %>" value="{{ l.id }}"> {{ l.name }} </option></select></div>',
       lookup_text:     '<div style="width: <%= width %>" class="input-group input-group-sm select2-bootstrap-prepend"><span class="input-group-addon"><span class="glyphicon glyphicon-th-list"></span></span><select <%= attributes %> ui-select2="{allowClear_: true}" ng-disabled="<%= disabled %>" class="form-control input-sm select2" id="record_<%= name %>" ng-model="ngModel.<%= name %>"><option></option><option ng-repeat="l in lookup_<%= lookup %>" value="{{ l.name }}"> {{ l.name }} </option></select></div>',
       bs_switch:       '<br> <bs-switch switch-type="checkbox" switch-size="" switch-animate="true" switch-icon="check" switch-on-label="Yes" switch-off-label="No" switch-on="default" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/>',
       number_input:    '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-plus-sign"></span></span><input type="text" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
-      date_picker:     '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text"datepicker-popup="dd-MMMM-yyyy" ng-disabled="<%= disabled %>" class="form-control"show-weeks="false"datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      date_picker:     '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text" ng-click="datepicker_clicked($event)" is-open="datepicker_opened[\'record_<%= name %>\']" datepicker-popup="dd-MMM-yyyy" ng-disabled="<%= disabled %>" class="form-control"show-weeks="false" datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
       time_picker:     '<div style="width: <%= width %>" class="input-group input-group-sm bootstrap-timepicker"><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span><div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;"><div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)"><timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker></div></div><input type="text" mo-format="hh : mm a" ng-disabled="<%= disabled %>" class="form-control dropdown-toggle" data-toggle="dropdown" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
-      datetime_picker: '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text" style="width: 50%" datepicker-popup="dd-MMMM-yyyy" ng-disabled="<%= disabled %>" class="form-control"show-weeks="false"datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/><div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;"><div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)"><timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker></div></div><input type="text" mo-format="hh : mm a" style="width: 35%" ng-disabled="<%= disabled %>" class="form-control dropdown-toggle" data-toggle="dropdown" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
+      datetime_picker: '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><input type="text" ng-click="datepicker_clicked($event)" is-open="datepicker_opened[\'record_<%= name %>\']" style="width: 50%" datepicker-popup="dd-MMM-yyyy" ng-disabled="<%= disabled %>" class="form-control" show-weeks="false" datepicker-append-to-body="true" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/><div class="dropdown-menu pull-right" style="padding: 0px 8px 0px 8px;"><div ng-model="ngModel.<%= name %>" style="display:inline-block;" ng-click="timepicker_clicked($event)"><timepicker hour-step="1" minute-step="15" show-meridian="true"></timepicker></div></div><input type="text" mo-format="hh : mm a" style="width: 35%" ng-disabled="<%= disabled %>" class="form-control dropdown-toggle" data-toggle="dropdown" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
       password_input:  '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-unchecked"></span></span><input type="password" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>',
       text_input:      '<div style="width: <%= width %>" class="input-group input-group-sm"><span class="input-group-addon"><span class="glyphicon glyphicon-unchecked"></span></span><input type="text" ng-disabled="<%= disabled %>" class="form-control" id="record_<%= name %>" ng-model="ngModel.<%= name %>"/></div>'
     }
@@ -98,6 +97,13 @@ angular.module("app").directive("exForm", ['$compile', function ($compile) {
   };
 
   var controllerFn = ['$scope', '$element', function($scope, $element) {
+    $scope.datepicker_opened = {}
+
+    $scope.datepicker_clicked = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $scope.datepicker_opened[e.target.id] = true
+    }
 
     $scope.timepicker_clicked = function(e) {
       e.preventDefault();

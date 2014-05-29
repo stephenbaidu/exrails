@@ -20,14 +20,16 @@
 //= require angular-resource
 
 //Libraries
-//= require select2
+//= require_tree ../angular/libs/underscore
+//= require_tree ../angular/libs/inflection
+//= require_tree ../angular/libs/select2
+//= require_tree ../angular/libs/moment
 //= require bootstrap
-//= require bootstrap-datepicker
-//= require angular-ui-bootstrap-tpls
+//= require_tree ../angular/libs/bootstrap-datepicker
 //= require_tree ../angular/libs
 
 //Angular App
-//= require ../angular/app.js
+//= require ./app.js
 //= require_tree ../angular/app
 
 //= require_tree .

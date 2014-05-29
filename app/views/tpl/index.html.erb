@@ -19,7 +19,7 @@
   <ui-view></ui-view>
   <div class="ex-grid" ng-show-="$state.current.name == 'app.index'">
     <div ng-show="totalRecords > 5">
-      <pagination total-items="totalRecords" items-per-page="recordsPerPage" page="currentPage" max-size="5" class="pagination-sm pull-right" boundary-links="true" rotate="false" num-pages="numPages" on-select-page="queryRecords(page)" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
+      <pagination total-items="totalRecords" items-per-page="recordsPerPage" ng-model="currentPage" max-size="5" class="pagination-sm pull-right" boundary-links="true" rotate="false" num-pages="numPages" ng-change="queryRecords()" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
       </pagination>
       <div class="col-md-2 pull-right- input-group input-group-sm select2-bootstrap-prepend" style="padding-left: 0px;">
         <span class="input-group-addon">
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div>
-      <pager total-items="totalRecords" items-per-page="recordsPerPage" page="currentPage" class="" on-select-page="queryRecords(page)"></pager>
+      <pager total-items="totalRecords" items-per-page="recordsPerPage" ng-model="currentPage" class="" ng-change="queryRecords()"></pager>
     </div>
   </div>
 </div>

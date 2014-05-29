@@ -1,29 +1,29 @@
 var app = angular.module("app");
 
-app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$state', '$stateParams',
-  function ($scope, APP, $rootScope, ResMgr, $state, $stateParams) {
+app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$state', '$stateParams', function ($scope, APP, $rootScope, ResMgr, $state, $stateParams) {
   window.AppController = $scope;
 
-  // Global configurations
+  // PNotify global configurations
   $.pnotify.defaults.styling = "bootstrap3";
   $.pnotify.defaults.history = false;
   $.pnotify.defaults.delay   = 2000;
 }]);
 
-app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
-  function ($scope, APP, $q, ResMgr, ExMsgBox, $state, $stateParams, $http) {
+app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http', function ($scope, APP, $q, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppIndexController = $scope;
   $scope.records = [];
   $scope.totalRecords = 0;
   $scope.recordsPerPage = 20;
-  $scope.queryString = '';
+  $scope.searchQuery = null;
   $scope.currentPage = 1;
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
   $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace('-', '_') + '/:id');
 
   $scope.queryRecords = function (page, size, query) {
-    query = query || {};
-    query['page'] = page  || 1;
+    if(! query) {
+      query = $scope.searchQuery || {};
+    }
+    query['page'] = page  || $scope.currentPage;
     query['size'] = size  || $scope.recordsPerPage;
     ResMgr.query($scope.model.name, query, function(data, totalRecords) {
         $scope.totalRecords = totalRecords;
@@ -36,6 +36,10 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
         $scope.error(error);
       });
   };
+
+  $scope.setSearchQuery = function (q) {
+    $scope.searchQuery = q;
+  }
 
   $scope.$watch('recordsPerPage', function() {
     $scope.queryRecords();
@@ -79,8 +83,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
 }]);
 
 
-app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$http',
-  function ($scope, APP, ExMsgBox, $state, $http) {
+app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$http', function ($scope, APP, ExMsgBox, $state, $http) {
   window.AppSearchController = $scope;
   $scope.query = {};
 
@@ -94,18 +97,19 @@ app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$
     });
 
   $scope.search = function () {
-    $scope.queryRecords($scope.query);
+    $scope.setSearchQuery($scope.query);
+    $scope.queryRecords();
   };
 
-  $scope.close = function () {
-    $scope.record = {};
+  $scope.cancel = function () {
+    $scope.setSearchQuery(null);
     $state.go('^');
+    $scope.queryRecords(1);
   };
 }]);
 
 
-app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http',
-  function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
+app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http', function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppFormController = $scope;
   $scope.record = {};
 

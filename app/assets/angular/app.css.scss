@@ -13,10 +13,6 @@ body {
   font-size: 14px;
 }
 
-.btn:focus {
-  outline: none;
-}
-
 // Color variables
 $ex-color-navbar: #563D7C;
 $ex-color-header: #E2D7F1;
@@ -78,6 +74,10 @@ $ex-color-bar: #463265;
 
 .dropdown-menu > li > a {
   padding: 3px 15px;
+}
+
+.form-control {
+  padding: 6px 10px;
 }
 
 .login-box-margin {

@@ -9,4 +9,8 @@ angular.module("app").controller("MainController", ['$rootScope', 'APP', '$state
   $rootScope.hasUrl = function(url) {
     return window.location.hash.indexOf(url) == 0;
   }
+
+  $rootScope.setCurrentUser = function(currentUser) {
+    $rootScope.currentUser = currentUser;
+  }
 }]);

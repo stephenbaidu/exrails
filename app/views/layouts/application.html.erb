@@ -7,8 +7,7 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
-<body ng-app="app" ng-controller="MainController" class="theme-ashly">
-  <!-- <div class="flat-ui"> -->
+<body ng-app="app" ng-controller="MainController" ng-init='setCurrentUser(<%= raw current_user.to_json %>)' class="theme-ashly">
   <div class="navbar navbar-inverse navbar-fixed-top ex-nav" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -26,7 +25,6 @@
       <%= yield :top_navigation %>
     </div>
   </div>
-  <!-- </div> -->
   <div id="page" class="container">
     <%= yield %>
   </div>

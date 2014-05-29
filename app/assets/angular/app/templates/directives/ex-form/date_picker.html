@@ -2,8 +2,8 @@
   <span class="input-group-addon">
     <span class="glyphicon glyphicon-calendar"></span>
   </span>
-  <input type="text"
-    datepicker-popup="dd-MMMM-yyyy"
+  <input type="text" ng-click="datepicker_clicked($event)" is-open="datepicker_opened['record_<%= name %>']"
+    datepicker-popup="dd-MMM-yyyy"
     class="form-control"
     show-weeks="false"
     datepicker-append-to-body="true"
