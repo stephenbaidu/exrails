@@ -12,8 +12,8 @@
  *
  * Libraries
  *= require select2
- *= require_tree ../angular/libs/bootstrap-datepicker
  * require bootstrap-datepicker
+ *= require_tree ../angular/libs/bootstrap-datepicker
  
  *= require_tree ../angular
  *
