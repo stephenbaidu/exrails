@@ -22,9 +22,11 @@
 //Libraries
 //= require_tree ../angular/libs/underscore
 //= require_tree ../angular/libs/inflection
-//= require_tree ../angular/libs/select2
 //= require_tree ../angular/libs/moment
+//= require select2
 //= require bootstrap
+// require bootstrap-datepicker
+// require angular-ui-bootstrap-tpls
 //= require_tree ../angular/libs/bootstrap-datepicker
 //= require_tree ../angular/libs
 

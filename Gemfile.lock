@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/collectiveidea/awesome_nested_set.git
+  revision: 9bdb148aef987111bfffcdf24f004f5ddd9f0441
+  specs:
+    awesome_nested_set (3.0.0.rc.5)
+      activerecord (>= 4.0.0, < 5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -34,8 +41,6 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
-    awesome_nested_set (2.1.6)
-      activerecord (>= 3.0.0)
     bcrypt (3.1.7)
     bootstrap-sass (3.0.2.1)
       sass (~> 3.2)
@@ -193,6 +198,8 @@ GEM
     sdoc (0.4.0)
       json (~> 1.8)
       rdoc (~> 4.0, < 5.0)
+    select2-rails (3.5.7)
+      thor (~> 0.14)
     shoulda-matchers (2.6.1)
       activesupport (>= 3.0.0)
     sidekiq (3.1.2)
@@ -237,7 +244,7 @@ DEPENDENCIES
   active_model_serializers
   angularjs-rails
   annotate
-  awesome_nested_set
+  awesome_nested_set!
   bootstrap-sass (~> 3.0.2.0)
   coffee-rails (~> 4.0.0)
   database_cleaner
@@ -261,6 +268,7 @@ DEPENDENCIES
   rspec-rails
   sass-rails (~> 4.0.0)
   sdoc
+  select2-rails
   shoulda-matchers
   sidekiq
   sprockets (~> 2.8, <= 2.11.0)

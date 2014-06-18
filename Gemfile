@@ -12,7 +12,7 @@ gem 'bootstrap-sass', '~> 3.0.2.0'
 gem 'angularjs-rails'
 gem 'font-awesome-rails'
 gem 'flat-ui-rails'
-# gem 'select2-rails'
+gem 'select2-rails'
 # gem 'bootstrap-datepicker-rails'
 # gem 'angular-ui-bootstrap-rails'
 
@@ -25,7 +25,7 @@ gem 'active_model_serializers'
 gem 'resourcify', '~> 0.1.1'
 
 gem 'wicked_pdf'
-gem 'awesome_nested_set'
+gem 'awesome_nested_set', :git => 'https://github.com/collectiveidea/awesome_nested_set.git'
 gem 'sidekiq'
 gem 'devise-async'
 
