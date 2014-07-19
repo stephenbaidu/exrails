@@ -1,6 +1,6 @@
-var app = angular.module("app");
+var app = angular.module('exrails.resourceManager', []);
 
-app.service("ResMgr", ['$q', '$http', function ($q, $http) {
+app.service('ResMgr', ['$q', '$http', '$resource', function ($q, $http, $resource) {
   return {
     models: {},
     getName: function(model) {
@@ -23,26 +23,27 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
       if(!config.displays) config.displays = config.url.titleize();
       return config;
     },
-    register: function (model, api_url, params, config) {
+    register: function (model, apiUrl, params, config) {
       model = this.getName(model);
       params = params || {id: '@id'};
       config = config || {};
       if(!this.models[model]) {
-        app.factory(model, ['$resource', function ($resource) {
-          return $resource(api_url, params, {
-            query:  { method: 'GET', isArray: true },
-            update: { method: 'PUT' }
-          });
-        }]);
+        var klass = $resource(apiUrl, params, {
+          query:  { method: 'GET', isArray: true },
+          update: { method: 'PUT' }
+        });
+        app.factory(model, function () {
+          return klass;
+        });
         this.models[model] = this.getModel(model, config);
-        this.models[model]["api_url"] = api_url;
-        this.models[model]["klass"] = angular.injector(['ng', 'app']).get(model);
+        this.models[model]['apiUrl'] = apiUrl;
+        this.models[model]['klass'] = klass;
       }
       return this.models[model];
     },
     query: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
-      this.models[model]["klass"].query(data, function (response, headers) {
+      this.models[model]['klass'].query(data, function (response, headers) {
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response, headers('_meta_total'));
       }, function (response) { console.log(response) });
@@ -50,7 +51,7 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
     },
     get: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
-      this.models[model]["klass"].get(data, function (response, headers) {
+      this.models[model]['klass'].get(data, function (response, headers) {
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response);
       }, function (response) { console.log(response) });
@@ -58,7 +59,7 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
     },
     create: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
-      new this.models[model]["klass"](data).$save(function (response) {
+      new this.models[model]['klass'](data).$save(function (response) {
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response);
       }, function (response) { console.log(response) });
@@ -66,7 +67,7 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
     },
     update: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
-      new this.models[model]["klass"](data).$update(function (response) {
+      new this.models[model]['klass'](data).$update(function (response) {
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response);
       }, function (response) { console.log(response) });
@@ -74,7 +75,7 @@ app.service("ResMgr", ['$q', '$http', function ($q, $http) {
     },
     delete: function (model, data, callback) {
       var d = $q.defer(); model = this.getName(model);
-      new this.models[model]["klass"](data).$delete(function (response) {
+      new this.models[model]['klass'](data).$delete(function (response) {
         response.error? d.reject(response) : d.resolve(response);
         callback && callback(response);
       }, function (response) { console.log(response) });

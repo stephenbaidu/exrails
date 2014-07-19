@@ -6,6 +6,7 @@ var app = angular.module('app', [
   'ui.bootstrap',
   'ui.select2',
   'ui.layout',
+  'exrails.resourceManager',
   'chieffancypants.loadingBar'
 ]);
 
