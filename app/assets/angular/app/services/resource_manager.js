@@ -4,7 +4,7 @@ app.service('ResMgr', ['$q', '$http', '$resource', function ($q, $http, $resourc
   return {
     models: {},
     getName: function(model) {
-      model = model.replace('-', '_');
+      model = model.replace(/-/gi, '_');
       model = model.underscore().split('_');
       model = model.slice(0, model.length - 1).join('_').camelize() + model[model.length - 1].classify();
       return model;
