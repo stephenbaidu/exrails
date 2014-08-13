@@ -17,7 +17,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
   $scope.searchQuery = null;
   $scope.currentPage = 1;
   $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
-  $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace('-', '_') + '/:id');
+  $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace(/-/gi, '_') + '/:id');
 
   $scope.queryRecords = function (page, size, query) {
     if(! query) {
