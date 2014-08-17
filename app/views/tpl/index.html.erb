@@ -34,10 +34,16 @@
           </option>
         </select>
       </div>
+      <div class="col-md-3 input-group input-group-sm">
+        <input type="text" class="form-control input-sm select2" ng-model="filterText"/>
+        <span class="input-group-addon">
+          <span class="fa fa-search"></span>
+        </span>
+      </div>
     </div>
     <div class="row">
       <panel ng-class="{ 'col-lg-9 col-md-9 left-box': search_on, 'col-lg-12 col-md-12': !search_on }">
-        <table class="table table-bordered table-striped table-hover table-condensed">
+        <table class="table table-bordered table-striped table-hover table-condensed-">
           <thead>
             <tr>
               <th class='grid-action-1'></th>
@@ -48,7 +54,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="rec in records">
+            <tr ng-repeat="rec in records | filter:filterText">
               <td>{{ (currentPage - 1) * recordsPerPage + $index + 1 }}.</td>
               <% @model_class.tpl.grid_columns.each do |c| %>
                 <% if c[:lookup] %>
