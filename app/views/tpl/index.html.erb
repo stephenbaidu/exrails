@@ -18,27 +18,40 @@
 <div class="view-container">
   <ui-view></ui-view>
   <div class="ex-grid" ng-show-="$state.current.name == 'app.index'">
-    <div ng-show="totalRecords > 5">
-      <pagination total-items="totalRecords" items-per-page="recordsPerPage" ng-model="currentPage" max-size="5" class="pagination-sm pull-right" boundary-links="true" rotate="false" num-pages="numPages" ng-change="queryRecords()" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
-      </pagination>
-      <div class="col-md-2 pull-right- input-group input-group-sm select2-bootstrap-prepend" style="padding-left: 0px;">
-        <span class="input-group-addon">
-          Records per page:
-        </span>
-        <select ui-select2="{width: '100%'}"
-          class="form-control input-sm select2"
-          id="recordsPerPage"
-          ng-model="recordsPerPage">
-          <option ng-repeat="l in pageSizes" value="{{ l }}">
-            {{ l }}
-          </option>
-        </select>
+    <div class="row" ng-show="totalRecords > 5">
+      <div class="col-md-2">
+        <div class="input-group input-group-sm select2-bootstrap-prepend">
+          <span class="input-group-addon">
+            Records per page:
+          </span>
+          <select ui-select2="{width: '95%'}"
+            class="form-control input-sm select2"
+            id="recordsPerPage"
+            ng-model="recordsPerPage">
+            <option ng-repeat="l in pageSizes" value="{{ l }}">
+              {{ l }}
+            </option>
+          </select>
+        </div>
       </div>
-      <div class="col-md-3 input-group input-group-sm">
-        <input type="text" class="form-control input-sm select2" ng-model="filterText"/>
-        <span class="input-group-addon">
-          <span class="fa fa-search"></span>
-        </span>
+      <div class="col-md-3">
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control input-sm select2" ng-model="filterText"/>
+          <span class="input-group-addon">
+            <span class="fa fa-search"></span>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-offset-3 col-md-4">
+        <pagination total-items="totalRecords"
+          items-per-page="recordsPerPage"
+          ng-model="currentPage" max-size="5"
+          class="pagination-sm pull-right"
+          boundary-links="true" rotate="false"
+          num-pages="numPages" ng-change="queryRecords()"
+          previous-text="&lsaquo;" next-text="&rsaquo;"
+          first-text="&laquo;" last-text="&raquo;">
+        </pagination>
       </div>
     </div>
     <div class="row">
