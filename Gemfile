@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# ruby '2.0.0'
+# ruby '2.1.2'
 gem 'rails', '4.1.1'
 
 gem 'sqlite3'
@@ -8,16 +8,13 @@ gem 'pg'
 
 gem 'jquery-rails'
 gem 'haml-rails', '~> 0.4'
-gem 'sprockets', '~> 2.8', '<= 2.11.0'
-gem 'bootstrap-sass', '~> 3.0.2.0'
-
-# To be pulled into lib directory with grunt 
+gem 'sprockets', '2.11.0'
+gem 'sass-rails', '~> 4.0.0'
+gem 'bootstrap-sass', '~> 3.2.0'
 gem 'angularjs-rails'
 gem 'font-awesome-rails'
 gem 'flat-ui-rails'
 gem 'select2-rails'
-# gem 'bootstrap-datepicker-rails'
-# gem 'angular-ui-bootstrap-rails'
 
 gem 'devise'
 gem 'pundit'
@@ -25,21 +22,21 @@ gem 'faker'
 gem 'paper_trail', '~> 3.0.0'
 gem 'paperclip', '~> 4.1'
 gem 'active_model_serializers'
-gem 'resourcify', '~> 0.1.1'
+gem 'resourcify', :git => 'https://github.com/stephenbaidu/resourcify.git'
+gem 'rb-readline'
 
 gem 'wicked_pdf'
-gem 'awesome_nested_set', :git => 'https://github.com/collectiveidea/awesome_nested_set.git'
+gem 'awesome_nested_set'
 gem 'sidekiq'
 gem 'devise-async'
 
 group :assets do
-  gem 'sass-rails', '~> 4.0.0'
   gem 'coffee-rails', '~> 4.0.0'
   gem 'uglifier', '>= 1.3.0'
 end
 
 group :development, :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0.0'
   gem 'factory_girl_rails'
 end
 

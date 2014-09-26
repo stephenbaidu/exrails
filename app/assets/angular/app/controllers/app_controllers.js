@@ -1,7 +1,7 @@
 var app = angular.module("app");
 
 app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$state', '$stateParams', function ($scope, APP, $rootScope, ResMgr, $state, $stateParams) {
-  window.AppController = $scope;
+  window.AppCtrl = $scope;
 
   // PNotify global configurations
   $.pnotify.defaults.styling = "bootstrap3";
@@ -10,13 +10,13 @@ app.controller("AppController", ['$scope', 'APP', '$rootScope', 'ResMgr', '$stat
 }]);
 
 app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http', function ($scope, APP, $q, ResMgr, ExMsgBox, $state, $stateParams, $http) {
-  window.AppIndexController = $scope;
+  window.AppIndexCtrl = $scope;
   $scope.records = [];
   $scope.totalRecords = 0;
-  $scope.recordsPerPage = 20;
+  $scope.recordsPerPage = 25;
   $scope.searchQuery = null;
   $scope.currentPage = 1;
-  $scope.pageSizes = [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000];
+  $scope.pageSizes = [5, 10, 15, 20, 24, 25, 30, 50, 100, 500, 1000];
   $scope.model = ResMgr.register($stateParams.url, APP.apiPrefix + $stateParams.url.replace(/-/gi, '_') + '/:id');
 
   $scope.queryRecords = function (page, size, query) {
@@ -84,7 +84,7 @@ app.controller("AppIndexController", ['$scope', 'APP', '$q', 'ResMgr', 'ExMsgBox
 
 
 app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$http', function ($scope, APP, ExMsgBox, $state, $http) {
-  window.AppSearchController = $scope;
+  window.AppSearchCtrl = $scope;
   $scope.query = {};
 
   $http.get(APP.tplPrefix + $scope.model.url + '/config')
@@ -110,7 +110,7 @@ app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$
 
 
 app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http', function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
-  window.AppFormController = $scope;
+  window.AppFormCtrl = $scope;
   $scope.record = {};
 
   $scope.loadConfig = function () {

@@ -87,7 +87,7 @@ angular.module("app").directive("exForm", ['$compile', function ($compile) {
 
       html += '</form>';
 
-      element.html(html);
+      element.html(html); window.exFormHtml = html;
       $compile(element.contents())(scope);
     }
 

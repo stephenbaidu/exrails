@@ -54,7 +54,7 @@ class TplController < ActionController::Base
       @namespace_prefix = ''
 
       # Module name
-      @app   = params[:app]
+      @app   = params[:app] || 'app'
 
       # Model url, like underscored plural of model name
       @model = params[:model]
