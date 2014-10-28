@@ -111,6 +111,7 @@ app.controller("AppSearchController", ['$scope', 'APP', 'ExMsgBox', '$state', '$
 
 app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$state', '$stateParams', '$http', function ($scope, APP, ResMgr, ExMsgBox, $state, $stateParams, $http) {
   window.AppFormCtrl = $scope;
+  window.stateParams = $stateParams;
   $scope.record = {};
 
   $scope.loadConfig = function () {
@@ -123,6 +124,7 @@ app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$st
         _.each(data.options, function(v, k) {
           $scope['options_' + k] = _.clone(v);
         });
+        $scope.setRecord();
       })
       .error(function(data, status, headers, config) {
         ExMsgBox.error('error');
@@ -137,6 +139,14 @@ app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$st
         .catch(function (error) {
           $scope.error(error);
         });
+    }
+  };
+
+  $scope.setRecord = function () {
+    if (!$scope.record.id && $stateParams.q) {
+      _.each($scope.splitQ($stateParams.q), function (v, k) {
+        $scope.record[k] = v;
+      });
     }
   };
 
@@ -157,6 +167,7 @@ app.controller("AppFormController", ['$scope', 'APP', 'ResMgr', 'ExMsgBox', '$st
     ResMgr.create($scope.model.name, data)
       .then(function (data) {
         ExMsgBox.success($scope.model.display + ' created successfully');
+        $scope.record.id = data.id;
         $scope.redirectBack();
       })
       .catch(function (error) {

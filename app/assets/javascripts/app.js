@@ -44,25 +44,25 @@ app.config(['$urlRouterProvider', '$stateProvider', 'APP', function ($urlRouterP
 
   $stateProvider
   .state('dashboard', {
-    url: '/dashboard',
+    url: '/dashboard?q',
     template : '---'
   })
   .state('reports', {
-    url: '/reports',
+    url: '/reports?q',
     templateUrl: function (stateParams) {
       return APP.root + 'app/reports';
     },
     controller: 'ReportsController'
   })
   .state('reports.report', {
-    url: '/:report{id:(?:/[^/]+)?}?q',
+    url: '/:report{id:(?:/[^/]+)?}',
     templateUrl: function (stateParams) {
       return APP.root + 'reports/' + stateParams.report
     },
     controller: 'ReportsController'
   })
   .state('app', {
-    url: '/:app',
+    url: '/:app?q',
     templateUrl: function (stateParams) {
       return APP.root + 'app/' + stateParams.app;
     },
@@ -104,7 +104,7 @@ app.config(['$urlRouterProvider', '$stateProvider', 'APP', function ($urlRouterP
     controller: 'AppFormController'
   })
   .state('app.view', {
-    url: '/:url/:view?q',
+    url: '/:url/:view',
     templateUrl: function (stateParams) {
       return APP.tplPrefix + stateParams.url + '/' + stateParams.view + '?app=' + stateParams.app;
     }
