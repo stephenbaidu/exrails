@@ -1,0 +1,12 @@
+class CreateSamples < ActiveRecord::Migration
+  def change
+    create_table :samples do |t|
+      t.string :name
+      t.string :description
+      t.date :sample_date
+      t.references :sample_status, index: true, foreign_key: true
+
+      t.timestamps null: false
+    end
+  end
+end

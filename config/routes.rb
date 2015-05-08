@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
     resources :users
     resources :roles
+    resources :samples
+    resources :sample_statuses
 
     get "config/:model"  => 'config#show'
     get "lookups/:model" => 'config#lookups'

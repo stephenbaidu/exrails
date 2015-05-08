@@ -35,17 +35,19 @@ app.constant('APP', {
     module1: {
       text: 'Main Menu', url: 'app', icon: 'fa fa-home fa-lg',
       links: [
-        { text: 'Sample', url: 'samples', icon: 'glyphicon glyphicon-user' }
+        { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user' }
       ]
     },
     reports:  {
       text: 'Reports', url: 'reports', icon: 'glyphicon glyphicon-stats',
       links: [
+        { text: 'Samples', url: 'samples', icon: 'fa fa-clipboard' }
       ]
     },
     setups: {
       text: 'Setups', url: 'setups', icon: 'fa fa-cogs fa-lg',
       links: [
+        { text: 'Sample Status', url: 'sample-statuses', icon: 'fa fa-tags' }
       ]
     }
   }
@@ -55,8 +57,8 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
   $urlRouterProvider.when('/app', '/app/dashboard'); // Default route
   $urlRouterProvider.when('/app/module1', '/app/module1/samples');
-  $urlRouterProvider.when('/app/reports', '/app/reports/payslips');
-  $urlRouterProvider.when('/app/setups', '/app/setups/person-statuses');
+  $urlRouterProvider.when('/app/reports', '/app/reports/samples');
+  $urlRouterProvider.when('/app/setups', '/app/setups/sample-statuses');
   $stateProvider
     .state('login', {
       url: '/',
