@@ -26,8 +26,6 @@
 #  image                  :string
 #  email                  :string
 #  tokens                 :text
-#  tenant_id              :integer
-#  tenant_ids             :string           default("--- []\n")
 #  role_ids               :string           default([])
 #  created_at             :datetime
 #  updated_at             :datetime
@@ -37,7 +35,6 @@
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#  index_users_on_tenant_id             (tenant_id)
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
@@ -52,8 +49,6 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
-
-  belongs_to :tenant
 
   def admin?
     roles.map(&:name).include? "Admin"

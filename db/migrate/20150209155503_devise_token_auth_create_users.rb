@@ -42,10 +42,6 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration
       ## Tokens
       t.text :tokens
 
-      ## Tenant
-      t.references :tenant # Default tenant
-      t.string :tenant_ids, default: [].to_yaml
-
       ## Roles
       t.string :role_ids, default: [].to_yaml
 
@@ -57,6 +53,5 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration
     add_index :users, :reset_password_token, :unique => true
     add_index :users, :confirmation_token,   :unique => true
     add_index :users, :unlock_token,         :unique => true
-    add_index :users, :tenant_id
   end
 end

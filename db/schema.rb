@@ -70,8 +70,6 @@ ActiveRecord::Schema.define(version: 20150209155503) do
     t.string   "image"
     t.string   "email"
     t.text     "tokens"
-    t.integer  "tenant_id"
-    t.string   "tenant_ids",             default: "--- []\n"
     t.string   "role_ids",               default: "--- []\n"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -80,7 +78,6 @@ ActiveRecord::Schema.define(version: 20150209155503) do
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["tenant_id"], name: "index_users_on_tenant_id", using: :btree
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 

@@ -51,7 +51,7 @@ namespace :ng do
         <li ng-class='{ active: hasUrl("#/app/module1") }'>
           <a href="#/app/module1">
             <span class="fa fa-home"></span>
-            Staff Management
+            Module 1
           </a>
         </li>
         <li ng-class='{ active: hasUrl("#/app/reports") }'>
