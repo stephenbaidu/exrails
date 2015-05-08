@@ -11,30 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507144454) do
+ActiveRecord::Schema.define(version: 20150209155503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "genders", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "people", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.integer  "gender_id"
-    t.date     "date_of_birth"
-    t.text     "person_tags"
-    t.integer  "person_status_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
-  add_index "people", ["gender_id"], name: "index_people_on_gender_id", using: :btree
-  add_index "people", ["person_status_id"], name: "index_people_on_person_status_id", using: :btree
 
   create_table "permissions", force: :cascade do |t|
     t.string   "name"
@@ -44,18 +24,6 @@ ActiveRecord::Schema.define(version: 20150507144454) do
   end
 
   add_index "permissions", ["name"], name: "index_permissions_on_name", unique: true, using: :btree
-
-  create_table "person_statuses", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "person_tags", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -127,6 +95,4 @@ ActiveRecord::Schema.define(version: 20150507144454) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  add_foreign_key "people", "genders"
-  add_foreign_key "people", "person_statuses"
 end
