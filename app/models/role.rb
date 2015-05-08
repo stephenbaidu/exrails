@@ -3,10 +3,11 @@
 # Table name: roles
 #
 #  id          :integer          not null, primary key
-#  name        :string(255)
-#  permissions :text             default("--- []\n")
-#  created_at  :datetime
-#  updated_at  :datetime
+#  name        :string
+#  permissions :text             default([])
+#  status      :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #
@@ -14,7 +15,6 @@
 #
 
 class Role < ActiveRecord::Base
-  
   resourcify
 
   serialize :permissions, Array
@@ -22,7 +22,6 @@ class Role < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
 
   def users
-    # User.where('role_ids @> ARRAY[?]', self.id).count
     User.all.select { |e| e.role_ids.include?(self.id) }.count
   end
 end

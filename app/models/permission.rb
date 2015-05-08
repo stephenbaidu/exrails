@@ -3,9 +3,10 @@
 # Table name: permissions
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  name       :string
+#  status     :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

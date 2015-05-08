@@ -1,6 +1,7 @@
 == README
 
-This README will be updated to be a meaningful guide.
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
 Things you may want to cover:
 
@@ -25,6 +26,3 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
-
-== Engines
-rails plugin new test_engine -T --mountable --dummy-path=spec/dummy

@@ -1,32 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>eXRails App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%= stylesheet_link_tag    "application", media: "all" %>
-  <%= javascript_include_tag "application" %>
+  <title>eXRails</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body ng-app="app" ng-controller="MainController" ng-init='setCurrentUser(<%= raw current_user.to_json %>)' class="theme-ashly">
-  <div class="navbar navbar-inverse navbar-fixed-top ex-nav" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand nav-h" href="/">
-          <span class="glyphicon glyphicon-leaf"></span>
-          eXRails
-        </a>
-      </div>
-      <%= yield :top_navigation %>
-    </div>
-  </div>
-  <div id="page" class="container">
-    <%= yield %>
-  </div>
+<body>
+
+<%= yield %>
+
 </body>
 </html>

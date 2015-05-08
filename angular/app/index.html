@@ -1,0 +1,136 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/pnotify/pnotify.core.css" />
+    <link rel="stylesheet" href="bower_components/pnotify/pnotify.buttons.css" />
+    <link rel="stylesheet" href="bower_components/pnotify/pnotify.history.css" />
+    <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
+    <link rel="stylesheet" href="bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/pickadate/lib/themes/default.css" />
+    <link rel="stylesheet" href="bower_components/pickadate/lib/themes/default.date.css" />
+    <link rel="stylesheet" href="bower_components/pickadate/lib/themes/default.time.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome-animation/dist/font-awesome-animation.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+    <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <!-- endbuild -->
+  </head>
+  <body ng-app="angularApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div ui-view></div>
+
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <!--
+     <script>
+       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+       ga('create', 'UA-XXXXX-X');
+       ga('send', 'pageview');
+    </script>
+    -->
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-cookie/angular-cookie.js"></script>
+    <script src="bower_components/ng-token-auth/dist/ng-token-auth.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/pnotify/pnotify.core.js"></script>
+    <script src="bower_components/pnotify/pnotify.buttons.js"></script>
+    <script src="bower_components/pnotify/pnotify.callbacks.js"></script>
+    <script src="bower_components/pnotify/pnotify.confirm.js"></script>
+    <script src="bower_components/pnotify/pnotify.desktop.js"></script>
+    <script src="bower_components/pnotify/pnotify.history.js"></script>
+    <script src="bower_components/pnotify/pnotify.nonblock.js"></script>
+    <script src="bower_components/angular-pnotify/src/angular-pnotify.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/get-style-property/get-style-property.js"></script>
+    <script src="bower_components/get-size/get-size.js"></script>
+    <script src="bower_components/matches-selector/matches-selector.js"></script>
+    <script src="bower_components/eventie/eventie.js"></script>
+    <script src="bower_components/doc-ready/doc-ready.js"></script>
+    <script src="bower_components/eventEmitter/EventEmitter.js"></script>
+    <script src="bower_components/outlayer/item.js"></script>
+    <script src="bower_components/outlayer/outlayer.js"></script>
+    <script src="bower_components/masonry/masonry.js"></script>
+    <script src="bower_components/isotope/js/item.js"></script>
+    <script src="bower_components/isotope/js/layout-mode.js"></script>
+    <script src="bower_components/isotope/js/isotope.js"></script>
+    <script src="bower_components/isotope/js/layout-modes/vertical.js"></script>
+    <script src="bower_components/isotope/js/layout-modes/fit-rows.js"></script>
+    <script src="bower_components/isotope/js/layout-modes/masonry.js"></script>
+    <script src="bower_components/tv4/tv4.js"></script>
+    <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
+    <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
+    <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
+    <script src="bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.js"></script>
+    <script src="bower_components/pickadate/lib/picker.js"></script>
+    <script src="bower_components/pickadate/lib/picker.date.js"></script>
+    <script src="bower_components/pickadate/lib/picker.time.js"></script>
+    <script src="bower_components/angular-schema-form-datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="bower_components/sifter/sifter.js"></script>
+    <script src="bower_components/microplugin/src/microplugin.js"></script>
+    <script src="bower_components/selectize/dist/js/selectize.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/schema-form-uiselect/schema-form-uiselect.min.js"></script>
+    <script src="bower_components/angular-underscore/angular-underscore.js"></script>
+    <script src="bower_components/angular-schema-form-uiselect/angular-schema-form-uiselect.min.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/inflection.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/app.js"></script>
+    <script src="scripts/controllers/module.js"></script>
+    <script src="scripts/controllers/index.js"></script>
+    <script src="scripts/controllers/form.js"></script>
+    <script src="scripts/filters/by_id.js"></script>
+    <script src="scripts/filters/by_value.js"></script>
+    <script src="scripts/filters/previous_next_ids.js"></script>
+    <script src="scripts/directives/ex_editable_grid.js"></script>
+    <script src="scripts/services/ex_msg_box.js"></script>
+    <script src="scripts/services/resource_manager.js"></script>
+    <!-- endbuild -->
+</body>
+</html>

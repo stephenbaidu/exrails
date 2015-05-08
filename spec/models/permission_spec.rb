@@ -3,17 +3,18 @@
 # Table name: permissions
 #
 #  id         :integer          not null, primary key
-#  name       :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  name       :string
+#  status     :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
 #  index_permissions_on_name  (name) UNIQUE
 #
 
-require 'spec_helper'
+require 'rails_helper'
 
-describe Permission do
+RSpec.describe Permission, :type => :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

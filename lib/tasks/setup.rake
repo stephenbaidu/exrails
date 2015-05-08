@@ -3,6 +3,5 @@ namespace :app do
   task :setup => :environment do
     Rake::Task['app:permissions'].invoke
     Rake::Task['app:lookups'].invoke
-    Rake::Task['app:setup_admin'].invoke
   end
 end

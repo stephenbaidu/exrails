@@ -3,18 +3,19 @@
 # Table name: roles
 #
 #  id          :integer          not null, primary key
-#  name        :string(255)
-#  permissions :text             default("--- []\n")
-#  created_at  :datetime
-#  updated_at  :datetime
+#  name        :string
+#  permissions :text             default([])
+#  status      :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #
 #  index_roles_on_name  (name) UNIQUE
 #
 
-require 'spec_helper'
+require 'rails_helper'
 
-describe Role do
+RSpec.describe Role, :type => :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

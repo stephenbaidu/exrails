@@ -3,21 +3,22 @@
 # Table name: roles
 #
 #  id          :integer          not null, primary key
-#  name        :string(255)
-#  permissions :text             default("--- []\n")
-#  created_at  :datetime
-#  updated_at  :datetime
+#  name        :string
+#  permissions :text             default([])
+#  status      :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #
 #  index_roles_on_name  (name) UNIQUE
 #
 
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
   factory :role do
     name "MyString"
-    permissions "MyString"
+permissions "MyText"
+status "MyString"
   end
+
 end

@@ -1,29 +1,19 @@
-EXRails::Application.routes.draw do
-
-  devise_for :users, :path => "account", :path_names => { :sign_in => 'login', :sign_out => 'logout', :confirmation => 'verification', :unlock => 'unblock' }
-    as :user do
-      get 'account/password' => 'devise/registrations#edit',   :as => 'edit_user_registration'    
-      put 'account/:id'  => 'devise/registrations#update', :as => 'user_registration'            
-    end
-
-  root to: 'application#init'
-
-  get 'reports/:report(/:id)' => 'reports#index'
-
-  get 'app/:app'  => 'tpl#index'
-  
-  resources :tpl, path: "tpl/:model" do
-    get 'config'  => 'tpl#_config',  on: :collection
-    get 'columns' => 'tpl#_columns', on: :collection
-    get 'lookups' => 'tpl#_lookups', on: :collection
-  end
-
-  namespace :api do
-    resources :users
-    resources :api, path: ":resource_url"
-  end
+Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+
+  scope 'api' do
+    mount_devise_token_auth_for 'User', at: 'auth'
+
+    resources :users
+    resources :roles
+
+    get "config/:model"  => 'config#show'
+    get "lookups/:model" => 'config#lookups'
+    get "schema/:model"  => 'config#schema'
+    get "grid/:model"    => 'config#grid'
+    get "form/:model"    => 'config#form'
+  end
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
@@ -62,7 +52,7 @@ EXRails::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'

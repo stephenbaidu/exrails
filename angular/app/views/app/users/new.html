@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ schema.title }}</h3>
+  </div>
+  <div class="panel-body">
+    <form sf-schema="schema" sf-form="form" sf-model="record"></form>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-default btn-sm" ng-click="cancel()">
+      <span class="glyphicon glyphicon-remove"></span>
+      Cancel
+    </button>
+    <button ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="create()">
+      <span class="glyphicon glyphicon-ok"></span>
+      {{ (action.creating)? "Saving..." : "Save" }}
+    </button>
+  </div>
+</div>

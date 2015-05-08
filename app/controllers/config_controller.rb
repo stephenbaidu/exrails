@@ -1,0 +1,195 @@
+class ConfigController < ApplicationController
+
+  layout false
+  
+  before_action -> {
+    @model = params[:model]
+
+    if @model
+      # Sanitization
+      @model.gsub!('-', '_')
+      @model = @model.underscore.pluralize
+
+      # Implied model resource class
+      @model_class = "#{@model.classify}".constantize
+    end
+  }
+
+  def show
+    json_data = {}
+    json_data[:lookups] = lookups(true)
+    json_data[:schema]  = schema(true)
+    json_data[:grid]    = grid(true)
+    json_data[:form]    = form(true)
+
+    render json: json_data
+  end
+
+  def lookups(get = false)
+    json_lookups = {}
+
+    @model_class.reflect_on_all_associations(:belongs_to).each do |association|
+      json_lookups[association.name] = association.klass.all.map { |e| {value: e.id, name: e.name} }
+      json_lookups[association.name].unshift({ value: '', name: '' })
+    end
+
+    if is_nested_set
+      json_lookups['parent'] = @model_class.all.map { |e| {value: e.id, name: e.name} }
+    end
+
+    if get
+      json_lookups
+    else
+      render json: json_lookups
+    end
+  end
+  
+  def schema(get = false)
+    json_schema = {}
+    lookup_list = lookups(true)
+
+    if @model_class.respond_to? "filter_by"
+      json_schema[:type]  = "object"
+      json_schema[:title] = @model.singularize.titleize
+      json_schema[:properties] = {}
+      json_schema[:required] = @model_class.validators.map {|e| e.presence.attributes }.flatten
+
+      foreign_keys = @model_class.reflections.each_with_object({}) {|(k, v), h| h[v.foreign_key] = v.name.to_sym }
+
+      columns = @model_class.columns.select {|c| !excluded_field? c.name }
+      columns.each do |col|
+        prop = {
+          title: col.name.titleize,
+          type:  col.type.to_s
+        }
+
+        if col.type == :date
+          prop[:type] = 'string'
+          prop[:format] = 'date'
+        end
+
+        prop[:type] = 'string' if col.type == :text
+        prop[:type] = 'string' if col.type == :decimal
+        prop[:type] = 'number' if col.type == :integer
+
+        # Is it a lookup
+        if foreign_keys.keys.include?(col.name)
+          lookup = foreign_keys[col.name]
+
+          # includes acts_as_nested_set
+          if lookup == :children
+            lookup = :parent
+            prop[:title]  = "Parent #{@model_class.name.split('::').last.singularize.titleize}"
+          end
+          prop[:lookup] = lookup
+          prop[:format] = 'uiselect'
+          prop[:placeholder] = "Select #{prop[:title]} ..."
+          prop[:items] = lookup_list[lookup].map { |e| {value: e[:value], label: e[:name]} }
+        elsif col.name == 'tags'
+          # Assumes there is a model with the name "model_name + _tag"
+          begin
+            tag_model_class = "#{@model_class.name}Tag".constantize
+            prop[:type] = 'array'
+            prop[:format] = 'uiselect'
+            prop[:placeholder] = "Select tags ..."
+            prop[:items] = tag_model_class.all.map { |e| {value: e.id, label: e.name} }
+          rescue Exception => e
+            
+          end
+        end
+
+        json_schema[:properties][col.name.to_sym] = prop
+      end
+    end
+
+    if get
+      json_schema
+    else
+      render json: json_schema
+    end
+  end
+
+  def grid(get = false)
+    grid_columns = []
+
+    grid_columns = @model_class.columns.map { |e| e.name }
+    grid_columns = grid_columns.select {|e| !excluded_field? e }
+    grid_columns = grid_columns.take(5)
+    
+    if get
+      grid_columns
+    else
+      render json: grid_columns
+    end
+  end
+
+  def form(get = false)
+
+    json_form = []
+    # lookup_list = lookups(true)
+
+    foreign_keys = @model_class.reflections.each_with_object({}) {|(k, v), h| h[v.foreign_key] = v.name.to_sym }
+
+    columns = @model_class.columns.select {|c| !excluded_field? c.name }
+    slice_size = params[:columns].to_i
+    slice_size = 2 if slice_size < 1
+    columns.each_slice(slice_size) do |cols|
+      section = {
+        type: "section",
+        htmlClass: "row",
+        items: []
+      }
+      cols.each do |col|
+        field = { key: col.name.to_sym }
+        field[:fieldHtmlClass] = "input-lg"
+
+        # Check if date
+        if col.type == :date
+          field[:type] = "datepicker"
+          field[:pickadate] = {
+            selectYears: true,
+            selectMonths: true
+          }
+        end
+
+        # Is it a lookup
+        if foreign_keys.keys.include?(col.name) ||
+          (@model_class.respond_to?(:acts_as_nested_set) && col.name == 'parent_id')
+          
+          lookup = foreign_keys[col.name]
+          field[:fieldHtmlClass] = "input-lg selectpicker"
+
+          if foreign_keys[col.name] == :children
+            lookup = :parent
+          end
+
+          field[:lookup] = lookup
+        end
+
+        section[:items] << {
+          type: "section",
+          htmlClass: "col-xs-6",
+          items: [field]
+        }
+      end
+
+      json_form << section
+    end
+
+    if get
+      json_form
+    else
+      render json: json_form
+    end
+  end
+
+  private
+    def excluded_field?(field)
+      # ["id", "created_at", "updated_at"].include? field
+      ['id', 'created_at', 'updated_at', 'details', 'lft', 'rgt', 'depth'].include? field
+    end
+
+    def is_nested_set
+      @model_class.respond_to? 'acts_as_nested_set_options'
+    end
+end
