@@ -5,7 +5,6 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.1'
 
 gem 'pg'
-gem 'apartment'
 gem 'omniauth'
 gem 'devise_token_auth'
 gem 'pundit'
