@@ -53,7 +53,7 @@ app.constant('APP', {
 
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
-  $urlRouterProvider.when('/app', '/app/module1/samples'); // Default route
+  $urlRouterProvider.when('/app', '/app/dashboard'); // Default route
   $urlRouterProvider.when('/app/module1', '/app/module1/samples');
   $urlRouterProvider.when('/app/reports', '/app/reports/payslips');
   $urlRouterProvider.when('/app/setups', '/app/setups/person-statuses');
@@ -80,6 +80,13 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             });
         }
       }
+    })
+    .state('app.dashboard', {
+      url: '/dashboard',
+      templateUrl: function (stateParams) {
+        return 'views/layouts/dashboard.html';
+      },
+      controller: 'ModuleCtrl'
     })
     .state('app.module', {
       url: '/:module',

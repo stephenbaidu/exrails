@@ -11,37 +11,6 @@ angular.module('angularApp')
   .controller('MainCtrl', function ($rootScope, $scope, $auth, $state, notificationService, $modal, APP) {
     $rootScope.currentUser = {};
     var passwordChangeErrorModal, passwordChangeErrorScope, passwordChangeModal, passwordChangeSuccessModal;
-    
-    $rootScope.isoOptions = {
-      itemSelector: '.portfolio-item',
-      resizable: true,
-      resizesContainer: true
-    };
-
-    $scope.slides = [
-      { bg: 'bg-1.jpg', img: 'typo-1.png' },
-      { bg: 'bg-2.jpg', img: 'typo-2.png' },
-      { bg: 'bg-3.jpg', img: 'typo-3.png' }
-    ];
-
-    $scope.workTags = [
-      {name: 'Web Design', tag: 'web'},
-      {name: 'Graphic Design', tag: 'graphic'},
-      {name: 'Photography', tag: 'photography'},
-      {name: 'Motion Graphics', tag: 'motion'},
-      {name: 'Branding', tag: 'branding'},
-    ];
-
-    $scope.recentWorks = [
-      {img: 'project-1.jpg', tags: 'others payslip staff'},
-      {img: 'project-2.jpg', tags: 'reports payroll'},
-      {img: 'project-3.png', tags: 'others staff'},
-      {img: 'project-4.png', tags: 'payslip payroll'},
-      {img: 'project-5.png', tags: 'reports staff'},
-      {img: 'project-6.jpg', tags: 'others payroll'},
-      {img: 'project-7.jpg', tags: 'payslip reports others payroll'},
-      {img: 'project-8.jpg', tags: 'reports payslip staff'}
-    ];
 
     $rootScope.showErrors = function (errors) {
       if(!errors) return;
@@ -139,7 +108,7 @@ angular.module('angularApp')
       passwordChangeModal();
     });
     $scope.$on('auth:login-success', function(ev, user) {
-      $state.go('app.module.model', {module: 'module1', model: 'samples'});
+      $state.go('app.dashboard');
     });
     $scope.$on('auth:login-error', function(ev, data) {
       $rootScope.currentUser = {};

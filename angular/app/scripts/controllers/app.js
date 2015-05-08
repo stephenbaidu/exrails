@@ -56,11 +56,6 @@ angular.module('angularApp')
       return result;
     };
 
-    $http.get(APP.apiPrefix + 'users/' + $auth.user.id)
-      .success(function (data) {
-        $auth.user.company = data.tenant.name;
-      });
-
     $scope.$on('auth:logout-success', function(ev) {
       notificationService.info('Goodbye');
       $state.go('login');
