@@ -41,4 +41,5 @@
 
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid
+  attributes :sign_in_count, :last_sign_in_ip, :current_sign_in_ip, :failed_attempts
 end
