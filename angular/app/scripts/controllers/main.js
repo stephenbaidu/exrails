@@ -9,7 +9,6 @@
  */
 angular.module('angularApp')
   .controller('MainCtrl', function ($rootScope, $scope, $auth, $state, notificationService, $modal, APP) {
-    $rootScope.currentUser = {};
     var passwordChangeErrorModal, passwordChangeErrorScope, passwordChangeModal, passwordChangeSuccessModal;
 
     $rootScope.showErrors = function (errors) {
@@ -18,6 +17,46 @@ angular.module('angularApp')
         notificationService.error(error);
       });
     };
+
+    $rootScope.sendPasswordResetEmail = function () {
+      (new PNotify({
+        title: 'Request Password Reset',
+        text: 'Email',
+        icon: 'glyphicon glyphicon-question-sign',
+        hide: false,
+        confirm: {
+            prompt: true
+        },
+        buttons: {
+            closer: false,
+            sticker: false
+        },
+        history: {
+            history: false
+        },
+        before_open: function(pnotify){
+          pnotify.get().css({
+            top: "20px", 
+            left: ($(window).width() / 2) - (pnotify.get().width() / 2)
+          });
+        }
+      })).get().on('pnotify.confirm', function(e, notice, val) {
+        var regExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (regExp.test(val)) {
+          console.log('Valid');
+          $auth.requestPasswordReset({email: val});
+        } else {
+          notice.remove();
+          notificationService.notify({
+            title: 'Invalid email',
+            text: 'You provided an invalid email',
+            type: 'error'
+          });
+        }
+      }).on('pnotify.cancel', function(e, notice) {
+        notice.remove();
+      });
+    }
 
     $scope.$on('auth:registration-email-success', function(ev, data) {
       notificationService.info('A registration email was ' + 'sent to ' + data.email + '. Follow the instructions contained in the email to complete registration.');
@@ -42,20 +81,16 @@ angular.module('angularApp')
     //     template: "<div id='alert-email-confirmation-error'>Unable to confirm your account. Request a password reset to verify your identity.</div>"
     //   });
     // });
-    // $scope.$on('auth:password-reset-request-success', function(ev, params) {
-    //   return $modal.open({
-    //     title: "Success",
-    //     html: true,
-    //     template: "<div id='alert-password-reset-request-success'>Password reset instructions have been sent to " + params.email + "</div>"
-    //   });
-    // });
-    // $scope.$on('auth:password-reset-request-error', function(ev, data) {
-    //   return $modal.open({
-    //     title: "Error",
-    //     html: true,
-    //     template: "<div id='alert-password-reset-request-error'>Error: " + _.map(data.errors).toString() + "</div>"
-    //   });
-    // });
+
+    $scope.$on('auth:password-reset-request-success', function(ev, data, data2) {
+      notificationService.info('An email has been sent to ' + data.email +
+        ' containing instructions for resetting your password.');
+    });
+
+    $scope.$on('auth:password-reset-request-error', function(ev, data) {
+      notificationService.error(_.map(data.errors).toString());
+    });
+
     // $scope.$on('auth:password-reset-confirm-error', function(ev, data) {
     //   return $modal.open({
     //     title: "Error",
@@ -71,6 +106,7 @@ angular.module('angularApp')
         templateUrl: 'views/partials/password-reset-modal.html'
       });
     };
+    
     passwordChangeSuccessModal = function () {
       $modal.open({
         title: "Success",
@@ -111,7 +147,6 @@ angular.module('angularApp')
       $state.go('app.dashboard');
     });
     $scope.$on('auth:login-error', function(ev, data) {
-      $rootScope.currentUser = {};
       notificationService.error('Authentication failure: ' + data.errors[0]);
     });
     

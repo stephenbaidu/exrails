@@ -27,6 +27,16 @@ angular.module('angularApp')
       }
     };
 
+    $rootScope.hasAccess = function (accessName) {
+      var permissions = $auth.user.permissions || [];
+      return true;
+    }
+
+    $rootScope.hasPermission = function (permissionName) {
+      var permissions = $auth.user.permissions || [];
+      return permissions.indexOf(permissionName) >= 0;
+    }
+
     $rootScope.back = function () {
       $state.go('^');
     }
@@ -56,13 +66,40 @@ angular.module('angularApp')
       return result;
     };
 
+    // Load permissions
+    $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/permissions')
+      .success(function (data) {
+        $auth.user.permissions = data;
+      });
+
+    $http.get(APP.apiPrefix + 'users/' + $auth.user.id)
+      .success(function (data) {
+        $auth.user.is_admin = data.is_admin;
+      });
+
     $scope.$on('auth:logout-success', function(ev) {
-      notificationService.info('Goodbye');
+      // notificationService.info('Goodbye');
       $state.go('login');
     });
+
     $scope.$on('auth:logout-error', function(ev) {
       notificationService.error('Unable to complete logout. Please try again.');
     });
+
+    // $rootScope.showPasswordReset = function () {
+    //   notificationService.notify({
+    //     title: 'Sticky Success',
+    //     text: 'Sticky success... I\'m not even gonna make a joke.',
+    //     type: 'success',
+    //     hide: false,
+    //     before_open: function(pnotify){
+    //       pnotify.get().css({
+    //         "top":"50px", 
+    //         "left": ($(window).width() / 2) - (pnotify.get().width() / 2)
+    //       });
+    //     }
+    //   });
+    // }
 
     $rootScope.confirmDialog = function (message, title) {
       var d = $q.defer();

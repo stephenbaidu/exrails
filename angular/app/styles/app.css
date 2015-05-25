@@ -8,7 +8,8 @@ table tr.active {
 }
 
 table tr.active > td {
-  background-color: rgba(0, 0, 0, 0.1) !important;
+  /*background-color: rgba(0, 0, 0, 0.1) !important;*/
+  background-color: rgba(199, 242, 206, 0.17) !important;
 }
 
 .navbar {
@@ -54,6 +55,12 @@ table tr.active > td {
   width: 35px;
 }
 
+.has-error .form-control-feedback {
+  top: 22px !important;
+  font-size: 12px;
+  width: 35px;
+}
+
 .has-success .caret {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
@@ -66,12 +73,29 @@ table tr.active > td {
   border-top: 6px solid #a94442;
 }
 
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
+  margin: 1px 3px 2px 1px;
+}
+
+.large-tags .uimultiselect .ui-select-match-item {
+  font-size: 18px !important;
+  height: 35px !important;
+}
+
+.large-tags .ui-select-multiple.ui-select-bootstrap input.ui-select-search {
+  font-size: 18px;
+}
+
 .ui-select-choices {
   font-size: 16px;
 }
 
 .ui-select-placeholder {
   font-size: 14px;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: #F7F7F7;
 }
 
 .pagination, .pager {
@@ -92,7 +116,7 @@ table tr.active > td {
 }
 
 .no-left {
-  padding-left: 0px;
+  /*padding-left: 0px;*/
 }
 
 .ex-form {

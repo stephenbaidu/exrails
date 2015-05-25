@@ -1,9 +1,4 @@
-
-<!-- build:css(.tmp) styles/login.css -->
-<link rel="stylesheet" href="styles/login.css">
-<!-- endbuild -->
-
-<div id="page">
+<div id="page" class="login">
   <header id="header" class="site-header">
     <nav id="topbar" class="site-topbar">
       <div class="container">
@@ -53,7 +48,7 @@
                 <h6 class="text">or</h6>
               </div>
               <p class="text-center">
-              <a href="#">Forgot your password?</a>
+              <a href="#" ng-click="sendPasswordResetEmail()">Forgot your password?</a>
               </p>
               <p class="text-center">
               <a href="#">Didn't receive confirmation instructions?</a>
@@ -125,11 +120,13 @@
   </footer>
 </div>
 
-<div class="scroll-to-top" data-spy="affix" data-offset-top="600">
+<div c<!-- lass="scroll-to-top" data-spy="affix" data-offset-top="600">
   <a href="#page" class="smooth-scroll">
     <i class="fa fa-arrow-up"></i>
   </a>
-</div>
+</div> -->
 
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/jquery.singlePageNav.min.js"></script>
 <script src="scripts/main.js"></script>
+<!-- endbuild -->

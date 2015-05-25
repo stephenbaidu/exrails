@@ -27,13 +27,13 @@
   </div>
   <div ng-hide="state.isIndex" class="col-md-8 no-left">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <button class="btn btn-default" ng-click="back()">
           <span class="fa fa-chevron-left"></span>
           Back
         </button>
       </div>
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <div ng-if="paging.currentId" class="btn-group pull-right">
           <a ng-disabled="!paging.previousId" class="btn btn-default" ui-sref=".show({id: paging.previousId})">
             <span class="fa fa-chevron-left"></span>
@@ -107,4 +107,5 @@
   <div class="col-md-8 no-left">
     <div ui-view></div>
   </div>
+  <div ng-controller="UserCtrl"></div>
 </div>

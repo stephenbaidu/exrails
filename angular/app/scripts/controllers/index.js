@@ -27,23 +27,27 @@ angular.module('angularApp')
     $scope.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
 
     $scope.queryRecords = function (page, size, query) {
+      $scope.action.loading = true;
+
       if(! query) {
         query = $scope.searchQuery || {};
       }
-      $scope.action.loading = true;
+      
       query['page'] = page || $scope.paging.currentPage;
       query['size'] = size || $scope.paging.recordsPerPage;
+      
       resourceManager.query($scope.model.name, query, function(data, totalRecords) {
           $scope.paging.totalRecords = totalRecords;
-          $scope.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', $scope);
-          $scope.action.loading = false;
         })
         .then(function (data) {
-          // $scope.updateRecords(data);
+          $scope.updateRecords(data);
+          $rootScope.$broadcast('model:records-loaded', $scope);
         })
         .catch(function (error) {
+          console.log(error);
           $scope.error(error);
+        })
+        .finally(function (error) {
           $scope.action.loading = false;
         });
     }
@@ -72,13 +76,14 @@ angular.module('angularApp')
     }
 
     $scope.fieldData = function (record, field) {
-      var lookup = $scope['schema']['properties'][field]['lookup'];
+      var property = $scope['schema']['properties'][field];
+      var lookup = (property && property.lookup) || false;
       var value  = record[field];
 
       if (!!lookup) {
         return byValueFilter($scope.lookups[lookup], value).name;
       }
-
+      
       return value;
     }
 
@@ -145,7 +150,6 @@ angular.module('angularApp')
           $scope.schema  = data.schema;
           $scope.grid    = data.grid;
           $rootScope.$broadcast('model:config-loaded', $scope);
-          $scope.queryRecords();
         })
         .error(function(data, status, headers, config) {
           notificationService.error('error');
