@@ -52,7 +52,7 @@ namespace :ng do
   </div>
 </div>
 <div class="row">
-  <div class="col-md-4 form-group">
+  <div class="col-md-4 form-group hidden-sm hidden-xs">
     <div class="input-group">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default" aria-expanded="false"><span class="fa fa-search"></span></button>
@@ -60,15 +60,15 @@ namespace :ng do
       <input type="text" class="form-control" ng-model="filterText" aria-label="...">
     </div>
   </div>
-  <div ng-hide="state.isIndex" class="col-md-8 no-left">
+  <div ng-hide="state.isIndex" class="col-md-8 no-left" style="padding-bottom: 5px;">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <button class="btn btn-default" ng-click="back()">
           <span class="fa fa-chevron-left"></span>
           Back
         </button>
       </div>
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <div ng-if="paging.currentId" class="btn-group pull-right">
           <a ng-disabled="!paging.previousId" class="btn btn-default" ui-sref=".show({id: paging.previousId})">
             <span class="fa fa-chevron-left"></span>
@@ -85,8 +85,8 @@ namespace :ng do
   </div>
 </div>
 <div class="row">
-  <div ng-class="{ 'col-md-12': state.isIndex, 'col-md-4': !state.isIndex }">
-    <table ng-if="state.isIndex" class="table table-bordered table-striped table-hover">
+  <div ng-show="state.isIndex" class="col-md-12">
+    <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
           <th class='grid-action-1'></th>
@@ -110,7 +110,15 @@ namespace :ng do
         </tr>
       </tbody>
     </table>
-    <table ng-if="!state.isIndex" class="table table-bordered table-striped table-hover">
+    <div class="pull-right">
+      <button ng-disabled="action.loading" type="button" class="btn btn-success" ng-click="loadMore()">
+        <span class="fa fa-spinner" ng-class="{'fa-pulse': action.loading}"></span>
+        {{ (action.loading)? "Loading..." : "More" }}
+      </button>
+    </div>
+  </div>
+  <div ng-hide="state.isIndex" class="col-md-4 hidden-sm hidden-xs">
+    <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
           <th class='grid-action-1'></th>
@@ -139,7 +147,7 @@ namespace :ng do
       </button>
     </div>
   </div>
-  <div class="col-md-8 no-left">
+  <div ng-hide="state.isIndex" class="col-md-8 no-left">
     <div ui-view></div>
   </div>
 </div>
@@ -151,14 +159,14 @@ namespace :ng do
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
     <button class="btn btn-default btn-sm" ng-click="cancel()">
       <span class="glyphicon glyphicon-remove"></span>
       Cancel
     </button>
-    <button ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="create()">
+    <button ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.creating)? "Saving..." : "Save" }}
     </button>
@@ -172,7 +180,7 @@ namespace :ng do
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form "disabled-form" sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <form disabled-form sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
     <button class="btn btn-info btn-sm" ng-click="edit()">
@@ -189,14 +197,14 @@ namespace :ng do
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
     <button class="btn btn-default btn-sm" ng-click="cancel()">
       <span class="glyphicon glyphicon-remove"></span>
       Cancel
     </button>
-    <button ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="update()">
+    <button ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.updating)? "Updating..." : "Update" }}
     </button>

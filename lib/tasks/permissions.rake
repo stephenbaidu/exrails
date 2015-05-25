@@ -3,12 +3,12 @@ namespace :app do
   task :permissions => :environment do |t, args|
     Rails.application.eager_load!
     excluded_models = [
-      # 'Gender',
+      # 'Gender'
     ]
     model_actions = [:index, :create, :show, :update, :delete]
     
     models = ActiveRecord::Base.descendants.map(&:name)
-    models = models.select { |e| !e.include?('::') && excluded_models.include?(e) }
+    models = models.select { |e| !e.include?('::') && !excluded_models.include?(e) }
     
     models.each do |model|
       model_actions.each do |action|
