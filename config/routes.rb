@@ -4,8 +4,13 @@ Rails.application.routes.draw do
 
   scope 'api' do
     mount_devise_token_auth_for 'User', at: 'auth'
-
-    resources :users
+    
+    resources :users do
+      post 'lock', on: :member
+      post 'unlock', on: :member
+      post 'reset_password', on: :member
+      post 'permissions', on: :member
+    end
     resources :roles
     resources :samples
     resources :sample_statuses

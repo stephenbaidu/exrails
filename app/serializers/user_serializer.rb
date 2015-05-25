@@ -40,6 +40,14 @@
 #
 
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid
-  attributes :sign_in_count, :last_sign_in_ip, :current_sign_in_ip, :failed_attempts
+  attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid, :status, :is_admin
+  attributes :sign_in_count, :current_sign_in_ip, :last_sign_in_ip, :current_sign_in_at, :last_sign_in_at, :failed_attempts
+
+  def status
+    object.locked_at ? 'Locked' : 'Active'
+  end
+
+  def is_admin
+    object.admin?
+  end
 end
