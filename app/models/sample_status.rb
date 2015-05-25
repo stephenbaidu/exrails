@@ -10,4 +10,6 @@
 
 class SampleStatus < ActiveRecord::Base
   resourcify
+
+  validates :name, presence: true
 end
