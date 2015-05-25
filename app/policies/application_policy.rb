@@ -38,6 +38,10 @@ class ApplicationPolicy
     Pundit.policy_scope!(user, record.class)
   end
 
+  def has_permission?(permission)
+    user.admin? or user.has_permission?(permission)
+  end
+
   class Scope
     attr_reader :user, :scope
 
@@ -49,11 +53,6 @@ class ApplicationPolicy
     def resolve
       scope
     end
-  end
-
-  def has_permission?(permission)
-    # user.admin? or user.has_permission?(permission)
-    true
   end
 end
 

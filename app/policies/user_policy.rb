@@ -1,7 +1,11 @@
 class UserPolicy < ApplicationPolicy
   class Scope < Struct.new(:user, :scope)
     def resolve
-      scope
+      if @user.admin?
+        scope
+      else
+        scope.where('id > 1')
+      end
     end
   end
 

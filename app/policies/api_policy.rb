@@ -1,13 +1,8 @@
 class ApiPolicy < ApplicationPolicy
-  class Scope < Struct.new(:user, :scope)
+  class Scope < Scope
     def resolve
       scope
     end
-  end
-
-  def initialize(user, record)
-    @user   = user
-    @record = record
   end
 
   def index?
