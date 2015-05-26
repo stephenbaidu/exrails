@@ -188,11 +188,11 @@ angular.module('angularApp')
 
     function setupNewUserForm (scope) {
       scope.schema.properties.password = {
-        title: 'Password or PIN',
+        title: 'Password',
         type: 'string'
       };
       scope.schema.properties.password_confirmation = {
-        title: 'Confirm Password or PIN',
+        title: 'Confirm Password',
         type: 'string'
       };
       scope.schema.properties.enforce_confirmation = {

@@ -1,5 +1,5 @@
 class UserPolicy < ApplicationPolicy
-  class Scope < Struct.new(:user, :scope)
+  class Scope < Scope
     def resolve
       if @user.admin?
         scope
