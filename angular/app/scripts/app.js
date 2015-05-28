@@ -20,7 +20,6 @@ var app = angular.module('angularApp', [
   'ngTouch',
   'ng-token-auth',
   'angular-underscore',
-  'jlareau.pnotify',
   'ui.bootstrap',
   'ui.select',
   'pascalprecht.translate',
@@ -32,7 +31,7 @@ app.constant('APP', {
   tplPrefix: '/tpl/',
   apiPrefix: '/api/',
   modules: {
-    module1: {
+    main: {
       text: 'Main Menu', url: 'app', icon: 'fa fa-home fa-lg',
       links: [
         { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user' }
@@ -57,7 +56,7 @@ app.constant('APP', {
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
   $urlRouterProvider.when('/app', '/app/dashboard'); // Default route
-  $urlRouterProvider.when('/app/module1', '/app/module1/samples');
+  $urlRouterProvider.when('/app/main', '/app/main/samples');
   $urlRouterProvider.when('/app/reports', '/app/reports/samples');
   $urlRouterProvider.when('/app/setups', '/app/setups/sample-statuses');
   $stateProvider
@@ -144,12 +143,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   $authProvider.configure({
     apiUrl: '/api'
   });
+}).factory('$exceptionHandler', function() {
+  return function(exception, cause) {
+    // exception.message += ' (caused by "' + cause + '")';
+    // throw exception;
+  };
 });
-
-
-angular
-  .module('ui.bootstrap.carousel', ['ui.bootstrap.transition'])
-    .controller('CarouselController', ['$scope', '$timeout', '$transition', '$q', function ($scope, $timeout, $transition, $q) {
-  }]).directive('carousel', [function() {
-    return {};
-  }]);

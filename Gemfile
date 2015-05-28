@@ -1,25 +1,33 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
+
+# gem 'jquery-rails'
+gem 'uglifier'
+# gem 'therubyracer'
+# gem 'turbolinks'
 
 gem 'pg'
 gem 'omniauth'
 gem 'devise_token_auth'
 gem 'pundit'
 gem 'faker'
-gem 'paper_trail', '~> 4.0.0.beta'
+gem 'paper_trail', '~> 4.0.0.rc'
 gem 'active_model_serializers'
 gem 'resourcify'
 gem 'rails-settings-cached', '0.4.1'
 gem 'wicked_pdf'
 gem 'awesome_nested_set'
 gem 'rb-readline'
+# gem 'whenever', :require => false
+gem 'rest-client'
+gem 'delayed_job_active_record'
 # gem 'wkhtmltopdf-binary'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
 end
 

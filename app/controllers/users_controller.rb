@@ -1,7 +1,28 @@
 class UsersController < ApplicationController
   resourcify
 
-  before_action :set_record, only: [:show, :update, :destroy, :lock, :unlock, :reset_password, :permissions]
+  before_action :set_record, only: [:show, :update, :destroy, :lock, :unlock, :reset_password, :change_password, :permissions]
+
+  def index
+    authorize _RC.new
+    
+    @records = _RC.includes(belongs_tos)
+
+    # apply filter_by if present
+    if @records.respond_to? "filter_by"
+      @records = @records.filter_by(params.except(:controller, :action, :page, :size))
+    end
+
+    @records = policy_scope(@records)
+    
+    response.headers['_meta_total'] = @records.count.to_s
+
+    page = params[:page] || 1
+    size = params[:size] || 20
+    @records = @records.offset((page.to_i - 1) * size.to_i).limit(size)
+
+    render json: @records
+  end
 
   def create
     user = user_params
@@ -18,6 +39,8 @@ class UsersController < ApplicationController
       @record.confirmation_sent_at = Date.today
       @record.confirmed_at = Date.today
     end
+
+    authorize @record
 
     if @record.save
       if user[:enforce_confirmation]
@@ -65,15 +88,48 @@ class UsersController < ApplicationController
 
   def reset_password
     authorize @record, :update?
-    
-    # if @record.unlock_access!
-    #   render json: @record
-    # else
-      @error[:type]    = 'Failure'
-      @error[:message] = 'Sorry, password reset action failed.'
 
-      render json: @error
-    # end
+    data = {
+      password: params[:password],
+      password_confirmation: params[:password_confirmation]
+    }
+
+    if @record.update_without_password(data)
+      render json: @record and return
+    else
+      @error[:type]     = 'Validation'
+      @error[:message]  = 'Sorry, there were errors.'
+      @error[:errors]   = @record.errors.messages
+      @error[:messages] = @record.errors.full_messages
+    end
+    
+    render json: @error
+  end
+
+  def change_password
+    authorize @record, :update?
+
+    data = {
+      current_password: params[:current_password],
+      password: params[:password],
+      password_confirmation: params[:password_confirmation]
+    }
+
+    if @record.valid_password?(data[:current_password])
+      if @record.update_with_password(data)
+        render json: @record and return
+      else
+        @error[:type]     = 'Validation'
+        @error[:message]  = 'Sorry, there were errors.'
+        @error[:errors]   = @record.errors.messages
+        @error[:messages] = @record.errors.full_messages
+      end
+    else
+      @error[:type]    = 'Validation'
+      @error[:message] = 'Your current password is invalid.'
+    end
+    
+    render json: @error
   end
 
   def permissions

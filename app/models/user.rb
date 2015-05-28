@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
   end
 
   def roles
-    Role.where id: self.role_ids
+    Role.unscoped.where id: self.role_ids
   end
 
   def has_permission?(permission)

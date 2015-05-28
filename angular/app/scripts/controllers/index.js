@@ -8,21 +8,21 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, notificationService, byValueFilter) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsgBox, byValueFilter) {
     window.AppIndexCtrl = $scope;
+    window.msgBox = exMsgBox;
     $scope.grid = {};
     $scope.recordsHash = {};
     $scope.records = [];
     $scope.searchQuery = null;
-    $scope.action = { loading: false };
+    $scope.action = { loading: false, deleting: false };
     $scope.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
       currentPage: 1,
       previousId: 0,
       currentId: 0,
-      nextId: 0,
-      pageSizes: [5, 10, 15, 20, 25, 30, 50, 100, 500, 1000]
+      nextId: 0
     };
     $scope.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
 
@@ -50,6 +50,22 @@ angular.module('angularApp')
         .finally(function (error) {
           $scope.action.loading = false;
         });
+    }
+
+    $scope.hasCreateAccess = function () {
+      return $rootScope.hasAccess($scope.model.name + ':create');
+    }
+
+    $scope.hasShowAccess = function () {
+      return $rootScope.hasAccess($scope.model.name + ':show');
+    }
+
+    $scope.hasUpdateAccess = function () {
+      return $rootScope.hasAccess($scope.model.name + ':update');
+    }
+
+    $scope.hasDeleteAccess = function () {
+      return $rootScope.hasAccess($scope.model.name + ':delete');
     }
 
     $scope.$on('model:records-loaded', function (e, scope) {
@@ -106,6 +122,13 @@ angular.module('angularApp')
       });
     }
 
+    $scope.reload = function () {
+      $scope.recordsHash = {};
+      $scope.records = [];
+      $scope.paging.currentPage = 1;
+      $scope.queryRecords();
+    }
+
     $scope.loadMore = function () {
       if ($scope.records.length < $scope.paging.totalRecords) {
         $scope.paging.currentPage = $scope.paging.currentPage + 1;
@@ -123,23 +146,29 @@ angular.module('angularApp')
 
     $scope.error = function (error) {
       error = error || {};
-      error.message  && notificationService.error(error.message, error.type || 'Error');
+      error.message  && exMsgBox.error(error.message, error.type || 'Error');
       error.messages && $rootScope.errorSummary(error.messages);
     }
 
     $scope.delete = function (id) {
-      var msg = "Are you sure you want to Delete this " + $scope.model.title + "?";
-      $rootScope.confirmDialog(msg, "Confirm Delete").then(function () {
+      $scope.action.deleting = true;
+
+      var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
+      exMsgBox.confirm(msg, "Confirm Delete").then(function () {
         var data = { id: id };
         data[$scope.model.key] = $scope.record;
         resourceManager.delete($scope.model.name, data)
           .then(function (data) {
-            $scope.queryRecords();
-            notificationService.success($scope.model.name + " deleted successfully");
+            $scope.reload();
+            exMsgBox.success($scope.schema.title + " deleted successfully");
           })
           .catch(function (error) {
             $scope.error(error);
+          }).finally(function () {
+            $scope.action.deleting = false;
           });
+      }).catch(function () {
+        $scope.action.deleting = false;
       });
     };
 
@@ -152,7 +181,7 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:config-loaded', $scope);
         })
         .error(function(data, status, headers, config) {
-          notificationService.error('error');
+          exMsgBox.error('error');
         });
     };
 

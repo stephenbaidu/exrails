@@ -69,7 +69,7 @@ class ConfigController < ApplicationController
         end
 
         prop[:type] = 'string' if col.type == :text
-        prop[:type] = 'number' if col.type == :decimal
+        prop[:type] = 'string' if col.type == :decimal
         prop[:type] = 'number' if col.type == :integer
 
         if col.name == 'email' || col.name.ends_with?('_email')

@@ -2,7 +2,6 @@ namespace :app do
   desc 'Creates default user: admin'
   task :setup_admin => :environment do |t, args|
 
-
     # Create admin role
     role = Role.where(name: 'Admin').first_or_create do |r|
       r.permissions = []

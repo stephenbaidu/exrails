@@ -5,7 +5,7 @@
         <i class="glyphicon glyphicon-list"></i>
         {{ model.title }}
       </h3>
-      <div class="btn-group pull-right">
+      <div ng-show="hasCreateAccess()" class="btn-group pull-right">
         <a class="btn btn-primary" ng-click="search_on=!search_on" data-toggle="button">
           <span class="fa fa-search"></span>
         </a>

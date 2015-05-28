@@ -6,24 +6,24 @@
     <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="cancel()">
+    <button class="btn btn-default btn-sm" ng-click="close()">
       <span class="glyphicon glyphicon-remove"></span>
-      Cancel
+      Close
     </button>
-    <button ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
+    <button ng-show="hasUpdateAccess()" ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.updating)? "Updating..." : "Update" }}
     </button>
     <div class="pull-right">
-      <button ng-show="record.status === 'Active'" ng-disabled="action.locking" class="btn btn-warning btn-sm" ng-click="lockUser()">
+      <button ng-show="hasUpdateAccess() && record.status === 'Active'" ng-disabled="action.locking" class="btn btn-warning btn-sm" ng-click="lockUser()">
         <span class="glyphicon glyphicon-ok"></span>
         {{ (action.locking)? "Locking..." : "Lock User" }}
       </button>
-      <button ng-show="record.status !== 'Active'" ng-disabled="action.unlocking" class="btn btn-success btn-sm" ng-click="unlockUser()">
+      <button ng-show="hasUpdateAccess() && record.status !== 'Active'" ng-disabled="action.unlocking" class="btn btn-success btn-sm" ng-click="unlockUser()">
         <span class="glyphicon glyphicon-ok"></span>
         {{ (action.unlocking)? "Unlocking..." : "Unlock User" }}
       </button>
-      <button ng-disabled="action.updating" class="btn btn-primary btn-sm" ng-click="resetPassword()">
+      <button ng-show="hasUpdateAccess()" ng-disabled="action.updating" class="btn btn-primary btn-sm" ng-click="resetPassword()">
         <span class="glyphicon glyphicon-ok"></span>
         {{ (action.updating)? "Reseting..." : "Reset Password" }}
       </button>

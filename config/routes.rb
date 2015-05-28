@@ -4,22 +4,24 @@ Rails.application.routes.draw do
 
   scope 'api' do
     mount_devise_token_auth_for 'User', at: 'auth'
-    
+
+    get 'config/:model'  => 'config#show'
+    get 'lookups/:model' => 'config#lookups'
+    get 'schema/:model'  => 'config#schema'
+    get 'grid/:model'    => 'config#grid'
+    get 'form/:model'    => 'config#form'
+
     resources :users do
       post 'lock', on: :member
       post 'unlock', on: :member
       post 'reset_password', on: :member
+      post 'change_password', on: :member
       post 'permissions', on: :member
     end
     resources :roles
     resources :samples
     resources :sample_statuses
-
-    get "config/:model"  => 'config#show'
-    get "lookups/:model" => 'config#lookups'
-    get "schema/:model"  => 'config#schema'
-    get "grid/:model"    => 'config#grid'
-    get "form/:model"    => 'config#form'
+    
   end
 
   # You can have the root of your site routed with "root"

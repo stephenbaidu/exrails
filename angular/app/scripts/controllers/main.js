@@ -8,13 +8,13 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('MainCtrl', function ($rootScope, $scope, $auth, $state, notificationService, $modal, APP) {
+  .controller('MainCtrl', function ($rootScope, $scope, $auth, $state, exMsgBox, $modal, APP) {
     var passwordChangeErrorModal, passwordChangeErrorScope, passwordChangeModal, passwordChangeSuccessModal;
 
     $rootScope.showErrors = function (errors) {
       if(!errors) return;
       angular.forEach(errors, function (error) {
-        notificationService.error(error);
+        exMsgBox.error(error);
       });
     };
 
@@ -47,7 +47,7 @@ angular.module('angularApp')
           $auth.requestPasswordReset({email: val});
         } else {
           notice.remove();
-          notificationService.notify({
+          exMsgBox.notify({
             title: 'Invalid email',
             text: 'You provided an invalid email',
             type: 'error'
@@ -59,12 +59,12 @@ angular.module('angularApp')
     }
 
     $scope.$on('auth:registration-email-success', function(ev, data) {
-      notificationService.info('A registration email was ' + 'sent to ' + data.email + '. Follow the instructions contained in the email to complete registration.');
+      exMsgBox.info('A registration email was ' + 'sent to ' + data.email + '. Follow the instructions contained in the email to complete registration.');
     });
     $scope.$on('auth:registration-email-error', function(ev, data) {
       console.log(data);
       angular.forEach(data.errors.full_messages, function (error) {
-        notificationService.error(error);
+        exMsgBox.error(error);
       });
     });
     // $scope.$on('auth:email-confirmation-success', function(ev, data) {
@@ -83,12 +83,12 @@ angular.module('angularApp')
     // });
 
     $scope.$on('auth:password-reset-request-success', function(ev, data, data2) {
-      notificationService.info('An email has been sent to ' + data.email +
+      exMsgBox.info('An email has been sent to ' + data.email +
         ' containing instructions for resetting your password.');
     });
 
     $scope.$on('auth:password-reset-request-error', function(ev, data) {
-      notificationService.error(_.map(data.errors).toString());
+      exMsgBox.error(_.map(data.errors).toString());
     });
 
     // $scope.$on('auth:password-reset-confirm-error', function(ev, data) {
@@ -147,11 +147,11 @@ angular.module('angularApp')
       $state.go('app.dashboard');
     });
     $scope.$on('auth:login-error', function(ev, data) {
-      notificationService.error('Authentication failure: ' + data.errors[0]);
+      exMsgBox.error('Authentication failure: ' + data.errors[0]);
     });
     
     $scope.$on('auth:account-update-success', function() {
-      notificationService.info('Your account has been updated.');
+      exMsgBox.info('Your account has been updated.');
     });
     // $scope.$on('auth:account-update-error', function(ev, data) {
     //   var errors;
@@ -165,7 +165,7 @@ angular.module('angularApp')
     //   });
     // });
     $scope.$on('auth:account-destroy-success', function() {
-      notificationService.error('Your account has been destroyed.');
+      exMsgBox.error('Your account has been destroyed.');
     });
     // return $scope.$on('auth:account-destroy-error', function(ev, data) {
     //   var errors;

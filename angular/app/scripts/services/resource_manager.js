@@ -71,7 +71,11 @@ angular.module('angularApp')
           d.resolve(response);
         }
         callback && callback(response, headers('_meta_total'));
-      }, function (response) { console.log(response) });
+      }, function (response) { d.reject(response) })
+      .$promise.catch(function (error) {
+        window.error = error;
+        d.reject({message: 'Sorry, you do not have permission.'});
+      });
       
       return d.promise;
     };

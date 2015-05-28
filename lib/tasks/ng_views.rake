@@ -40,7 +40,7 @@ namespace :ng do
         <i class="glyphicon glyphicon-list"></i>
         {{ model.title }}
       </h3>
-      <div class="btn-group pull-right">
+      <div ng-show="hasCreateAccess()" class="btn-group pull-right">
         <a class="btn btn-primary" ng-click="search_on=!search_on" data-toggle="button">
           <span class="fa fa-search"></span>
         </a>
@@ -162,11 +162,11 @@ namespace :ng do
     <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="cancel()">
+    <button class="btn btn-default btn-sm" ng-click="close()">
       <span class="glyphicon glyphicon-remove"></span>
-      Cancel
+      Close
     </button>
-    <button ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
+    <button ng-show="hasCreateAccess()" ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.creating)? "Saving..." : "Save" }}
     </button>
@@ -183,7 +183,11 @@ namespace :ng do
     <form disabled-form sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-info btn-sm" ng-click="edit()">
+    <button class="btn btn-default btn-sm" ng-click="close()">
+      <span class="glyphicon glyphicon-remove"></span>
+      Close
+    </button>
+    <button ng-show="hasUpdateAccess()" class="btn btn-info btn-sm" ng-click="edit()">
       <span class="glyphicon glyphicon-pencil"></span>
       Edit
     </button>
@@ -200,11 +204,11 @@ namespace :ng do
     <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="cancel()">
+    <button class="btn btn-default btn-sm" ng-click="close()">
       <span class="glyphicon glyphicon-remove"></span>
-      Cancel
+      Close
     </button>
-    <button ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
+    <button ng-show="hasUpdateAccess()" ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.updating)? "Updating..." : "Update" }}
     </button>

@@ -6,11 +6,11 @@
     <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="cancel()">
+    <button class="btn btn-default btn-sm" ng-click="close()">
       <span class="glyphicon glyphicon-remove"></span>
-      Cancel
+      Close
     </button>
-    <button ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
+    <button ng-show="hasCreateAccess()" ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.creating)? "Saving..." : "Save" }}
     </button>

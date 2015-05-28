@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $modal, $state, APP, notificationService) {
+  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $modal, $state, APP, exMsgBox) {
 
     $rootScope.modules = APP['modules'] || {};
     
@@ -27,14 +27,42 @@ angular.module('angularApp')
       }
     };
 
-    $rootScope.hasAccess = function (accessName) {
-      var permissions = $auth.user.permissions || [];
-      return true;
-    }
+    $rootScope.hasAccess = function (urlOrPermission) {
+      if ($auth.user.is_admin) {
+        return true;
+      }
 
-    $rootScope.hasPermission = function (permissionName) {
-      var permissions = $auth.user.permissions || [];
-      return permissions.indexOf(permissionName) >= 0;
+      var permission = urlOrPermission || '';
+      permission = permission.replace(/-/gi, '_');
+
+      // Guess from url if not a specific permission
+      if (permission.indexOf(':') < 0) {
+        permission = permission.split('?')[0];
+        if (permission.indexOf('/') < 0) {
+          permission = permission.classify() + ':index';
+        } else {
+          var regExNew  = /^([A-z-_]+)\/new/gi;
+          var regExShow = /^([A-z-_]+)\/(\d+)\/show/gi;
+          var regExEdit = /^([A-z-_]+)\/(\d+)\/edit/gi;
+
+          var matchNew  = regExNew.exec(permission)
+          var matchShow = regExShow.exec(permission)
+          var matchEdit = regExEdit.exec(permission)
+
+          if (matchNew) {
+            permission = matchNew[1].classify() + ':create';
+          } else if (matchShow) {
+            permission = matchShow[1].classify() + ':show';
+          } else if (matchEdit) {
+            permission = matchEdit[1].classify() + ':update';
+          }
+        }
+      }
+
+      var found = _.find($auth.user.permissions, function (p) {
+        return p === permission;
+      });
+      return (found === undefined)? false : true;
     }
 
     $rootScope.back = function () {
@@ -74,68 +102,86 @@ angular.module('angularApp')
 
     $http.get(APP.apiPrefix + 'users/' + $auth.user.id)
       .success(function (data) {
+        $auth.user.client = data.client;
+        $auth.user.branch = data.branch;
         $auth.user.is_admin = data.is_admin;
+        $auth.user.is_system_admin = data.is_system_admin;
       });
 
     $scope.$on('auth:logout-success', function(ev) {
-      // notificationService.info('Goodbye');
+      // exMsgBox.info('Goodbye');
       $state.go('login');
     });
 
     $scope.$on('auth:logout-error', function(ev) {
-      notificationService.error('Unable to complete logout. Please try again.');
+      exMsgBox.error('Unable to complete logout. Please try again.');
     });
 
-    // $rootScope.showPasswordReset = function () {
-    //   notificationService.notify({
-    //     title: 'Sticky Success',
-    //     text: 'Sticky success... I\'m not even gonna make a joke.',
-    //     type: 'success',
-    //     hide: false,
-    //     before_open: function(pnotify){
-    //       pnotify.get().css({
-    //         "top":"50px", 
-    //         "left": ($(window).width() / 2) - (pnotify.get().width() / 2)
-    //       });
-    //     }
-    //   });
-    // }
-
-    $rootScope.confirmDialog = function (message, title) {
-      var d = $q.defer();
-      var dialog = $modal.open({
-        template: function() {
-          return  '<div class="modal ex-modal"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" ng-click="cancel()">×</button><h4 class="modal-title">{{ title }}</h4></div><div class="modal-body"> {{ message }} </div><div class="modal-footer"><button class="btn btn-primary" ng-click="ok()"><i class="fa fa-check-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;Yes</button><button class="btn btn-warning" ng-click="cancel()"><i class="fa fa-times-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;No</button></div></div></div></div>'
-        },
-        controller: function($scope, $modalInstance) {
-          $scope.message = message;
-          $scope.title = title;
-
-          $scope.ok = function () {
-            $modalInstance.close();
-            d.resolve(true);
-          };
-
-          $scope.cancel = function () {
-            $modalInstance.dismiss();
-            d.reject(false)
-          };
+    $rootScope.showPasswordReset = function () {
+      sweetAlert({
+        title: 'Change Password',
+        text: 'Current Password:',
+        type: 'input',
+        inputType: 'password',
+        showCancelButton: true,
+        closeOnConfirm: false,
+        animation: 'slide-from-top',
+        inputPlaceholder: 'Current Password'
+      }, function(currentPassword) {
+        if (currentPassword === false) return false;
+        if (currentPassword === '') {
+          sweetAlert.showInput('No password provided!');
+          return false
         }
+        sweetAlert({
+          title: 'Change Password',
+          text: 'New Password:',
+          type: 'input',
+          inputType: 'password',
+          showCancelButton: true,
+          closeOnConfirm: false,
+          animation: 'slide-from-top',
+          inputPlaceholder: 'New Password'
+        }, function(password) {
+          if (password === false) return false;
+          if (password === '') {
+            sweetAlert.showInput('No password provided!');
+            return false
+          }
+          sweetAlert({
+            title: 'Change Password',
+            text: 'New Password Again:',
+            type: 'input',
+            inputType: 'password',
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: 'slide-from-top',
+            inputPlaceholder: 'New Password Again'
+          }, function(passwordConfirmation) {
+            if (passwordConfirmation === false) return false;
+            if (passwordConfirmation === '') {
+              sweetAlert.showInput('No password provided!');
+              return false
+            }
+            $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/change_password', {
+              current_password: currentPassword,
+              password: password,
+              password_confirmation: passwordConfirmation
+            }).success(function (data) {
+              if (data.error) {
+                sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
+              } else {
+                sweetAlert('Great!', 'Password changed successfully', 'success');
+              }
+            }).catch(function (data) {
+              sweetAlert('Nice!', 'You wrote: ' + inputValue, 'error');
+            }).finally(function (data) {
+              // 
+            });
+            
+            // sweetAlert("Nice!", "You wrote: " + inputValue, "success");
+          })
+        });
       });
-      return d.promise;
-    };
-
-    $rootScope.errorSummary = function (messages) {
-      var message = "<ul>";
-      angular.forEach(messages, function(value){
-        message += "<li>" + value + "</li>";
-      });
-      message += "</ul>";
-      notificationService.notify({
-        title: 'Error Summary',
-        text:  message,
-        type: 'error',
-        hide: false
-      });
-    };
+    }
   });

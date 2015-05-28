@@ -1,0 +1,6 @@
+test:
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV['POSTGRES_PORT_5432_TCP_ADDR'] %>
+  username: postgres
+  password: postgres

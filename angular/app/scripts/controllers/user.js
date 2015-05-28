@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('UserCtrl', function ($scope, $rootScope, APP, notificationService, $http, $state, $stateParams) {
+  .controller('UserCtrl', function ($scope, $rootScope, APP, exMsgBox, $http, $state, $stateParams) {
     window.AppUserCtrl = $scope;
     $scope.stateParams = $stateParams;
     $scope.state = $state;
@@ -43,10 +43,10 @@ angular.module('angularApp')
         $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/lock')
           .success(function (data) {
             scope.record = data;
-            notificationService.success('User successfully locked');
+            exMsgBox.success('User successfully locked');
           })
           .catch(function (error) {
-            notificationService.error(error['message']);
+            exMsgBox.error(error['message']);
           })
           .finally(function () {
             scope.action.locking = false;
@@ -58,10 +58,10 @@ angular.module('angularApp')
         $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/unlock')
           .success(function (data) {
             scope.record = data;
-            notificationService.success('User successfully unlocked');
+            exMsgBox.success('User successfully unlocked');
           })
           .catch(function (error) {
-            notificationService.error(error['message']);
+            exMsgBox.error(error['message']);
           })
           .finally(function () {
             scope.action.unlocking = false;

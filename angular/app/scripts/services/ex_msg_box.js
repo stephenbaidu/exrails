@@ -10,6 +10,9 @@
 angular.module('angularApp')
   .service('exMsgBox', function ($q) {
     return {
+      notify: function(options) {
+        new PNotify(options);
+      },
       success: function(message, title) {
         new PNotify({
           title: title || 'Success',
@@ -48,11 +51,11 @@ angular.module('angularApp')
         });
       },
       errorSummary: function(messages) {
-        var message = "<ul>";
+        var message = '<ul>';
         angular.forEach(messages, function(value){
-          message += "<li>" + value + "</li>";
+          message += '<li>' + value + '</li>';
         });
-        message += "</ul>";
+        message += '</ul>';
         new PNotify({
           title: 'Error Summary',
           text:  message,
@@ -86,34 +89,31 @@ angular.module('angularApp')
 
         return d.promise;
       },
+      clear: function () {
+        PNotify.removeAll();
+      },
+      sweetAlert: function(options) {
+        sweetAlert(options);
+      },
       prompt: function(message, title) {
-        var d = $q.defer();
-
-        (new PNotify({
+        var d = $q.defer()
+        sweetAlert({
           title: title || 'Input Needed',
           text: message,
-          icon: 'glyphicon glyphicon-question-sign',
-          hide: false,
-          confirm: {
-            prompt: true
-          },
-          buttons: {
-            closer: false,
-            sticker: false
-          },
-          history: {
-            history: false
+          type: 'input',
+          showCancelButton: true,
+          animation: "slide-from-top"
+        }, function (inputValue) {
+          if (inputValue === false) {
+            d.reject(false);
+            return false;
+          } else {
+            d.resolve(inputValue);
+            return true;
           }
-        })).get().on('pnotify.confirm', function(e, notice, val) {
-          d.resolve(val);
-        }).on('pnotify.cancel', function(e, notice) {
-          d.reject(false);
         });
 
         return d.promise;
-      },
-      clear: function () {
-        PNotify.removeAll();
       }
     };
   });

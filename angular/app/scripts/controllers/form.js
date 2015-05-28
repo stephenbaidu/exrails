@@ -8,13 +8,13 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, notificationService, $state, $stateParams, $http, $translate) {
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsgBox, $state, $stateParams, $http, $translate) {
     window.AppFormCtrl = $scope;
     $scope.lookups = {};
     $scope.schema  = {};
     $scope.form    = {};
     $scope.record  = {};
-    $scope.action  = { loading: true, saving: false, creating: false, updating: false };
+    $scope.action  = { loading: true, saving: false, creating: false, updating: false, deleting: false };
 
     $scope.loadConfig = function () {
       $http.get(APP.apiPrefix + 'config/' + $scope.model.url)
@@ -27,7 +27,7 @@ angular.module('angularApp')
           $scope.setRecord();
         })
         .error(function(data, status, headers, config) {
-          notificationService.error('error');
+          exMsgBox.error('error');
         });
     };
 
@@ -78,7 +78,7 @@ angular.module('angularApp')
       }
     };
 
-    $scope.cancel = function () {
+    $scope.close = function () {
       $scope.record = {};
       $state.go('^');
     };
@@ -99,7 +99,7 @@ angular.module('angularApp')
       resourceManager.create($scope.model.name, data)
         .then(function (data) {
           $rootScope.$broadcast('model:record-created', $scope);
-          notificationService.success($scope.schema.title + ' created successfully');
+          exMsgBox.success($scope.schema.title + ' created successfully');
           $scope.record.id = data.id;
           $scope.redirectBack();
         })
@@ -126,7 +126,7 @@ angular.module('angularApp')
       resourceManager.update($scope.model.name, data)
         .then(function (data) {
           $rootScope.$broadcast('model:record-updated', $scope);
-          notificationService.success($scope.schema.title + ' updated successfully');
+          exMsgBox.success($scope.schema.title + ' updated successfully');
           $scope.updateRecordInRecords(data)
           $scope.redirectBack();
         })
@@ -152,6 +152,29 @@ angular.module('angularApp')
       } else {
         $scope.create();
       }
+    };
+
+    $scope.delete = function () {
+      $scope.action.deleting = true;
+
+      var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
+      exMsgBox.confirm(msg, "Confirm Delete").then(function () {
+        var data = { id: $scope.record.id };
+        data[$scope.model.key] = $scope.record;
+        resourceManager.delete($scope.model.name, data)
+          .then(function (data) {
+            exMsgBox.success($scope.schema.title + " deleted successfully");
+            $scope.reload();
+            $scope.redirectBack();
+          })
+          .catch(function (error) {
+            $scope.error(error);
+          }).finally(function () {
+            $scope.action.deleting = false;
+          });
+      }).catch(function () {
+        $scope.action.deleting = false;
+      });
     };
 
     $scope.loadConfig();

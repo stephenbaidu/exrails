@@ -2,9 +2,12 @@ class UserPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if @user.admin?
-        scope
-      else
         scope.where('id > 1')
+      else
+        user_ids = scope.select do |u|
+          u.branch && (u.branch[:id] == @user.branch.id)
+        end.map(&:id)
+        User.where(id: user_ids)
       end
     end
   end

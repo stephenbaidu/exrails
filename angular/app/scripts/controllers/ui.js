@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name angularApp.controller:UiCtrl
+ * @name angularApp.controller:UserCtrl
  * @description
- * # UiCtrl
+ * # UserCtrl
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('UiCtrl', function ($scope) {
+  .controller('UiCtrl', function ($scope, APP, $http, $state, $stateParams) {
     window.AppUiCtrl = $scope;
 
     $scope.$on('model:config-loaded', function(evt, scope) {
