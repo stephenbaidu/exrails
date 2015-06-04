@@ -129,7 +129,7 @@ angular.module('angularApp')
     });
   };
 
-  var controllerFn = function($scope, $element, exMsgBox, $filter, $sce) {
+  var controllerFn = function($scope, $element, exMsg, $filter, $sce) {
     $scope.editorIndex = -1;
     $scope.isNewItem = false;
 
@@ -151,7 +151,7 @@ angular.module('angularApp')
 
     $scope.removeItem = function (index) {
       var msg = "Are you sure you want to remove this item?";
-      exMsgBox.confirm(msg, ($scope.title || 'Confirm Delete')).then(function () {
+      exMsg.confirm(msg, ($scope.title || 'Confirm Delete')).then(function () {
       if($scope.onDelete) {
         $scope.onDelete(angular.copy($scope.ngModel[index]))
       }

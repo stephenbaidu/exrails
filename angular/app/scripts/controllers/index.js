@@ -8,9 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsgBox, byValueFilter) {
-    window.AppIndexCtrl = $scope;
-    window.msgBox = exMsgBox;
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter) {
+    window.indexCtrl = $scope;
+    
     $scope.grid = {};
     $scope.recordsHash = {};
     $scope.records = [];
@@ -146,7 +146,7 @@ angular.module('angularApp')
 
     $scope.error = function (error) {
       error = error || {};
-      error.message  && exMsgBox.error(error.message, error.type || 'Error');
+      error.message  && exMsg.error(error.message, error.type || 'Error');
       error.messages && $rootScope.errorSummary(error.messages);
     }
 
@@ -154,13 +154,13 @@ angular.module('angularApp')
       $scope.action.deleting = true;
 
       var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
-      exMsgBox.confirm(msg, "Confirm Delete").then(function () {
+      exMsg.confirm(msg, "Confirm Delete").then(function () {
         var data = { id: id };
         data[$scope.model.key] = $scope.record;
         resourceManager.delete($scope.model.name, data)
           .then(function (data) {
             $scope.reload();
-            exMsgBox.success($scope.schema.title + " deleted successfully");
+            exMsg.success($scope.schema.title + " deleted successfully");
           })
           .catch(function (error) {
             $scope.error(error);
@@ -181,7 +181,7 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:config-loaded', $scope);
         })
         .error(function(data, status, headers, config) {
-          exMsgBox.error('error');
+          exMsg.error('error');
         });
     };
 

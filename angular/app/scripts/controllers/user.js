@@ -8,11 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('UserCtrl', function ($scope, $rootScope, APP, exMsgBox, $http, $state, $stateParams) {
-    window.AppUserCtrl = $scope;
-    $scope.stateParams = $stateParams;
-    $scope.state = $state;
-
+  .controller('UserCtrl', function ($scope, $rootScope, APP, exMsg, $http, $state, $stateParams) {
+    window.userCtrl = $scope;
+    
     $scope.$on('model:config-loaded', function (evt, scope) {
       if (scope.model && scope.model.name === 'User') {
         scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip', 'last_sign_in_at', 'last_sign_in_ip'];
@@ -43,10 +41,10 @@ angular.module('angularApp')
         $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/lock')
           .success(function (data) {
             scope.record = data;
-            exMsgBox.success('User successfully locked');
+            exMsg.success('User successfully locked');
           })
           .catch(function (error) {
-            exMsgBox.error(error['message']);
+            exMsg.error(error['message']);
           })
           .finally(function () {
             scope.action.locking = false;
@@ -58,10 +56,10 @@ angular.module('angularApp')
         $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/unlock')
           .success(function (data) {
             scope.record = data;
-            exMsgBox.success('User successfully unlocked');
+            exMsg.success('User successfully unlocked');
           })
           .catch(function (error) {
-            exMsgBox.error(error['message']);
+            exMsg.error(error['message']);
           })
           .finally(function () {
             scope.action.unlocking = false;

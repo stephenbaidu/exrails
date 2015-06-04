@@ -8,11 +8,12 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $modal, $state, APP, exMsgBox) {
-
-    $rootScope.modules = APP['modules'] || {};
+  .controller('AppCtrl', function ($scope, $http, $auth, $q, $modal, $state, APP, exMsg, $stateParams) {
+    window.appCtrl = $scope;
     
-    $rootScope.state = {
+    $scope.modules = APP['modules'] || {};
+    
+    $scope.state = {
       isIndex: true,
       isNew: false,
       isShow: false,
@@ -27,7 +28,7 @@ angular.module('angularApp')
       }
     };
 
-    $rootScope.hasAccess = function (urlOrPermission) {
+    $scope.hasAccess = function (urlOrPermission) {
       if ($auth.user.is_admin) {
         return true;
       }
@@ -65,27 +66,27 @@ angular.module('angularApp')
       return (found === undefined)? false : true;
     }
 
-    $rootScope.back = function () {
+    $scope.back = function () {
       $state.go('^');
     }
 
-    $rootScope.state.update($rootScope.state.update($state.current));
+    $scope.state.update($scope.state.update($state.current));
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $rootScope.state.update(toState);
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      $scope.state.update(toState);
     });
 
-    $rootScope.hasUrl = function(url) {
+    $scope.hasUrl = function(url) {
       return window.location.hash.indexOf(url) >= 0;
     };
 
-    $rootScope.buildQ = function(data) {
+    $scope.buildQ = function(data) {
       return _.map(data, function (v, k) {
           return k + '.eq.' + v;
         }).join(':');
     };
 
-    $rootScope.splitQ = function(str) {
+    $scope.splitQ = function(str) {
       var result = {};
       str.split(':').forEach(function(x){
         var arr = x.split('.eq.');
@@ -102,23 +103,20 @@ angular.module('angularApp')
 
     $http.get(APP.apiPrefix + 'users/' + $auth.user.id)
       .success(function (data) {
-        $auth.user.client = data.client;
-        $auth.user.branch = data.branch;
         $auth.user.is_admin = data.is_admin;
-        $auth.user.is_system_admin = data.is_system_admin;
+        $auth.user.status = data.status;
       });
 
     $scope.$on('auth:logout-success', function(ev) {
-      // exMsgBox.info('Goodbye');
       $state.go('login');
     });
 
     $scope.$on('auth:logout-error', function(ev) {
-      exMsgBox.error('Unable to complete logout. Please try again.');
+      exMsg.error('Unable to complete logout. Please try again.');
     });
 
-    $rootScope.showPasswordReset = function () {
-      sweetAlert({
+    $scope.showPasswordChange = function () {
+      exMsg.sweetAlert({
         title: 'Change Password',
         text: 'Current Password:',
         type: 'input',
@@ -130,10 +128,10 @@ angular.module('angularApp')
       }, function(currentPassword) {
         if (currentPassword === false) return false;
         if (currentPassword === '') {
-          sweetAlert.showInput('No password provided!');
+          exMsg.sweetAlert.showInputError('No password provided!');
           return false
         }
-        sweetAlert({
+        exMsg.sweetAlert({
           title: 'Change Password',
           text: 'New Password:',
           type: 'input',
@@ -145,10 +143,10 @@ angular.module('angularApp')
         }, function(password) {
           if (password === false) return false;
           if (password === '') {
-            sweetAlert.showInput('No password provided!');
+            exMsg.sweetAlert.showInputError('No password provided!');
             return false
           }
-          sweetAlert({
+          exMsg.sweetAlert({
             title: 'Change Password',
             text: 'New Password Again:',
             type: 'input',
@@ -160,7 +158,7 @@ angular.module('angularApp')
           }, function(passwordConfirmation) {
             if (passwordConfirmation === false) return false;
             if (passwordConfirmation === '') {
-              sweetAlert.showInput('No password provided!');
+              exMsg.sweetAlert.showInputError('No password provided!');
               return false
             }
             $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/change_password', {
@@ -169,17 +167,13 @@ angular.module('angularApp')
               password_confirmation: passwordConfirmation
             }).success(function (data) {
               if (data.error) {
-                sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
+                exMsg.sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
               } else {
-                sweetAlert('Great!', 'Password changed successfully', 'success');
+                exMsg.sweetAlert('Great!', 'Password changed successfully', 'success');
               }
             }).catch(function (data) {
-              sweetAlert('Nice!', 'You wrote: ' + inputValue, 'error');
-            }).finally(function (data) {
-              // 
+              exMsg.sweetAlert('Nice!', 'You wrote: ' + inputValue, 'error');
             });
-            
-            // sweetAlert("Nice!", "You wrote: " + inputValue, "success");
           })
         });
       });

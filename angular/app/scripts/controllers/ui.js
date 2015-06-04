@@ -9,7 +9,7 @@
  */
 angular.module('angularApp')
   .controller('UiCtrl', function ($scope, APP, $http, $state, $stateParams) {
-    window.AppUiCtrl = $scope;
+    window.uiCtrl = $scope;
 
     $scope.$on('model:config-loaded', function(evt, scope) {
       if (!scope.model || !scope.schema) return;

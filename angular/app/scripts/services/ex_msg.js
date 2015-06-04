@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc service
- * @name angularApp.exMsgBox
+ * @name angularApp.exMsg
  * @description
- * # exMsgBox
+ * # exMsg
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('exMsgBox', function ($q) {
+  .service('exMsg', function ($q) {
     return {
       notify: function(options) {
         new PNotify(options);
@@ -18,8 +18,7 @@ angular.module('angularApp')
           title: title || 'Success',
           text:  message,
           type: 'success',
-          nonblock: true,
-          nonblock_opacity: .2
+          nonblock: true
         });
       },
       error: function(message, title) {
@@ -92,9 +91,7 @@ angular.module('angularApp')
       clear: function () {
         PNotify.removeAll();
       },
-      sweetAlert: function(options) {
-        sweetAlert(options);
-      },
+      sweetAlert: sweetAlert,
       prompt: function(message, title) {
         var d = $q.defer()
         sweetAlert({

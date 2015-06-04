@@ -8,8 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsgBox, $state, $stateParams, $http, $translate) {
-    window.AppFormCtrl = $scope;
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate) {
+    window.formCtrl = $scope;
+    
     $scope.lookups = {};
     $scope.schema  = {};
     $scope.form    = {};
@@ -27,7 +28,7 @@ angular.module('angularApp')
           $scope.setRecord();
         })
         .error(function(data, status, headers, config) {
-          exMsgBox.error('error');
+          exMsg.error('error');
         });
     };
 
@@ -99,7 +100,7 @@ angular.module('angularApp')
       resourceManager.create($scope.model.name, data)
         .then(function (data) {
           $rootScope.$broadcast('model:record-created', $scope);
-          exMsgBox.success($scope.schema.title + ' created successfully');
+          exMsg.success($scope.schema.title + ' created successfully');
           $scope.record.id = data.id;
           $scope.redirectBack();
         })
@@ -126,7 +127,7 @@ angular.module('angularApp')
       resourceManager.update($scope.model.name, data)
         .then(function (data) {
           $rootScope.$broadcast('model:record-updated', $scope);
-          exMsgBox.success($scope.schema.title + ' updated successfully');
+          exMsg.success($scope.schema.title + ' updated successfully');
           $scope.updateRecordInRecords(data)
           $scope.redirectBack();
         })
@@ -158,12 +159,12 @@ angular.module('angularApp')
       $scope.action.deleting = true;
 
       var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
-      exMsgBox.confirm(msg, "Confirm Delete").then(function () {
+      exMsg.confirm(msg, "Confirm Delete").then(function () {
         var data = { id: $scope.record.id };
         data[$scope.model.key] = $scope.record;
         resourceManager.delete($scope.model.name, data)
           .then(function (data) {
-            exMsgBox.success($scope.schema.title + " deleted successfully");
+            exMsg.success($scope.schema.title + " deleted successfully");
             $scope.reload();
             $scope.redirectBack();
           })

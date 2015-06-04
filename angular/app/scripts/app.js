@@ -55,43 +55,36 @@ app.constant('APP', {
 
 app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
-  $urlRouterProvider.when('/app', '/app/dashboard'); // Default route
-  $urlRouterProvider.when('/app/main', '/app/main/samples');
-  $urlRouterProvider.when('/app/reports', '/app/reports/samples');
-  $urlRouterProvider.when('/app/setups', '/app/setups/sample-statuses');
+  $urlRouterProvider.when('/', '/dashboard'); // Default route
+  $urlRouterProvider.when('/main', '/main/samples');
+  $urlRouterProvider.when('/reports', '/reports/samples');
+  $urlRouterProvider.when('/setups', '/setups/sample-statuses');
   $stateProvider
-    .state('login', {
-      url: '/',
-      templateUrl: 'views/layouts/login.html',
-      controller: 'MainCtrl'
-    })
     .state('app', {
-      url: '/app',
-      abstract: true,
+      url: '/',
+      // abstract: true,
       templateUrl: 'views/layouts/app.html',
       controller: 'AppCtrl',
       resolve: {
         auth: function($auth, $state, $rootScope) {
-          return $auth.validateUser()
-            .then(function(data) {
-              $rootScope.currentUser = data;
-            })
-            .catch(function(){
-              // redirect unauthorized users to the login page
-              $state.go('login');
-            });
+          return $auth.validateUser().catch(function() { $state.go('login'); });
         }
       }
     })
+    .state('login', {
+      url: '/login',
+      templateUrl: 'views/layouts/login.html',
+      controller: 'LoginCtrl'
+    })
     .state('app.dashboard', {
-      url: '/dashboard',
+      url: 'dashboard',
       templateUrl: function (stateParams) {
         return 'views/layouts/dashboard.html';
       },
       controller: 'ModuleCtrl'
     })
     .state('app.module', {
-      url: '/:module',
+      url: ':module',
       templateUrl: function (stateParams) {
         return 'views/layouts/' + stateParams.module + '_module.html';
       },

@@ -1,18 +1,18 @@
 'use strict';
 
-describe('Service: exMsgBox', function () {
+describe('Service: exMsg', function () {
 
   // load the service's module
   beforeEach(module('angularApp'));
 
   // instantiate service
-  var exMsgBox;
-  beforeEach(inject(function (_exMsgBox_) {
-    exMsgBox = _exMsgBox_;
+  var exMsg;
+  beforeEach(inject(function (_exMsg_) {
+    exMsg = _exMsg_;
   }));
 
   it('should do something', function () {
-    expect(!!exMsgBox).toBe(true);
+    expect(!!exMsg).toBe(true);
   });
 
 });

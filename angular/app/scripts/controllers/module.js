@@ -9,5 +9,5 @@
  */
 angular.module('angularApp')
   .controller('ModuleCtrl', function ($scope, APP) {
-    window.AppModuleCtrl = $scope;
+    window.moduleCtrl = $scope;
   });
