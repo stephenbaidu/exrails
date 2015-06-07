@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name angularApp.controller:UserCtrl
+ * @name angularApp.controller:UiCtrl
  * @description
- * # UserCtrl
+ * # UiCtrl
  * Controller of the angularApp
  */
 angular.module('angularApp')
