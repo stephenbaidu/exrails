@@ -119,58 +119,6 @@ table tr.active > td {
   /*padding-left: 0px;*/
 }
 
-.ex-form {
-  border: 2px solid #E2D7F1;
-  border-radius: 0px;
-}
-
-.ex-form .form-group, .ex-form .ex-array {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.ex-form .has-switch {
-  min-width: 70px;
-  width: 70px;
-}
-
-.ex-form .panel-heading {
-  padding: 10px;
-}
-
-.ex-form .panel-heading .close {
-  margin-top: -3px;
-}
-
-.ex-form .panel-heading, .ex-form .panel-footer {
-  background-color: #E2D7F1;
-  border-color: #E2D7F1;
-  color: black;
-  border-radius: 0px;
-}
-
-.ex-form .panel-body {
-  padding: 10px 5px 0px 5px;
-}
-
-.ex-form .panel-footer {
-  padding: 5px 10px;
-}
-
-.ex-nav {
-  background-color: #563D7C;
-  border-color: #463265;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.ex-nav .navbar-nav > .active > a {
-  background-color: #463265 !important;
-}
-
-.ex-nav .navbar-nav > li > a:hover {
-  color: #fff;
-}
-
 .grid-action-1 {
   width: 26px;
 }
@@ -238,10 +186,6 @@ table tr.active > td {
 }
 
 .alert .glyphicon {
-  color: black;
-}
-
-.ex-search-remove {
   color: black;
 }
 
@@ -435,28 +379,6 @@ table tr.active > td {
 
 .wizard .current:after {
   border-left-color: #007ACC;
-}
-
-.ex-modal .modal-header {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.ex-form {
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.ex-form .panel-heading, .ex-form .panel-footer {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.ex-nav {
-  background-color: rgba(47, 47, 47, 0.98);
-  border-color: rgba(39, 39, 39, 0.98);
-}
-
-.ex-nav .navbar-nav > .active > a {
-  background-color: rgba(39, 39, 39, 0.98) !important;
 }
 
 .table-bordered thead th {
