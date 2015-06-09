@@ -53,19 +53,19 @@ angular.module('angularApp')
     }
 
     $scope.hasCreateAccess = function () {
-      return $rootScope.hasAccess($scope.model.name + ':create');
+      return $scope.hasAccess($scope.model.name + ':create');
     }
 
     $scope.hasShowAccess = function () {
-      return $rootScope.hasAccess($scope.model.name + ':show');
+      return $scope.hasAccess($scope.model.name + ':show');
     }
 
     $scope.hasUpdateAccess = function () {
-      return $rootScope.hasAccess($scope.model.name + ':update');
+      return $scope.hasAccess($scope.model.name + ':update');
     }
 
     $scope.hasDeleteAccess = function () {
-      return $rootScope.hasAccess($scope.model.name + ':delete');
+      return $scope.hasAccess($scope.model.name + ':delete');
     }
 
     $scope.$on('model:records-loaded', function (e, scope) {
