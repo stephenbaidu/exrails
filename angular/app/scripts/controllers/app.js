@@ -105,6 +105,8 @@ angular.module('angularApp')
       .success(function (data) {
         $auth.user.is_admin = data.is_admin;
         $auth.user.status = data.status;
+        $auth.user.roles = data.roles;
+        $rootScope.$broadcast('user:user-updated', $scope);
       });
 
     $scope.$on('auth:logout-success', function(ev) {
@@ -113,6 +115,10 @@ angular.module('angularApp')
 
     $scope.$on('auth:logout-error', function(ev) {
       exMsg.error('Unable to complete logout. Please try again.');
+    });
+
+    $scope.$on('auth:session-expired', function(ev) {
+      $state.go('login');
     });
 
     $scope.showPasswordChange = function () {
