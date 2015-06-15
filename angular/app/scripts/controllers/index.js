@@ -8,10 +8,10 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService) {
     window.indexCtrl = $scope;
     
-    $scope.grid = {};
+    $scope.grid = [];
     $scope.recordsHash = {};
     $scope.records = [];
     $scope.searchQuery = null;
@@ -147,7 +147,10 @@ angular.module('angularApp')
     $scope.error = function (error) {
       error = error || {};
       error.message  && exMsg.error(error.message, error.type || 'Error');
-      error.messages && $rootScope.errorSummary(error.messages);
+      // error.messages && $rootScope.errorSummary(error.messages);
+      angular.forEach(error.messages, function(value) {
+        exMsg.error(value, 'Error');
+      });
     }
 
     $scope.delete = function (id) {
@@ -183,6 +186,40 @@ angular.module('angularApp')
         .error(function(data, status, headers, config) {
           exMsg.error('error');
         });
+    };
+
+    $scope.toCSV = function () {
+      var columns = _.chain($scope.grid)
+        .map(function (e) {
+          return {key: e, title: $scope.schema.properties[e].title}
+        }).value();
+      var reportData = _.map($scope.records, function (rec) {
+        var data = {};
+        _.each($scope.grid, function (e) {
+          data[e] = $scope.fieldData(rec, e);
+        });
+
+        return data;
+      });
+      
+      reportService.toCSV($scope.model.title, reportData, columns);
+    };
+
+    $scope.toPDF = function () {
+      var columns = _.chain($scope.grid)
+        .map(function (e) {
+          return {key: e, title: $scope.schema.properties[e].title}
+        }).value();
+      var reportData = _.map($scope.records, function (rec) {
+        var data = {};
+        _.each($scope.grid, function (e) {
+          data[e] = $scope.fieldData(rec, e);
+        });
+
+        return data;
+      });
+      
+      reportService.toPDF($scope.model.title, reportData, columns);
     };
 
     $scope.loadConfig();
