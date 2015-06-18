@@ -196,7 +196,7 @@ angular.module('angularApp')
       var reportData = _.map($scope.records, function (rec) {
         var data = {};
         _.each($scope.grid, function (e) {
-          data[e] = $scope.fieldData(rec, e);
+          data[e] = $scope.fieldData(rec, e) || '';
         });
 
         return data;
@@ -213,7 +213,7 @@ angular.module('angularApp')
       var reportData = _.map($scope.records, function (rec) {
         var data = {};
         _.each($scope.grid, function (e) {
-          data[e] = $scope.fieldData(rec, e);
+          data[e] = $scope.fieldData(rec, e) || '';
         });
 
         return data;
