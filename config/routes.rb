@@ -16,11 +16,15 @@ Rails.application.routes.draw do
       post 'unlock', on: :member
       post 'reset_password', on: :member
       post 'change_password', on: :member
-      post 'permissions', on: :member
+      # post 'permissions', on: :member
     end
     resources :roles
     resources :samples
     resources :sample_statuses
+
+    # Reports
+    get 'reports/samples' => 'reports#samples'
+    get 'reports/sample' => 'reports#sample'
     
   end
 

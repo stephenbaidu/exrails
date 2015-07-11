@@ -106,6 +106,7 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1.0)
+    pdfkit (0.7.0)
     pg (0.18.1)
     pundit (0.3.0)
       activesupport (>= 3.0.0)
@@ -204,6 +205,7 @@ GEM
       sprockets-rails (>= 2.0, < 4.0)
     wicked_pdf (0.11.0)
       rails
+    wkhtmltopdf-binary (0.9.9.3)
 
 PLATFORMS
   ruby
@@ -221,6 +223,7 @@ DEPENDENCIES
   newrelic_rpm
   omniauth
   paper_trail (~> 4.0.0.rc)
+  pdfkit
   pg
   pundit
   rails (= 4.2.1)
@@ -237,3 +240,4 @@ DEPENDENCIES
   uglifier
   web-console (~> 2.0)
   wicked_pdf
+  wkhtmltopdf-binary

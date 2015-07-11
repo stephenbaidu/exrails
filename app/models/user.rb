@@ -60,11 +60,19 @@ class User < ActiveRecord::Base
     Role.unscoped.where id: self.role_ids
   end
 
+  def permissions
+    self.roles.map(&:permissions).flatten
+  end
+
   def has_permission?(permission)
     if Permission.where(name: permission).exists?
       self.roles.map(&:permissions).flatten.include? permission
     else
       false
     end
+  end
+
+  def as_json(options={})
+    super(methods: [:permissions, :admin?])
   end
 end

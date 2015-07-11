@@ -127,7 +127,7 @@ namespace :ng do
         </tr>
       </thead>
       <tbody data-link="row" class="rowlink">
-        <tr ng-repeat="rec in records | filter:filterText" ng-class="{active: rec.id == paging.currentId}">
+        <tr ng-repeat="rec in records | filter:filterText" ng-class="{active: rec.id === paging.currentId}">
           <td>{{ $index + 1 }}.</td>
           <td>
             {{ rec.name }}
@@ -212,6 +212,13 @@ namespace :ng do
       <span class="glyphicon glyphicon-ok"></span>
       {{ (action.updating)? "Updating..." : "Update" }}
     </button>
+    <div class="pull-right">
+      <button ng-show="hasDeleteAccess()" ng-disabled="action.deleting" class="btn btn-warning btn-sm" ng-click="delete(record.id)">
+        <span class="fa fa-trash"></span>
+        Delete
+      </button>
+    </div>
+    <div class="clearfix"></div>
   </div>
 </div>
     eos

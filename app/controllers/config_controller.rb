@@ -214,8 +214,8 @@ class ConfigController < ApplicationController
     def excluded_field?(field)
       # ["id", "created_at", "updated_at"].include? field
       [
-        'id', 'created_at', 'updated_at', 'details',
-        'lft', 'rgt', 'depth'
+        'id', 'created_at', 'updated_at', 'deleted_at',
+        'details', 'lft', 'rgt', 'depth'
       ].include? field
     end
 

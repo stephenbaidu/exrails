@@ -24,7 +24,8 @@ gem 'rb-readline'
 # gem 'whenever', :require => false
 gem 'rest-client'
 gem 'delayed_job_active_record'
-# gem 'wkhtmltopdf-binary'
+gem 'pdfkit'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
