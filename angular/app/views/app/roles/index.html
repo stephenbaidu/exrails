@@ -17,7 +17,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-4 form-group">
+  <div class="col-md-4 form-group hidden-sm hidden-xs">
     <div class="input-group">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default" aria-expanded="false"><span class="fa fa-search"></span></button>
@@ -25,7 +25,7 @@
       <input type="text" class="form-control" ng-model="filterText" aria-label="...">
     </div>
   </div>
-  <div ng-hide="state.isIndex" class="col-md-8 no-left">
+  <div ng-hide="state.isIndex" class="col-md-8 no-left" style="padding-bottom: 5px;">
     <div class="row">
       <div class="col-xs-6">
         <button class="btn btn-default" ng-click="back()">
@@ -50,8 +50,8 @@
   </div>
 </div>
 <div class="row">
-  <div ng-class="{ 'col-md-12': state.isIndex, 'col-md-4': !state.isIndex }">
-    <table ng-if="state.isIndex" class="table table-bordered table-striped table-hover">
+  <div ng-show="state.isIndex" class="col-md-12">
+    <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
           <th class='grid-action-1'></th>
@@ -75,7 +75,15 @@
         </tr>
       </tbody>
     </table>
-    <table ng-if="!state.isIndex" class="table table-bordered table-striped table-hover">
+    <div class="pull-right">
+      <button ng-disabled="action.loading" type="button" class="btn btn-success" ng-click="loadMore()">
+        <span class="fa fa-spinner" ng-class="{'fa-pulse': action.loading}"></span>
+        {{ (action.loading)? "Loading..." : "More" }}
+      </button>
+    </div>
+  </div>
+  <div ng-hide="state.isIndex" class="col-md-4 hidden-sm hidden-xs">
+    <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
           <th class='grid-action-1'></th>
@@ -104,7 +112,7 @@
       </button>
     </div>
   </div>
-  <div class="col-md-8 no-left">
+  <div ng-hide="state.isIndex" class="col-md-8 no-left">
     <div ui-view></div>
   </div>
 </div>

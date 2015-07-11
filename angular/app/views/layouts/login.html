@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto+Slab">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Rock+Salt">
-<div id="page" class="login">
+<div class="login" id="page">
   <header id="header" class="site-header">
     <nav id="topbar" class="site-topbar">
       <div class="container">
@@ -25,7 +25,7 @@
             <span class="sr-only">Toggle navigation</span>
             <i class="fa fa-bars"></i>
           </button>
-          <h1 class="navbar-brand"><a href="#/"><img src="images/yeoman.png" alt=""> Project Name</a></h1>
+          <h1 class="navbar-brand"><a href="#/"><img src="images/logo.png" alt=""> eXRails App</a></h1>
         </div>
       </div>
     </nav>
@@ -55,7 +55,7 @@
               <a href="#" ng-click="sendPasswordResetEmail()">Forgot your password?</a>
               </p>
               <p class="text-center">
-              <a href="#">Didn't receive confirmation instructions?</a>
+              <a href="#" ng-click="sendConfirmationInstructions()">Didn't receive confirmation instructions?</a>
               </p>
               <!-- <p class="text-center">
               <a href="#">Didn't receive unlock instructions?</a>
@@ -116,8 +116,8 @@
     <div class="container">
       <div class="copyright">
         <p>
-          © 2015, Company Name.
-          <br /> Developed by baidus.net
+          © 2015 Axon Information Systems.
+          <br /> Developed by Axon Information Systems
         </p>
       </div>
     </div>

@@ -64,26 +64,20 @@ angular.module('angularApp')
       },
       confirm: function(message, title) {
         var d = $q.defer();
-
-        (new PNotify({
-          title: title || 'Confirmation Needed',
+        sweetAlert({
+          title: title || 'Confirm',
           text: message,
-          icon: 'glyphicon glyphicon-question-sign',
-          hide: false,
-          confirm: {
-            confirm: true
-          },
-          buttons: {
-            closer: false,
-            sticker: false
-          },
-          history: {
-            history: false
+          type: 'warning',
+          showCancelButton: true,
+          animation: "slide-from-top"
+        }, function (isConfirm) {
+          if (isConfirm) {
+            d.resolve(true);
+            return true;
+          } else {
+            d.reject(false);
+            return false;
           }
-        })).get().on('pnotify.confirm', function() {
-          d.resolve(true);
-        }).on('pnotify.cancel', function() {
-          d.reject(false);
         });
 
         return d.promise;

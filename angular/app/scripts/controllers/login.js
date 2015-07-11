@@ -2,16 +2,17 @@
 
 /**
  * @ngdoc function
- * @name angularApp.controller:LoginCtrl
+ * @name angularApp.controller:MainCtrl
  * @description
- * # LoginCtrl
+ * # MainCtrl
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('LoginCtrl', function ($scope, $rootScope, $auth, $state, exMsg, $modal, APP) {
-    window.loginCtrl = $scope
+  .controller('LoginCtrl', function ($scope, $auth, $http, $state, exMsg, APP) {
+    var vm = $scope;
+    window.loginCtrl = vm;
     
-    $scope.$on('auth:registration-email-success', function(ev, data) {
+    vm.$on('auth:registration-email-success', function(ev, data) {
       var message = 'A registration email was ' + 'sent to ' + data.email + '. Follow the instructions contained in the email to complete registration.';
       exMsg.sweetAlert({
         title: 'Registration',
@@ -20,33 +21,33 @@ angular.module('angularApp')
       });
     });
 
-    $scope.$on('auth:registration-email-error', function(ev, data) {
-      var messages = _.map(data.errors.full_messages, function (error) {
-        return error.replace(/Email This/, 'This');
-      });
+    vm.$on('auth:registration-email-error', function(ev, data) {
+      // var messages = _.map(data.errors.full_messages, function (error) {
+      //   return error.replace(/Email This/, 'This');
+      // });
 
-      if (messages.length === 1) {
-        exMsg.sweetAlert(messages[0]);
-      } else {
-        exMsg.sweetAlert('Validation Error', messages.join('\n'), 'error');
-      }
+      // if (messages.length === 1) {
+      //   exMsg.sweetAlert(messages[0]);
+      // } else {
+      //   exMsg.sweetAlert('Validation Error', messages.join('\n'), 'error');
+      // }
     });
 
-    $scope.$on('auth:login-success', function(ev, user) {
-      $state.go('app.dashboard');
+    vm.$on('auth:login-success', function(ev, user) {
+      $state.go('app');
     });
 
-    $scope.$on('auth:login-error', function(ev, data) {
+    vm.$on('auth:login-error', function(ev, data) {
       exMsg.sweetAlert('Failed', data.errors[0], 'error');
     });
 
-    $scope.sendPasswordResetEmail = function () {
+    vm.sendPasswordResetEmail = function () {
       exMsg.sweetAlert({
         title: 'Password Reset',
         text: 'Email',
         type: 'input',
         showCancelButton: true,
-        animation: "slide-from-top"
+        animation: 'slide-from-top'
       }, function (email) {
         if (email === false) return false;
         if (email === '') {
@@ -63,15 +64,30 @@ angular.module('angularApp')
       });
     }
 
-    $scope.sendConfirmationInstructions = function () {
+    vm.sendConfirmationInstructions = function () {
       exMsg.sweetAlert({
         title: 'Confirmation Instructions',
         text: 'Email',
         type: 'input',
         showCancelButton: true,
-        animation: "slide-from-top"
+        animation: 'slide-from-top'
       }, function (email) {
-        //
+        if (email === false) return false;
+        if (email === '') {
+          exMsg.sweetAlert.showInputError('No email provided!');
+          return false
+        }
+
+        $http.post(APP.apiPrefix + 'users/send_confirmation_instructions', {
+          email: email,
+          redirect_url: window.location.href.split('#')[0]
+        }).success(function (data) {
+          if(data.error) {
+            exMsg.sweetAlert('Error', data.message, 'error');
+          } else {
+            exMsg.sweetAlert('Successful', data.message, 'success');
+          }
+        });
       });
     }
   });

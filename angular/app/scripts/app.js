@@ -20,15 +20,20 @@ var app = angular.module('angularApp', [
   'ngTouch',
   'ng-token-auth',
   'angular-underscore',
-  'ui.bootstrap',
+  // 'ui.bootstrap',
+  'ngDialog',
   'ui.select',
+  'xeditable',
+  'daterangepicker',
+  'angular-loading-bar',
   'pascalprecht.translate',
-  'schemaForm'
+  'schemaForm',
+  'formly',
+  'formlyBootstrap'
 ]);
 
 app.constant('APP', {
   root: '/',
-  tplPrefix: '/tpl/',
   apiPrefix: '/api/',
   modules: {
     main: {
@@ -40,7 +45,8 @@ app.constant('APP', {
     reports:  {
       text: 'Reports', url: 'reports', icon: 'glyphicon glyphicon-stats',
       links: [
-        { text: 'Samples', url: 'samples', icon: 'fa fa-clipboard' }
+        { text: 'Samples', url: 'samples', icon: 'fa fa-clipboard' },
+        { text: 'Sample',  url: 'sample-info',  icon: 'fa fa-clipboard' }
       ]
     },
     setups: {
@@ -82,6 +88,20 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         return 'views/layouts/dashboard.html';
       },
       controller: 'ModuleCtrl'
+    })
+    .state('app.reports', {
+      url: 'reports',
+      templateUrl: function (stateParams) {
+        return 'views/layouts/reports_module.html';
+      }
+    })
+    .state('app.reports.report', {
+      url: '/:report',
+      templateUrl: function (stateParams) {
+        // return 'views/app/reports/' + stateParams.report + '.html';
+        return 'views/app/reports/show.html';
+      },
+      controller: 'ReportCtrl'
     })
     .state('app.module', {
       url: ':module',
@@ -134,11 +154,40 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     });
 }).config(function($authProvider) {
   $authProvider.configure({
-    apiUrl: '/api'
+    apiUrl: '/api',
+    confirmationSuccessUrl:  window.location.href.split('#')[0],
   });
 }).factory('$exceptionHandler', function() {
   return function(exception, cause) {
     // exception.message += ' (caused by "' + cause + '")';
     // throw exception;
   };
+}).run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+}).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+  cfpLoadingBarProvider.includeSpinner = false;
+}]).run(function(formlyConfig, formlyValidationMessages) {
+  // formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'true';
+  // formlyValidationMessages.addStringMessage('required', 'This field is required');
+  formlyConfig.setType({
+    name: 'ui-select',
+    extends: 'select',
+    templateUrl: 'views/templates/ui-select.html'
+  });
+  formlyConfig.setType({
+    name: 'ui-select-multiple',
+    extends: 'ui-select',
+    templateUrl: 'views/templates/ui-select-multiple.html'
+  });
+  formlyConfig.setType({
+    name: 'datepicker',
+    extends: 'input',
+    templateUrl: 'views/templates/datepicker.html'
+  });
+}).config(function (formlyConfigProvider) {  
+  // formlyConfigProvider.setWrapper({
+  //   name: 'validation',
+  //   types: ['input', 'ui-select', 'datepicker'],
+  //   templateUrl: 'views/templates/error-messages.html'
+  // });
 });

@@ -8,12 +8,13 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AppCtrl', function ($scope, $http, $auth, $q, $modal, $state, APP, exMsg, $stateParams) {
-    window.appCtrl = $scope;
+  .controller('AppCtrl', function ($scope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
+    var vm = $scope;
+    window.appCtrl = vm;
     
-    $scope.modules = APP['modules'] || {};
+    vm.modules = APP['modules'] || {};
     
-    $scope.state = {
+    vm.state = {
       isIndex: true,
       isNew: false,
       isShow: false,
@@ -28,8 +29,8 @@ angular.module('angularApp')
       }
     };
 
-    $scope.hasAccess = function (urlOrPermission) {
-      if ($auth.user.is_admin) {
+    vm.hasAccess = function (urlOrPermission) {
+      if ($auth.user['admin?'] === true) {
         return true;
       }
 
@@ -66,27 +67,27 @@ angular.module('angularApp')
       return (found === undefined)? false : true;
     }
 
-    $scope.back = function () {
+    vm.back = function () {
       $state.go('^');
     }
 
-    $scope.state.update($scope.state.update($state.current));
+    vm.state.update(vm.state.update($state.current));
 
-    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $scope.state.update(toState);
+    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      vm.state.update(toState);
     });
 
-    $scope.hasUrl = function(url) {
+    vm.hasUrl = function(url) {
       return window.location.hash.indexOf(url) >= 0;
     };
 
-    $scope.buildQ = function(data) {
+    vm.buildQ = function(data) {
       return _.map(data, function (v, k) {
           return k + '.eq.' + v;
         }).join(':');
     };
 
-    $scope.splitQ = function(str) {
+    vm.splitQ = function(str) {
       var result = {};
       str.split(':').forEach(function(x){
         var arr = x.split('.eq.');
@@ -95,33 +96,21 @@ angular.module('angularApp')
       return result;
     };
 
-    // Load permissions
-    $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/permissions')
-      .success(function (data) {
-        $auth.user.permissions = data;
-      });
+    // // Load permissions
+    // $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/permissions')
+    //   .success(function (data) {
+    //     $auth.user.permissions = data;
+    //   });
 
-    $http.get(APP.apiPrefix + 'users/' + $auth.user.id)
-      .success(function (data) {
-        $auth.user.is_admin = data.is_admin;
-        $auth.user.status = data.status;
-        $auth.user.roles = data.roles;
-        $rootScope.$broadcast('user:user-updated', $scope);
-      });
-
-    $scope.$on('auth:logout-success', function(ev) {
+    vm.$on('auth:logout-success', function(ev) {
       $state.go('login');
     });
 
-    $scope.$on('auth:logout-error', function(ev) {
+    vm.$on('auth:logout-error', function(ev) {
       exMsg.error('Unable to complete logout. Please try again.');
     });
 
-    $scope.$on('auth:session-expired', function(ev) {
-      $state.go('login');
-    });
-
-    $scope.showPasswordChange = function () {
+    vm.showPasswordChange = function () {
       exMsg.sweetAlert({
         title: 'Change Password',
         text: 'Current Password:',

@@ -1,0 +1,245 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+// bower:scss
+@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
+body {
+  padding-top: 50px;
+  font-size: 14px;
+}
+
+.formly-field-ui-select-multiple {
+  input.ui-select-search {
+    height: 1.666666em !important;
+  }
+  .ui-select-container {
+    min-height: 38px;
+    padding: 4px 4px;
+  }
+  .ui-select-match-item {
+    height: 25px;
+    padding-top: 2px;
+  }
+}
+
+.formly-form {
+  .formly-field-group {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  
+  input, select, .ui-select-match, .ui-select-toggle {
+    height: 38px !important;
+  }
+}
+
+.rowlink tr td:first-child, .rowlink tr td:last-child {
+  vertical-align: middle;
+}
+
+.panel {
+  margin-bottom: 0px !important;
+}
+
+table {
+  tr.active {
+    font-weight: bold;
+  }
+
+  tr.active td:last-child {
+    background-color: #ddd !important;
+  }
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+#project_name {
+  min-width: 130px;
+}
+
+.dropdown-menu > li > a {
+  padding: 3px 15px;
+}
+
+.panel {
+  border-radius: 0px;
+}
+
+.input-lg, .form-group-lg .form-control, .uiselect .ui-select-toggle {
+  height: 38px !important;
+  padding: 7px 10px;
+  font-size: 16px;
+  line-height: 1.33;
+  border-radius: 4px !important;
+}
+
+.uimultiselect {
+  .ui-select-container {
+    min-height: 38px;
+    padding: 4px 4px;
+  }
+  .ui-select-match-item {
+    height: 25px;
+    padding-top: 2px;
+  }
+}
+
+.form-control-feedback {
+  right: -12px;
+}
+
+.form-control-feedback {
+  top: 0px !important;
+}
+
+.schema-form-section { 
+  .has-success {
+    .form-control-feedback {
+      top: 25px !important;
+      float: right;
+      font-size: 12px;
+      width: 35px;
+    }
+    .caret {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #3c763d;
+    }
+  }
+
+  .has-error {
+    .form-control-feedback {
+      top: 22px !important;
+      font-size: 12px;
+      width: 35px;
+    }
+    .caret {
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #a94442;
+    }
+  }
+}
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
+  margin: 1px 3px 2px 1px;
+}
+
+.large-tags .uimultiselect .ui-select-match-item {
+  font-size: 18px !important;
+  height: 35px !important;
+}
+
+.large-tags .ui-select-multiple.ui-select-bootstrap input.ui-select-search {
+  font-size: 18px;
+}
+
+.ui-select-choices {
+  font-size: 16px;
+}
+
+.ui-select-placeholder {
+  font-size: 14px;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+  background-color: #F7F7F7;
+}
+
+.pagination, .pager {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.container {
+  width: auto;
+
+  .navbar-header {
+    width: auto;
+  }
+
+  .navbar-nav {
+    font-size: 14px;
+  }
+}
+
+.ex-nav .navbar-nav > li > a:hover {
+  color: #fff;
+}
+
+.grid-action-1 {
+  width: 26px;
+}
+
+.grid-action-2 {
+  width: 52px;
+}
+
+.grid-action-3 {
+  width: 89px;
+}
+
+.sidebar {
+  margin-left: -15px;
+  height: 100%;
+  position: fixed;
+  background-color: #eee;
+  overflow-y: auto;
+  width: 130px;
+
+  ul {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  ul li:last-child {
+    margin-bottom: 50px;
+  }
+  
+  ul li a {
+    border-radius: 10px 0px 0px 10px;
+    span {
+      color: #3F6883;
+    }
+  }
+  
+  ul li.active a {
+    color: black;
+    background-color: white !important;
+  }
+  
+  .fa, .glyphicon {
+    font-size: 2.5em;
+  }
+}
+
+.content {
+  padding: 0px;
+  margin-left: 130px;
+  .content-header {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 7px;
+    .btn, h3 {
+      margin-top: 10px;
+    }
+  }
+}
+
+.link-text {
+  text-align: left;
+}
+
+.alert .glyphicon {
+  color: black;
+}
+
+.table-bordered thead th {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.schema-form-checkbox > label {
+  line-height: 3.4;
+  font-weight: bold;
+}

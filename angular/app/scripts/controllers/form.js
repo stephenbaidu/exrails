@@ -8,176 +8,194 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate) {
-    window.formCtrl = $scope;
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, lookupService, formService) {
+    var vm = $scope;
+    window.formCtrl = vm;
     
-    $scope.lookups = {};
-    $scope.schema  = {};
-    $scope.form    = {};
-    $scope.record  = {};
-    $scope.action  = { loading: true, saving: false, creating: false, updating: false, deleting: false };
+    vm.record        = {};
+    vm.action        = { loading: true, saving: false, creating: false, updating: false, deleting: false };
+    
+    // vm.lookups       = {};
+    vm.schema        = {};
+    vm.form          = formService.get(vm.model.key);
 
-    $scope.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + $scope.model.url)
+    vm.formlyFields  = fieldService.get(vm.model.key);
+    vm.formlyOptions = {};
+    vm.formlyForm    = {};
+
+    vm.loadConfig = function () {
+      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
-          $scope.lookups = data.lookups;
-          $scope.schema  = data.schema;
-          $scope.form    = data.form;
-          $scope.setDisableFields();
-          $rootScope.$broadcast('model:config-loaded', $scope);
-          $scope.setRecord();
+          // vm.lookups = data.lookups;
+          vm.schema  = data.schema;
+          // vm.form    = data.form;
+          // vm.setFormFields(data.fields);
+          // vm.setDisableFields();
+          $rootScope.$broadcast('model:config-loaded', vm);
+          vm.setRecord();
         })
         .error(function(data, status, headers, config) {
           exMsg.error('error');
         });
     };
 
-    $scope.setDisableFields = function () {
-      if ($state.$current.name === 'app.module.model.show') {
-        angular.forEach($scope.schema.properties, function (field) {
-          field.readonly = true;
-        });
-      }
-    }
+    // vm.setDisableFields = function () {
+    //   if ($state.$current.name === 'app.module.model.show') {
+    //     angular.forEach(vm.schema.properties, function (field) {
+    //       field.readonly = true;
+    //     });
+    //   } else {
+    //     angular.forEach(vm.schema.properties, function (field) {
+    //       field.readonly = false;
+    //     });
+    //     vm.$broadcast('schemaFormRedraw');
+    //   }
+    // }
 
-    $scope.loadRecord = function () {
-      $scope.action.loading = true;
+    vm.loadRecord = function () {
+      vm.action.loading = true;
 
       if($stateParams.id) {
         var data = { id: $stateParams.id };
-        resourceManager.get($scope.model.name, data)
+        resourceManager.get(vm.model.name, data)
           .then(function (data) {
-            $scope.record = data;
-            $scope.sanitizeRecord();
-            $rootScope.$broadcast('model:record-loaded', $scope);
-            $scope.action.loading = false;
-            $scope.$broadcast('schemaFormRedraw');
+            vm.record = data;
+            vm.sanitizeRecord();
+            $rootScope.$broadcast('model:record-loaded', vm);
+            vm.action.loading = false;
+            vm.$broadcast('schemaFormRedraw');
           })
           .catch(function (error) {
-            $scope.error(error);
-            $scope.action.loading = false;
+            vm.error(error);
+            vm.action.loading = false;
           });
       } else {
-        $rootScope.$broadcast('model:record-new', $scope);
+        $rootScope.$broadcast('model:record-new', vm);
       }
     };
 
-    $scope.sanitizeRecord = function () {
-      _.each($scope.record, function (value, key) {
+    vm.$on('model:reload-record', function(evt, model, recordId) {
+      if (model === vm.model.name && recordId === vm.record.id) {
+        vm.loadRecord();
+      }
+    });
+
+    vm.sanitizeRecord = function () {
+      _.each(vm.record, function (value, key) {
         if (value === null) {
-          $scope.record[key] = '';
+          vm.record[key] = '';
         }
       });
     }
 
-    $scope.setRecord = function () {
-      if (!$scope.record.id && $stateParams.q) {
-        _.each($scope.splitQ($stateParams.q), function (v, k) {
-          $scope.record[k] = v;
+    vm.setRecord = function () {
+      if (!vm.record.id && $stateParams.q) {
+        _.each(vm.splitQ($stateParams.q), function (v, k) {
+          vm.record[k] = v;
         });
-        $rootScope.$broadcast('model:record-set', $scope);
+        $rootScope.$broadcast('model:record-set', vm);
       }
     };
 
-    $scope.close = function () {
-      $scope.record = {};
+    vm.close = function () {
+      vm.record = {};
       $state.go('^');
     };
 
-    $scope.redirectBack = function () {
-      $scope.record = {};
+    vm.redirectBack = function () {
+      vm.record = {};
       $state.go('^');
-      $scope.queryRecords();
+      vm.queryRecords();
     };
 
-    $scope.create = function () {
-      $scope.action.saving = true;
-      $scope.action.creating = true;
+    vm.create = function () {
+      vm.action.saving = true;
+      vm.action.creating = true;
 
       var data = {};
-      data[$scope.model.key] = $scope.record;
+      data[vm.model.key] = vm.record;
       
-      resourceManager.create($scope.model.name, data)
+      resourceManager.create(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-created', $scope);
-          exMsg.success($scope.schema.title + ' created successfully');
-          $scope.record.id = data.id;
-          $scope.redirectBack();
+          $rootScope.$broadcast('model:record-created', vm);
+          exMsg.success(vm.schema.title + ' created successfully');
+          vm.record.id = data.id;
+          vm.redirectBack();
         })
         .catch(function (error) {
-          $scope.error(error);
+          vm.error(error);
         })
         .finally(function () {
-          $scope.action.saving = false;
-          $scope.action.creating = false;
+          vm.action.saving = false;
+          vm.action.creating = false;
         });
     };
 
-    $scope.edit = function () {
+    vm.edit = function () {
       $state.go('^.edit', {id: $stateParams.id});
     };
 
-    $scope.update = function () {
-      $scope.action.saving = true;
-      $scope.action.updating = true;
+    vm.update = function () {
+      vm.action.saving = true;
+      vm.action.updating = true;
 
       var data = { id: $stateParams.id };
-      data[$scope.model.key] = $scope.record;
+      data[vm.model.key] = vm.record;
       
-      resourceManager.update($scope.model.name, data)
+      resourceManager.update(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-updated', $scope);
-          exMsg.success($scope.schema.title + ' updated successfully');
-          $scope.updateRecordInRecords(data)
-          $scope.redirectBack();
+          $rootScope.$broadcast('model:record-updated', vm);
+          exMsg.success(vm.schema.title + ' updated successfully');
+          vm.updateRecordInRecords(data);
+          vm.redirectBack();
         })
         .catch(function (error) {
-          $scope.error(error);
+          vm.error(error);
         })
         .finally(function () {
-          $scope.action.saving = false;
-          $scope.action.updating = false;
+          vm.action.saving = false;
+          vm.action.updating = false;
         });
     };
 
-    $scope.save = function () {
+    vm.save = function () {
       PNotify.removeAll();
-      $scope.$broadcast('schemaFormValidate');
+      vm.$broadcast('schemaFormValidate');
 
-      if ($scope.formObject && !$scope.formObject.$valid) {
+      if (vm.formObject && !vm.formObject.$valid) {
         return;
       }
 
       if($stateParams.id) {
-        $scope.update();
+        vm.update();
       } else {
-        $scope.create();
+        vm.create();
       }
     };
 
-    $scope.delete = function () {
-      $scope.action.deleting = true;
+    vm.delete = function () {
+      vm.action.deleting = true;
 
-      var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
+      var msg = "Are you sure you want to delete this " + vm.schema.title + "?";
       exMsg.confirm(msg, "Confirm Delete").then(function () {
-        var data = { id: $scope.record.id };
-        data[$scope.model.key] = $scope.record;
-        resourceManager.delete($scope.model.name, data)
+        var data = { id: vm.record.id };
+        data[vm.model.key] = vm.record;
+        resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-            exMsg.success($scope.schema.title + " deleted successfully");
-            $scope.reload();
-            $scope.redirectBack();
+            exMsg.success(vm.schema.title + " deleted successfully");
+            vm.reload();
+            vm.redirectBack();
           })
           .catch(function (error) {
-            $scope.error(error);
+            vm.error(error);
           }).finally(function () {
-            $scope.action.deleting = false;
+            vm.action.deleting = false;
           });
       }).catch(function () {
-        $scope.action.deleting = false;
+        vm.action.deleting = false;
       });
     };
 
-    $scope.loadConfig();
-    $scope.loadRecord();
+    vm.loadConfig();
+    vm.loadRecord();
   });

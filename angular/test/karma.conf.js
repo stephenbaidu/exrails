@@ -1,7 +1,7 @@
 // Karma configuration
 // http://karma-runner.github.io/0.12/config/configuration-file.html
-// Generated on 2015-01-02 using
-// generator-karma 0.8.3
+// Generated on 2015-06-30 using
+// generator-karma 1.0.0
 
 module.exports = function(config) {
   'use strict';
@@ -14,12 +14,18 @@ module.exports = function(config) {
     basePath: '../',
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    // as well as any additional frameworks (requirejs/chai/sinon/...)
+    frameworks: [
+      "jasmine"
+    ],
 
     // list of files / patterns to load in the browser
     files: [
+      // bower:js
+      'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/underscore/underscore.js',
+      'bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-cookies/angular-cookies.js',
@@ -28,13 +34,53 @@ module.exports = function(config) {
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/angular-touch/angular-touch.js',
-      'app/scripts/**/*.js',
-      'test/mock/**/*.js',
-      'test/spec/**/*.js'
+      'bower_components/angular-translate/angular-translate.js',
+      'bower_components/angular-ui-router/release/angular-ui-router.js',
+      'bower_components/angular-underscore/angular-underscore.js',
+      'bower_components/angular-cookie/angular-cookie.js',
+      'bower_components/ng-token-auth/dist/ng-token-auth.js',
+      'bower_components/jspdf/dist/jspdf.min.js',
+      'bower_components/jspdf-autotable/jspdf.plugin.autotable.js',
+      'bower_components/pnotify/pnotify.core.js',
+      'bower_components/pnotify/pnotify.buttons.js',
+      'bower_components/pnotify/pnotify.callbacks.js',
+      'bower_components/pnotify/pnotify.confirm.js',
+      'bower_components/pnotify/pnotify.desktop.js',
+      'bower_components/pnotify/pnotify.history.js',
+      'bower_components/pnotify/pnotify.nonblock.js',
+      'bower_components/sweetalert/dist/sweetalert.min.js',
+      'bower_components/angular-xeditable/dist/js/xeditable.js',
+      'bower_components/angular-loading-bar/build/loading-bar.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/moment/moment.js',
+      'bower_components/bootstrap-daterangepicker/daterangepicker.js',
+      'bower_components/angular-daterangepicker/js/angular-daterangepicker.js',
+      'bower_components/angular-ui-select/dist/select.js',
+      'bower_components/api-check/dist/api-check.js',
+      'bower_components/angular-formly/dist/formly.js',
+      'bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.js',
+      'bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js',
+      'bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js',
+      'bower_components/tv4/tv4.js',
+      'bower_components/objectpath/lib/ObjectPath.js',
+      'bower_components/angular-schema-form/dist/schema-form.js',
+      'bower_components/angular-schema-form/dist/bootstrap-decorator.js',
+      'bower_components/pickadate/lib/picker.js',
+      'bower_components/pickadate/lib/picker.date.js',
+      'bower_components/pickadate/lib/picker.time.js',
+      'bower_components/angular-schema-form-datepicker/bootstrap-datepicker.min.js',
+      'bower_components/angular-schema-form-uiselect/angular-schema-form-uiselect.min.js',
+      'bower_components/ngDialog/js/ngDialog.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      // endbower
+      "app/scripts/**/*.js",
+      "test/mock/**/*.js",
+      "test/spec/**/*.js"
     ],
 
     // list of files / patterns to exclude
-    exclude: [],
+    exclude: [
+    ],
 
     // web server port
     port: 8080,
@@ -48,13 +94,13 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'PhantomJS'
+      "PhantomJS"
     ],
 
     // Which plugins to enable
     plugins: [
-      'karma-phantomjs-launcher',
-      'karma-jasmine'
+      "karma-phantomjs-launcher",
+      "karma-jasmine"
     ],
 
     // Continuous Integration mode

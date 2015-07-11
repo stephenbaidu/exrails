@@ -2,16 +2,17 @@
 
 /**
  * @ngdoc function
- * @name angularApp.controller:UiCtrl
+ * @name angularApp.controller:UserCtrl
  * @description
- * # UiCtrl
+ * # UserCtrl
  * Controller of the angularApp
  */
 angular.module('angularApp')
   .controller('UiCtrl', function ($scope, APP, $http, $state, $stateParams) {
-    window.uiCtrl = $scope;
+    var vm = $scope;
+    window.uiCtrl = vm;
 
-    $scope.$on('model:config-loaded', function(evt, scope) {
+    vm.$on('model:config-loaded', function(evt, scope) {
       if (!scope.model || !scope.schema) return;
 
       if (scope.model.name === 'User') {
@@ -19,8 +20,8 @@ angular.module('angularApp')
       }
     });
 
-    $scope.$on('ui:form-updated', function(evt, scope) {
-      if (scope.model.name === 'User' && $scope.user.is_admin) {
+    vm.$on('ui:form-updated', function(evt, scope) {
+      if (scope.model.name === 'User' && vm.user.is_admin) {
         // do something
       }
     })

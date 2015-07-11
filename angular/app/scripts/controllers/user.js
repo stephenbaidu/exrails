@@ -9,9 +9,13 @@
  */
 angular.module('angularApp')
   .controller('UserCtrl', function ($scope, $rootScope, APP, exMsg, $http, $state, $stateParams) {
-    window.userCtrl = $scope;
-    
-    $scope.$on('model:config-loaded', function (evt, scope) {
+    var vm = $scope;
+    window.userCtrl = vm;
+
+    vm.stateParams = $stateParams;
+    vm.state = $state;
+
+    vm.$on('model:config-loaded', function (evt, scope) {
       if (scope.model && scope.model.name === 'User') {
         scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip', 'last_sign_in_at', 'last_sign_in_ip'];
         scope.schema.required = ['name', 'email'];
@@ -31,7 +35,7 @@ angular.module('angularApp')
       }
     });
 
-    $scope.$on('model:record-loaded', function (evt, scope) {
+    vm.$on('model:record-loaded', function (evt, scope) {
       if (scope.model.name !== 'User') {
         return;
       }

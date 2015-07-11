@@ -92,7 +92,7 @@
         </tr>
       </thead>
       <tbody data-link="row" class="rowlink">
-        <tr ng-repeat="rec in records | filter:filterText" ng-class="{active: rec.id == paging.currentId}">
+        <tr ng-repeat="rec in records | filter:filterText" ng-class="{active: rec.id === paging.currentId}">
           <td>{{ $index + 1 }}.</td>
           <td>
             {{ rec.name }}

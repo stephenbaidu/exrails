@@ -9,14 +9,16 @@
  */
 angular.module('angularApp')
   .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService) {
-    window.indexCtrl = $scope;
+    var vm = $scope;
+    window.indexCtrl = vm;
     
-    $scope.grid = [];
-    $scope.recordsHash = {};
-    $scope.records = [];
-    $scope.searchQuery = null;
-    $scope.action = { loading: false, deleting: false };
-    $scope.paging = {
+    vm.grid = {};
+    vm.recordsHash = {};
+    vm.records = [];
+    vm.currentRecord = {};
+    vm.searchQuery = null;
+    vm.action = { loading: false, deleting: false };
+    vm.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
       currentPage: 1,
@@ -24,203 +26,201 @@ angular.module('angularApp')
       currentId: 0,
       nextId: 0
     };
-    $scope.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
+    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
 
-    $scope.queryRecords = function (page, size, query) {
-      $scope.action.loading = true;
+    vm.queryRecords = function (page, size, query) {
+      vm.action.loading = true;
 
       if(! query) {
-        query = $scope.searchQuery || {};
+        query = vm.searchQuery || {};
       }
       
-      query['page'] = page || $scope.paging.currentPage;
-      query['size'] = size || $scope.paging.recordsPerPage;
+      query['page'] = page || vm.paging.currentPage;
+      query['size'] = size || vm.paging.recordsPerPage;
       
-      resourceManager.query($scope.model.name, query, function(data, totalRecords) {
-          $scope.paging.totalRecords = totalRecords;
+      resourceManager.query(vm.model.name, query, function(data, totalRecords) {
+          vm.paging.totalRecords = totalRecords;
         })
         .then(function (data) {
-          $scope.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', $scope);
+          vm.updateRecords(data);
+          $rootScope.$broadcast('model:records-loaded', vm);
         })
         .catch(function (error) {
           console.log(error);
-          $scope.error(error);
+          vm.error(error);
         })
         .finally(function (error) {
-          $scope.action.loading = false;
+          vm.action.loading = false;
         });
     }
 
-    $scope.hasCreateAccess = function () {
-      return $scope.hasAccess($scope.model.name + ':create');
+    vm.hasCreateAccess = function () {
+      return vm.hasAccess(vm.model.name + ':create');
     }
 
-    $scope.hasShowAccess = function () {
-      return $scope.hasAccess($scope.model.name + ':show');
+    vm.hasShowAccess = function () {
+      return vm.hasAccess(vm.model.name + ':show');
     }
 
-    $scope.hasUpdateAccess = function () {
-      return $scope.hasAccess($scope.model.name + ':update');
+    vm.hasUpdateAccess = function () {
+      return vm.hasAccess(vm.model.name + ':update');
     }
 
-    $scope.hasDeleteAccess = function () {
-      return $scope.hasAccess($scope.model.name + ':delete');
+    vm.hasDeleteAccess = function () {
+      return vm.hasAccess(vm.model.name + ':delete');
     }
 
-    $scope.$on('model:records-loaded', function (e, scope) {
-      if(scope.model.name != $scope.model.name) return;
+    vm.$on('model:records-loaded', function (e, scope) {
+      if(scope.model.name != vm.model.name) return;
 
-      $scope.updatePreviousNext();
+      vm.updatePreviousNext();
     });
 
-    $scope.$on('model:record-loaded', function (e, scope) {
-      if(scope.model.name != $scope.model.name) return;
+    vm.$on('model:record-loaded', function (e, scope) {
+      if(scope.model.name != vm.model.name) return;
 
-      $scope.paging.currentId = scope.record.id;
-      $scope.updatePreviousNext();
+      vm.currentRecord = scope.record;
+      vm.paging.currentId = scope.record.id;
+      vm.updatePreviousNext();
     });
 
-    $scope.updatePreviousNext = function () {
-      if ($scope.records.length == 0 || $scope.paging.currentId == 0) return;
+    vm.updatePreviousNext = function () {
+      if (vm.records.length == 0 || vm.paging.currentId == 0) return;
 
-      var indices = $filter('previousNextIds')($scope.records, $scope.paging.currentId);
+      var indices = $filter('previousNextIds')(vm.records, vm.paging.currentId);
       if (indices) {
-        $scope.paging.previousId = indices.previousId;
-        $scope.paging.nextId = indices.nextId;
+        vm.paging.previousId = indices.previousId;
+        vm.paging.nextId = indices.nextId;
       }
     }
 
-    $scope.fieldData = function (record, field) {
+    vm.fieldData = function (record, field) {
       var property = $scope['schema']['properties'][field];
       var lookup = (property && property.lookup) || false;
       var value  = record[field];
 
       if (!!lookup) {
-        return byValueFilter($scope.lookups[lookup], value).name;
+        return byValueFilter(vm.lookups[lookup], value).name;
       }
       
       return value;
     }
 
-    $scope.updateRecords = function (records) {
+    vm.updateRecords = function (records) {
       angular.forEach(records, function(record) {
-        if (!$scope.recordsHash[record.id]) {
-          $scope.records.push(record);
-          $scope.recordsHash[record.id] = true;
+        if (!vm.recordsHash[record.id]) {
+          vm.records.push(record);
+          vm.recordsHash[record.id] = true;
         }
       });
     }
 
-    $scope.updateRecordInRecords = function (record) {
+    vm.updateRecordInRecords = function (record) {
       if (!record) return;
-      angular.forEach($scope.records, function (rec, index) {
+      angular.forEach(vm.records, function (rec, index) {
         if (rec.id == record.id) {
-          $scope.records[index] = record;
+          vm.records[index] = record;
           return;
         }
       });
     }
 
-    $scope.reload = function () {
-      $scope.recordsHash = {};
-      $scope.records = [];
-      $scope.paging.currentPage = 1;
-      $scope.queryRecords();
+    vm.reload = function () {
+      vm.recordsHash = {};
+      vm.records = [];
+      vm.paging.currentPage = 1;
+      vm.queryRecords();
     }
 
-    $scope.loadMore = function () {
-      if ($scope.records.length < $scope.paging.totalRecords) {
-        $scope.paging.currentPage = $scope.paging.currentPage + 1;
-        $scope.queryRecords();
+    vm.loadMore = function () {
+      if (vm.records.length < vm.paging.totalRecords) {
+        vm.paging.currentPage = vm.paging.currentPage + 1;
+        vm.queryRecords();
       }
     }
 
-    $scope.setSearchQuery = function (q) {
-      $scope.searchQuery = q;
+    vm.setSearchQuery = function (q) {
+      vm.searchQuery = q;
     }
 
-    $scope.$watch('paging.recordsPerPage', function() {
-      $scope.queryRecords();
+    vm.$watch('paging.recordsPerPage', function() {
+      vm.queryRecords();
     });
 
-    $scope.error = function (error) {
+    vm.error = function (error) {
       error = error || {};
       error.message  && exMsg.error(error.message, error.type || 'Error');
-      // error.messages && $rootScope.errorSummary(error.messages);
-      angular.forEach(error.messages, function(value) {
-        exMsg.error(value, 'Error');
-      });
+      error.messages && exMsg.errorSummary(error.messages);
     }
 
-    $scope.delete = function (id) {
-      $scope.action.deleting = true;
+    vm.delete = function (id) {
+      vm.action.deleting = true;
 
-      var msg = "Are you sure you want to delete this " + $scope.schema.title + "?";
+      var msg = "Are you sure you want to delete this " + vm.schema.title + "?";
       exMsg.confirm(msg, "Confirm Delete").then(function () {
         var data = { id: id };
-        data[$scope.model.key] = $scope.record;
-        resourceManager.delete($scope.model.name, data)
+        data[vm.model.key] = vm.record;
+        resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-            $scope.reload();
-            exMsg.success($scope.schema.title + " deleted successfully");
+            vm.reload();
+            exMsg.success(vm.schema.title + " deleted successfully");
           })
           .catch(function (error) {
-            $scope.error(error);
+            vm.error(error);
           }).finally(function () {
-            $scope.action.deleting = false;
+            vm.action.deleting = false;
           });
       }).catch(function () {
-        $scope.action.deleting = false;
+        vm.action.deleting = false;
       });
     };
 
-    $scope.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + $scope.model.url)
+    vm.toCSV = function () {
+      var columns = _.chain(vm.grid)
+        .map(function (e) {
+          return {key: e, title: vm.schema.properties[e].title}
+        }).value();
+      var reportData = _.map(vm.records, function (rec) {
+        var data = {};
+        _.each(vm.grid, function (e) {
+          data[e] = vm.fieldData(rec, e);
+        });
+
+        return data;
+      });
+      
+      reportService.toCSV(vm.model.title, reportData, columns);
+    };
+
+    vm.toPDF = function () {
+      var columns = _.chain(vm.grid)
+        .map(function (e) {
+          return {key: e, title: vm.schema.properties[e].title}
+        }).value();
+      var reportData = _.map(vm.records, function (rec) {
+        var data = {};
+        _.each(vm.grid, function (e) {
+          data[e] = vm.fieldData(rec, e);
+        });
+
+        return data;
+      });
+      
+      reportService.toPDF(vm.model.title, reportData, columns);
+    };
+
+    vm.loadConfig = function () {
+      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
-          $scope.lookups = data.lookups;
-          $scope.schema  = data.schema;
-          $scope.grid    = data.grid;
-          $rootScope.$broadcast('model:config-loaded', $scope);
+          vm.lookups = data.lookups;
+          vm.schema  = data.schema;
+          vm.grid    = data.grid;
+          $rootScope.$broadcast('model:config-loaded', vm);
         })
         .error(function(data, status, headers, config) {
           exMsg.error('error');
         });
     };
 
-    $scope.toCSV = function () {
-      var columns = _.chain($scope.grid)
-        .map(function (e) {
-          return {key: e, title: $scope.schema.properties[e].title}
-        }).value();
-      var reportData = _.map($scope.records, function (rec) {
-        var data = {};
-        _.each($scope.grid, function (e) {
-          data[e] = $scope.fieldData(rec, e) || '';
-        });
-
-        return data;
-      });
-      
-      reportService.toCSV($scope.model.title, reportData, columns);
-    };
-
-    $scope.toPDF = function () {
-      var columns = _.chain($scope.grid)
-        .map(function (e) {
-          return {key: e, title: $scope.schema.properties[e].title}
-        }).value();
-      var reportData = _.map($scope.records, function (rec) {
-        var data = {};
-        _.each($scope.grid, function (e) {
-          data[e] = $scope.fieldData(rec, e) || '';
-        });
-
-        return data;
-      });
-      
-      reportService.toPDF($scope.model.title, reportData, columns);
-    };
-
-    $scope.loadConfig();
+    vm.loadConfig();
   });
