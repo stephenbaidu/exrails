@@ -61,7 +61,7 @@ angular.module('angularApp')
           .then(function (data) {
             vm.record = data;
             vm.sanitizeRecord();
-            $rootScope.$broadcast('model:record-loaded', vm);
+            $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record);
             vm.action.loading = false;
             vm.$broadcast('schemaFormRedraw');
           })
@@ -105,7 +105,7 @@ angular.module('angularApp')
     vm.redirectBack = function () {
       vm.record = {};
       $state.go('^');
-      vm.queryRecords();
+      // vm.queryRecords();
     };
 
     vm.create = function () {
@@ -117,7 +117,7 @@ angular.module('angularApp')
       
       resourceManager.create(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-created', vm);
+          $rootScope.$broadcast('model:record-created', vm.model.name, data);
           exMsg.success(vm.schema.title + ' created successfully');
           vm.record.id = data.id;
           vm.redirectBack();
@@ -144,9 +144,9 @@ angular.module('angularApp')
       
       resourceManager.update(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-updated', vm);
+          $rootScope.$broadcast('model:record-updated', vm.model.name, data);
           exMsg.success(vm.schema.title + ' updated successfully');
-          vm.updateRecordInRecords(data);
+          // vm.updateRecordInRecords(data);
           vm.redirectBack();
         })
         .catch(function (error) {
@@ -182,8 +182,9 @@ angular.module('angularApp')
         data[vm.model.key] = vm.record;
         resourceManager.delete(vm.model.name, data)
           .then(function (data) {
+          $rootScope.$broadcast('model:record-deleted', vm.model.name, data);
             exMsg.success(vm.schema.title + " deleted successfully");
-            vm.reload();
+            // vm.reload();
             vm.redirectBack();
           })
           .catch(function (error) {

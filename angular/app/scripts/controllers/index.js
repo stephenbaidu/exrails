@@ -117,13 +117,58 @@ angular.module('angularApp')
 
     vm.updateRecordInRecords = function (record) {
       if (!record) return;
+      
+      var recordFound = false;
+
       angular.forEach(vm.records, function (rec, index) {
         if (rec.id == record.id) {
-          vm.records[index] = record;
+          vm.records[index] = angular.copy(record);
+          recordFound = true;
+          return;
+        }
+      });
+
+      if (!recordFound) {
+        vm.records.unshift(record);
+        vm.recordsHash[record.id] = true;
+      }
+    }
+
+    vm.removeRecordInRecords = function (record) {
+      if (!record) return;
+
+      angular.forEach(vm.records, function (rec, index) {
+        if (rec.id == record.id) {
+          vm.records.splice(index, 1);
+          delete vm.recordsHash[record.id];
           return;
         }
       });
     }
+
+    vm.$on('model:record-loaded', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.updateRecordInRecords(record);
+      }
+    });
+
+    vm.$on('model:record-created', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.updateRecordInRecords(record);
+      }
+    });
+
+    vm.$on('model:record-updated', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.updateRecordInRecords(record);
+      }
+    });
+
+    vm.$on('model:record-deleted', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.removeRecordInRecords(record);
+      }
+    });
 
     vm.reload = function () {
       vm.recordsHash = {};
@@ -162,8 +207,9 @@ angular.module('angularApp')
         data[vm.model.key] = vm.record;
         resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-            vm.reload();
+            $rootScope.$broadcast('model:record-deleted', vm.model.name, data);
             exMsg.success(vm.schema.title + " deleted successfully");
+            // vm.reload();
           })
           .catch(function (error) {
             vm.error(error);
@@ -190,6 +236,7 @@ angular.module('angularApp')
       });
       
       reportService.toCSV(vm.model.title, reportData, columns);
+      $rootScope.$broadcast('report:csv-generated', vm.model.name);
     };
 
     vm.toPDF = function () {
@@ -207,6 +254,7 @@ angular.module('angularApp')
       });
       
       reportService.toPDF(vm.model.title, reportData, columns);
+      $rootScope.$broadcast('report:pdf-generated', vm.model.name);
     };
 
     vm.loadConfig = function () {
