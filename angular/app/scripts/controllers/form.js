@@ -11,9 +11,11 @@ angular.module('angularApp')
   .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, lookupService, formService) {
     var vm = $scope;
     window.formCtrl = vm;
+
+    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
     
-    vm.record        = {};
-    vm.action        = { loading: true, saving: false, creating: false, updating: false, deleting: false };
+    vm.record = {};
+    vm.action = { loading: true, saving: false, creating: false, updating: false, deleting: false };
     
     // vm.lookups       = {};
     vm.schema        = {};
@@ -38,6 +40,22 @@ angular.module('angularApp')
           exMsg.error('error');
         });
     };
+
+    vm.hasCreateAccess = function () {
+      return vm.hasAccess(vm.model.name + ':create');
+    }
+
+    vm.hasShowAccess = function () {
+      return vm.hasAccess(vm.model.name + ':show');
+    }
+
+    vm.hasUpdateAccess = function () {
+      return vm.hasAccess(vm.model.name + ':update');
+    }
+
+    vm.hasDeleteAccess = function () {
+      return vm.hasAccess(vm.model.name + ':delete');
+    }
 
     // vm.setDisableFields = function () {
     //   if ($state.$current.name === 'app.module.model.show') {

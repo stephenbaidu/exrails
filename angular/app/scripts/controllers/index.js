@@ -8,9 +8,11 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService, lookupService, byIdFilter) {
     var vm = $scope;
     window.indexCtrl = vm;
+
+    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
     
     vm.grid = {};
     vm.recordsHash = {};
@@ -26,7 +28,6 @@ angular.module('angularApp')
       currentId: 0,
       nextId: 0
     };
-    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
 
     vm.queryRecords = function (page, size, query) {
       vm.action.loading = true;
@@ -106,11 +107,25 @@ angular.module('angularApp')
       return value;
     }
 
+    vm.polishRecord = function (record) {
+      if (!record || !record.id) return;
+
+      lookupService.load(vm.model.key).then(function (response) {
+        var lookups = response.data;
+        angular.forEach(vm.schema.properties, function (value, key) {
+          if (value.lookup && lookups[value.lookup]) {
+            record[value.lookup] = byValueFilter(lookups[value.lookup], record[key]);
+          }
+        });
+      });
+    }
+
     vm.updateRecords = function (records) {
       angular.forEach(records, function(record) {
         if (!vm.recordsHash[record.id]) {
           vm.records.push(record);
           vm.recordsHash[record.id] = true;
+          vm.polishRecord(record);
         }
       });
     }
@@ -123,6 +138,7 @@ angular.module('angularApp')
       angular.forEach(vm.records, function (rec, index) {
         if (rec.id == record.id) {
           vm.records[index] = angular.copy(record);
+          vm.polishRecord(vm.records[index]);
           recordFound = true;
           return;
         }

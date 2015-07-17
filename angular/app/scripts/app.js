@@ -110,6 +110,19 @@ app.config(function ($stateProvider, $urlRouterProvider) {
       },
       controller: 'ModuleCtrl'
     })
+    .state('app.module.form', {
+      url: '/form',
+      templateUrl: function (stateParams) {
+        return 'views/layouts/form.html';
+      }
+    })
+    .state('app.module.form.model', {
+      url: '/:model',
+      templateUrl: function (stateParams) {
+        return 'views/app/' + stateParams.model + '/new.html';
+      },
+      controller: 'FormCtrl'
+    })
     .state('app.module.model', {
       url: '/:model',
       templateUrl: function (stateParams) {
