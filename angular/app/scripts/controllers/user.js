@@ -15,30 +15,28 @@ angular.module('angularApp')
     vm.stateParams = $stateParams;
     vm.state = $state;
 
-    vm.$on('model:config-loaded', function (evt, scope) {
-      if (scope.model && scope.model.name === 'User') {
-        scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip', 'last_sign_in_at', 'last_sign_in_ip'];
-        scope.schema.required = ['name', 'email'];
-        scope.schema.properties.status = {
-          title: 'Status',
-          type: 'string',
-          readonly: true
-        };
+    vm.$on('model:config-loaded', function (evt, modelName, configData, scope) {
+      if (modelName !== 'User') return;
 
-        if ($state.$current.name === 'app.module.model.new') {
-          setupNewUserForm(scope);
-          $rootScope.$broadcast('ui:form-updated', scope);
-        } else {
-          updateUserConfig(scope);
-          // $rootScope.$broadcast('ui:form-updated', scope);
-        }
+      scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip'];
+      scope.schema.required = ['name', 'email'];
+      scope.schema.properties.status = {
+        title: 'Status',
+        type: 'string',
+        readonly: true
+      };
+
+      if ($state.$current.name === 'app.module.model.new') {
+        setupNewUserForm(scope);
+        $rootScope.$broadcast('ui:form-updated', modelName, {}, scope);
+      } else {
+        updateUserConfig(scope);
+        $rootScope.$broadcast('ui:form-updated', modelName, {}, scope);
       }
     });
 
-    vm.$on('model:record-loaded', function (evt, scope) {
-      if (scope.model.name !== 'User') {
-        return;
-      }
+    vm.$on('model:record-loaded', function (evt, modelName, record, scope) {
+      if (modelName !== 'User') return;
 
       scope.lockUser = function () {
         scope.action.locking = true;

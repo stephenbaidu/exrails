@@ -12,16 +12,14 @@ angular.module('angularApp')
     var vm = $scope;
     window.uiCtrl = vm;
 
-    vm.$on('model:config-loaded', function(evt, scope) {
-      if (!scope.model || !scope.schema) return;
-
-      if (scope.model.name === 'User') {
+    vm.$on('model:config-loaded', function(evt, modelName, configData, scope) {
+      if (modelName === 'User') {
         // do something
       }
     });
 
-    vm.$on('ui:form-updated', function(evt, scope) {
-      if (scope.model.name === 'User' && vm.user.is_admin) {
+    vm.$on('ui:form-updated', function(evt, modelName) {
+      if (modelName === 'User' && vm.user['admin?']) {
         // do something
       }
     })
