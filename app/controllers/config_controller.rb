@@ -37,6 +37,16 @@ class ConfigController < ApplicationController
       json_lookups['parent'] = @model_class.all.map { |e| {value: e.id, name: e.name} }
     end
 
+    begin
+      params[:models].to_s.split(',').each do |model|
+        klass = model.classify.constantize
+        key   = model.singularize.underscore
+        json_lookups[key] = klass.all.map { |e| {value: e.id, name: e.name} }
+        json_lookups[key].unshift({ value: '', name: '' })
+      end
+    rescue
+    end
+
     if get
       json_lookups
     else
