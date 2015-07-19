@@ -17,9 +17,12 @@ angular.module('angularApp')
         }
         return lookups[modelName][lookupName];
       },
-      load: function(modelName) {
+      load: function(modelName, models) {
         var url = APP.apiPrefix + 'lookups/' + modelName;
-        return $http.get(url, { cache: true })
+        return $http.get(url, {
+            cache: true,
+            params: { models: models }
+          })
           .success(function (data) {
             lookups[modelName] = data;
             return data;
