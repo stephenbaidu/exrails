@@ -2,6 +2,7 @@
   theme="bootstrap"
   ng-required="{{to.required}}"
   ng-disabled="{{to.disabled}}"
+  close-on-select="false"
   reset-search-input="false">
   <ui-select-match placeholder="{{to.placeholder}}">
     {{$item[to.labelProp || 'name']}}
