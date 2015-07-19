@@ -58,6 +58,7 @@
           <th ng-repeat="field in grid">
             {{ schema.properties[field].title }}
           </th>
+          <th>Roles</th>
           <th class="grid-action-1"></th>
         </tr>
       </thead>
@@ -66,6 +67,12 @@
           <td>{{ $index + 1 }}.</td>
           <td ng-repeat="field in grid">
             {{ fieldData(rec, field) }}
+          </td>
+          <td>
+            <span ng-repeat="roleId in rec.role_ids"
+              class="label label-default" style="margin-right: 2px;">
+              {{ (schema.properties.role_ids.items | byValue:roleId).label }}
+            </span>
           </td>
           <td>
             <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
