@@ -19,8 +19,6 @@ class Role < ActiveRecord::Base
 
   serialize :permissions, Array
 
-  default_scope -> { where('id > 1') }
-
   validates :name, presence: true, uniqueness: true
 
   def users
