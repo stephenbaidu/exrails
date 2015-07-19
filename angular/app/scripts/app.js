@@ -53,6 +53,7 @@ app.constant('APP', {
       text: 'Setups', url: 'setups', icon: 'fa fa-cogs fa-lg',
       links: [
         { text: 'Users', url: 'users', icon: 'fa fa-user' },
+        { text: 'Roles', url: 'roles', icon: 'fa fa-user' },
         { text: 'Sample Status', url: 'sample-statuses', icon: 'fa fa-tags' }
       ]
     }

@@ -38,7 +38,7 @@ forms['role'] = [
         "htmlClass": "col-sm-6 col-xs-12",
         "items": [
           {
-            "key": "permissions",
+            "key": "status",
             "fieldHtmlClass": "input-lg"
           }
         ]
@@ -51,10 +51,10 @@ forms['role'] = [
     "items": [
       {
         "type": "section",
-        "htmlClass": "col-sm-6 col-xs-12",
+        "htmlClass": "col-xs-12",
         "items": [
           {
-            "key": "status",
+            "key": "permissions",
             "fieldHtmlClass": "input-lg"
           }
         ]

@@ -32,11 +32,11 @@ fields['role'] = [
       },
       {
         "className": "col-xs-6",
-        "key": "permissions",
+        "key": "status",
         "type": "input",
         "templateOptions": {
           "required": false,
-          "label": "Permissions"
+          "label": "Status"
         }
       }
     ]
@@ -44,12 +44,20 @@ fields['role'] = [
   {
     "fieldGroup": [
       {
-        "className": "col-xs-6",
-        "key": "status",
-        "type": "input",
+        "className": "col-xs-12",
+        "key": "permissions",
+        "type": "ui-select-multiple",
         "templateOptions": {
           "required": false,
-          "label": "Status"
+          "label": "Permissions",
+          "valueProp": "name",
+          "labelProp": "name",
+          "options": []
+        },
+        "controller": function($scope, lookupService) {
+          lookupService.load('role', 'permission').then(function() {
+            $scope.to.options = lookupService.get('role', 'permission');
+          });
         }
       }
     ]
@@ -100,9 +108,7 @@ fields['sample'] = [
           "lookup": "sample_status",
           "valueProp": "value",
           "labelProp": "name",
-          "options": [
-
-          ]
+          "options": []
         },
         "controller": function($scope, lookupService) {
           lookupService.load('sample').then(function() {
