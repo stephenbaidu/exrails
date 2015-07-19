@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, lookupService, formService) {
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, formService) {
     var vm = $scope;
     window.formCtrl = vm;
 
@@ -17,9 +17,7 @@ angular.module('angularApp')
     vm.record = {};
     vm.action = { loading: true, saving: false, creating: false, updating: false, deleting: false };
     
-    // vm.lookups       = {};
-    vm.schema        = {};
-    vm.form          = formService.get(vm.model.key);
+    vm.schema = {};
 
     vm.formlyFields  = fieldService.get(vm.model.key);
     vm.formlyOptions = {};
@@ -28,12 +26,10 @@ angular.module('angularApp')
     vm.loadConfig = function () {
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
-          // vm.lookups = data.lookups;
           vm.schema  = data.schema;
-          // vm.form    = data.form;
-          // vm.setFormFields(data.fields);
-          // vm.setDisableFields();
-          $rootScope.$broadcast('model:config-loaded', vm);
+          vm.setDisableFields();
+          vm.form = formService.get(vm.model.key);
+          $rootScope.$broadcast('model:config-loaded', vm.model.name, data, vm);
           vm.setRecord();
         })
         .error(function(data, status, headers, config) {
@@ -57,18 +53,18 @@ angular.module('angularApp')
       return vm.hasAccess(vm.model.name + ':delete');
     }
 
-    // vm.setDisableFields = function () {
-    //   if ($state.$current.name === 'app.module.model.show') {
-    //     angular.forEach(vm.schema.properties, function (field) {
-    //       field.readonly = true;
-    //     });
-    //   } else {
-    //     angular.forEach(vm.schema.properties, function (field) {
-    //       field.readonly = false;
-    //     });
-    //     vm.$broadcast('schemaFormRedraw');
-    //   }
-    // }
+    vm.setDisableFields = function () {
+      if ($state.$current.name === 'app.module.model.show') {
+        angular.forEach(vm.schema.properties, function (field) {
+          field.readonly = true;
+        });
+      } else {
+        angular.forEach(vm.schema.properties, function (field) {
+          field.readonly = false;
+        });
+      }
+      vm.$broadcast('schemaFormRedraw');
+    }
 
     vm.loadRecord = function () {
       vm.action.loading = true;
@@ -123,7 +119,6 @@ angular.module('angularApp')
     vm.redirectBack = function () {
       vm.record = {};
       $state.go('^');
-      // vm.queryRecords();
     };
 
     vm.create = function () {
@@ -164,7 +159,6 @@ angular.module('angularApp')
         .then(function (data) {
           $rootScope.$broadcast('model:record-updated', vm.model.name, data);
           exMsg.success(vm.schema.title + ' updated successfully');
-          // vm.updateRecordInRecords(data);
           vm.redirectBack();
         })
         .catch(function (error) {
@@ -202,7 +196,6 @@ angular.module('angularApp')
           .then(function (data) {
           $rootScope.$broadcast('model:record-deleted', vm.model.name, data);
             exMsg.success(vm.schema.title + " deleted successfully");
-            // vm.reload();
             vm.redirectBack();
           })
           .catch(function (error) {

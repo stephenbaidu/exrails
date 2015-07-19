@@ -44,7 +44,7 @@ angular.module('angularApp')
         })
         .then(function (data) {
           vm.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', vm);
+          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records);
         })
         .catch(function (error) {
           console.log(error);
@@ -71,17 +71,17 @@ angular.module('angularApp')
       return vm.hasAccess(vm.model.name + ':delete');
     }
 
-    vm.$on('model:records-loaded', function (e, scope) {
-      if(scope.model.name != vm.model.name) return;
+    vm.$on('model:records-loaded', function (e, modelName, records) {
+      if(vm.model.name != modelName) return;
 
       vm.updatePreviousNext();
     });
 
-    vm.$on('model:record-loaded', function (e, scope) {
-      if(scope.model.name != vm.model.name) return;
+    vm.$on('model:record-loaded', function (e, modelName, record) {
+      if(vm.model.name != modelName) return;
 
-      vm.currentRecord = scope.record;
-      vm.paging.currentId = scope.record.id;
+      vm.currentRecord = record;
+      vm.paging.currentId = record.id;
       vm.updatePreviousNext();
     });
 
@@ -279,7 +279,7 @@ angular.module('angularApp')
           vm.lookups = data.lookups;
           vm.schema  = data.schema;
           vm.grid    = data.grid;
-          $rootScope.$broadcast('model:config-loaded', vm);
+          $rootScope.$broadcast('model:config-loaded', vm.model.name, data, vm);
         })
         .error(function(data, status, headers, config) {
           exMsg.error('error');
