@@ -26,11 +26,14 @@ angular.module('angularApp')
         readonly: true
       };
 
-      if ($state.$current.name === 'app.module.model.new') {
-        setupNewUserForm(scope);
+      if ($state.$current.name === 'app.module.model.show') {
+        updateUserForm(scope);
+        $rootScope.$broadcast('ui:form-updated', modelName, {}, scope);
+      } else if ($state.$current.name === 'app.module.model.edit') {
+        setupEditUserForm(scope);
         $rootScope.$broadcast('ui:form-updated', modelName, {}, scope);
       } else {
-        updateUserConfig(scope);
+        setupNewUserForm(scope);
         $rootScope.$broadcast('ui:form-updated', modelName, {}, scope);
       }
     });
@@ -40,7 +43,7 @@ angular.module('angularApp')
 
       scope.lockUser = function () {
         scope.action.locking = true;
-        $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/lock')
+        $http.post(APP.apiPrefix + 'users/' + record.id + '/lock')
           .success(function (data) {
             scope.record = data;
             exMsg.success('User successfully locked');
@@ -55,7 +58,7 @@ angular.module('angularApp')
 
       scope.unlockUser = function () {
         scope.action.unlocking = true;
-        $http.post(APP.apiPrefix + 'users/' + scope.record.id + '/unlock')
+        $http.post(APP.apiPrefix + 'users/' + record.id + '/unlock')
           .success(function (data) {
             scope.record = data;
             exMsg.success('User successfully unlocked');
@@ -73,7 +76,7 @@ angular.module('angularApp')
       }
     });
 
-    function updateUserConfig(scope) {
+    function updateUserForm(scope) {
       var allowedProperties = [
         'sign_in_count', 'current_sign_in_at', 'last_sign_in_at',
         'current_sign_in_ip', 'last_sign_in_ip', 'failed_attempts',
@@ -270,6 +273,46 @@ angular.module('angularApp')
             helpvalue: '<div class="alert alert-info">A confirmation email will be sent to the User to confirm this account</div>'
           }
         ]
+      }];
+    }
+
+    function setupEditUserForm(scope) {
+      scope.form = [{
+        type: 'section',
+        htmlClass: 'row',
+        items: [{
+          type: 'section',
+          htmlClass: 'col-sm-6 col-xs-12',
+          items: [{
+            key: 'name',
+            fieldHtmlClass: 'input-lg'
+          }]
+        }, {
+          type: 'section',
+          htmlClass: 'col-sm-6 col-xs-12',
+          items: [{
+            key: 'email',
+            fieldHtmlClass: 'input-lg'
+          }]
+        }]
+      }, {
+        type: 'section',
+        htmlClass: 'row large-tags-',
+        items: [{
+          type: 'section',
+          htmlClass: 'col-xs-6',
+          items: [{
+            key: 'role_ids',
+            fieldHtmlClass: 'input-lg'
+          }]
+        }, {
+          type: 'section',
+          htmlClass: 'col-xs-6',
+          items: [{
+            key: 'status',
+            fieldHtmlClass: 'input-lg'
+          }]
+        }]
       }];
     }
   });

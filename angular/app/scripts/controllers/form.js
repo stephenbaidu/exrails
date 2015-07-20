@@ -75,7 +75,7 @@ angular.module('angularApp')
           .then(function (data) {
             vm.record = data;
             vm.sanitizeRecord();
-            $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record);
+            $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
             vm.action.loading = false;
             vm.$broadcast('schemaFormRedraw');
           })
@@ -84,12 +84,12 @@ angular.module('angularApp')
             vm.action.loading = false;
           });
       } else {
-        $rootScope.$broadcast('model:record-new', vm);
+        $rootScope.$broadcast('model:record-new', vm.model.name, vm.record, vm);
       }
     };
 
-    vm.$on('model:reload-record', function(evt, model, recordId) {
-      if (model === vm.model.name && recordId === vm.record.id) {
+    vm.$on('model:reload-record', function(evt, modelName, record) {
+      if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord();
       }
     });
@@ -107,7 +107,7 @@ angular.module('angularApp')
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
         });
-        $rootScope.$broadcast('model:record-set', vm);
+        $rootScope.$broadcast('model:record-set', vm.model.name, vm.record, vm);
       }
     };
 
@@ -130,7 +130,7 @@ angular.module('angularApp')
       
       resourceManager.create(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-created', vm.model.name, data);
+          $rootScope.$broadcast('model:record-created', vm.model.name, vm.record, vm);
           exMsg.success(vm.schema.title + ' created successfully');
           vm.record.id = data.id;
           vm.redirectBack();
@@ -157,7 +157,7 @@ angular.module('angularApp')
       
       resourceManager.update(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-updated', vm.model.name, data);
+          $rootScope.$broadcast('model:record-updated', vm.model.name, vm.record, vm);
           exMsg.success(vm.schema.title + ' updated successfully');
           vm.redirectBack();
         })
@@ -194,7 +194,7 @@ angular.module('angularApp')
         data[vm.model.key] = vm.record;
         resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-          $rootScope.$broadcast('model:record-deleted', vm.model.name, data);
+          $rootScope.$broadcast('model:record-deleted', vm.model.name, vm.record, vm);
             exMsg.success(vm.schema.title + " deleted successfully");
             vm.redirectBack();
           })

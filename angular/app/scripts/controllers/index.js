@@ -44,7 +44,7 @@ angular.module('angularApp')
         })
         .then(function (data) {
           vm.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records);
+          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records, vm);
         })
         .catch(function (error) {
           console.log(error);

@@ -108,7 +108,8 @@ table {
 
   .has-error {
     .form-control-feedback {
-      top: 22px !important;
+      top: 25px !important;
+      float: right;
       font-size: 12px;
       width: 35px;
     }
