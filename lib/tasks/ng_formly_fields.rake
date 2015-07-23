@@ -198,7 +198,7 @@ fields-here
 
   def controller_function
     <<-eos
-function($scope, lookupService) {
+/* @ngInject */ function($scope, lookupService) {
           lookupService.load('model-key').then(function() {
             $scope.to.options = lookupService.get('model-key', $scope.to.lookup);
           });
