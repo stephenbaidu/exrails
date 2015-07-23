@@ -132,21 +132,12 @@ angular.module('angularApp')
 
     vm.updateRecordInRecords = function (record) {
       if (!record) return;
-      
-      var recordFound = false;
 
-      angular.forEach(vm.records, function (rec, index) {
-        if (rec.id == record.id) {
-          vm.records[index] = angular.copy(record);
-          vm.polishRecord(vm.records[index]);
-          recordFound = true;
-          return;
-        }
-      });
+      var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
 
-      if (!recordFound) {
-        vm.records.unshift(record);
-        vm.recordsHash[record.id] = true;
+      if (recordIndex >= 0) {
+        vm.records[recordIndex] = angular.copy(record);
+        vm.polishRecord(vm.records[recordIndex]);
       }
     }
 
@@ -279,7 +270,7 @@ angular.module('angularApp')
           vm.lookups = data.lookups;
           vm.schema  = data.schema;
           vm.grid    = data.grid;
-          $rootScope.$broadcast('model:config-loaded', vm.model.name, data, vm);
+          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
         })
         .error(function(data, status, headers, config) {
           exMsg.error('error');

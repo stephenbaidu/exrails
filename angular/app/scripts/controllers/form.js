@@ -29,7 +29,7 @@ angular.module('angularApp')
           vm.schema  = data.schema;
           vm.setDisableFields();
           vm.form = formService.get(vm.model.key);
-          $rootScope.$broadcast('model:config-loaded', vm.model.name, data, vm);
+          $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, vm);
           vm.setRecord();
         })
         .error(function(data, status, headers, config) {
