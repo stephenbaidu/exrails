@@ -245,7 +245,7 @@ angular.module('angularApp')
       var reportData = _.map(vm.records, function (rec) {
         var data = {};
         _.each(vm.grid, function (e) {
-          data[e] = vm.fieldData(rec, e);
+          data[e] = vm.fieldData(rec, e) || '';
         });
 
         return data;
@@ -263,7 +263,7 @@ angular.module('angularApp')
       var reportData = _.map(vm.records, function (rec) {
         var data = {};
         _.each(vm.grid, function (e) {
-          data[e] = vm.fieldData(rec, e);
+          data[e] = vm.fieldData(rec, e) || '';
         });
 
         return data;
