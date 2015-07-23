@@ -104,7 +104,7 @@ fields['sample'] = [
 
           ]
         },
-        "controller": function($scope, lookupService) {
+        "controller": /* @ngInject */ function($scope, lookupService) {
           lookupService.load('sample').then(function() {
             $scope.to.options = lookupService.get('sample', $scope.to.lookup);
           });

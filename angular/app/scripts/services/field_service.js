@@ -54,7 +54,7 @@ fields['role'] = [
           "labelProp": "name",
           "options": []
         },
-        "controller": function($scope, lookupService) {
+        "controller": /* @ngInject */ function($scope, lookupService) {
           lookupService.load('role', 'permission').then(function() {
             $scope.to.options = lookupService.get('role', 'permission');
           });
