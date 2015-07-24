@@ -651,7 +651,7 @@ forms-here
 
   def ng_schema_form_excluded?(field)
     [
-      'id', 'created_at', 'updated_at', 'details',
+      'id', 'created_at', 'updated_at', 'deleted_at', 'details',
       'lft', 'rgt', 'depth'
     ].include? field
   end
