@@ -118,7 +118,12 @@ angular.module('angularApp')
 
     vm.redirectBack = function () {
       vm.record = {};
-      $state.go('^');
+      
+      if ($state.$current.name === 'app.module.form.model') {
+        $state.go('.', $stateParams, { reload: true });
+      } else {
+        $state.go('^');
+      }
     };
 
     vm.create = function () {
