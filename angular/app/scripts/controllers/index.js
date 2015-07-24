@@ -200,12 +200,6 @@ angular.module('angularApp')
       vm.queryRecords();
     });
 
-    vm.error = function (error) {
-      error = error || {};
-      error.message  && exMsg.error(error.message, error.type || 'Error');
-      error.messages && exMsg.errorSummary(error.messages);
-    }
-
     vm.delete = function (id) {
       vm.action.deleting = true;
 

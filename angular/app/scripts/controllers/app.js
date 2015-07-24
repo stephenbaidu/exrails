@@ -67,6 +67,12 @@ angular.module('angularApp')
       return (found === undefined)? false : true;
     }
 
+    vm.error = function (error) {
+      error = error || {};
+      error.message  && exMsg.error(error.message, error.type || 'Error');
+      error.messages && exMsg.errorSummary(error.messages);
+    }
+
     vm.back = function () {
       $state.go('^');
     }
