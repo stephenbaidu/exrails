@@ -15,10 +15,14 @@ angular.module('angularApp')
     vm.stateParams = $stateParams;
     vm.state = $state;
 
-    vm.$on('model:config-loaded', function (evt, modelName, configData, scope) {
-      if (modelName !== 'User') return;
+    vm.$on('model:index-config-loaded', function (evt, modelName, configData, scope) {
+      if (modelName === 'User') {
+        scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip'];
+      }
+    });
 
-      scope.grid = ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip'];
+    vm.$on('model:form-config-loaded', function (evt, modelName, configData, scope) {
+      if (modelName !== 'User') return;
       scope.schema.required = ['name', 'email'];
       scope.schema.properties.status = {
         title: 'Status',

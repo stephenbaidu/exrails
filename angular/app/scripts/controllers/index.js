@@ -144,13 +144,12 @@ angular.module('angularApp')
     vm.removeRecordInRecords = function (record) {
       if (!record) return;
 
-      angular.forEach(vm.records, function (rec, index) {
-        if (rec.id == record.id) {
-          vm.records.splice(index, 1);
-          delete vm.recordsHash[record.id];
-          return;
-        }
-      });
+      var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
+
+      if (recordIndex >= 0) {
+        vm.records.splice(recordIndex, 1);
+        delete vm.recordsHash[record.id];
+      }
     }
 
     vm.$on('model:record-loaded', function (evt, modelName, record) {
@@ -161,7 +160,9 @@ angular.module('angularApp')
 
     vm.$on('model:record-created', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
-        vm.updateRecordInRecords(record);
+        vm.records.unshift(angular.copy(record));
+        vm.recordsHash[record.id] = true;
+        vm.polishRecord(vm.records[0]);
       }
     });
 

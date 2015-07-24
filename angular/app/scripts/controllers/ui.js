@@ -12,7 +12,7 @@ angular.module('angularApp')
     var vm = $scope;
     window.uiCtrl = vm;
 
-    vm.$on('model:config-loaded', function(evt, modelName, configData, scope) {
+    vm.$on('model:index-config-loaded', function(evt, modelName, configData, scope) {
       if (modelName === 'User') {
         // do something
       }
