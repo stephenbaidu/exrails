@@ -639,7 +639,7 @@ angular.module('angularApp')
 
     var formSVC = {
       get: function (modelInSnakeCase) {
-        return forms[modelInSnakeCase] || [];
+        return angular.copy(forms[modelInSnakeCase]) || [];
       }
     };
 forms-here
@@ -748,7 +748,7 @@ angular.module('angularApp')
 
     var fieldSVC = {
       get: function (modelInSnakeCase) {
-        return fields[modelInSnakeCase] || [];
+        return angular.copy(fields[modelInSnakeCase]) || [];
       }
     };
 fields-here

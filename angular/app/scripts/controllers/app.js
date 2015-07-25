@@ -22,10 +22,10 @@ angular.module('angularApp')
       update: function (state) {
         if (!state) return;
         
-        this.isIndex = (state.name == 'app.module.model');
-        this.isNew   = (state.name == 'app.module.model.new');
-        this.isShow  = (state.name == 'app.module.model.show');
-        this.isEdit  = (state.name == 'app.module.model.edit');
+        this.isIndex = (state.name === 'app.module.model');
+        this.isNew   = (state.name === 'app.module.model.new' || state.name === 'app.module.form.model');
+        this.isShow  = (state.name === 'app.module.model.show');
+        this.isEdit  = (state.name === 'app.module.model.edit');
       }
     };
 
@@ -101,12 +101,6 @@ angular.module('angularApp')
       });
       return result;
     };
-
-    // // Load permissions
-    // $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/permissions')
-    //   .success(function (data) {
-    //     $auth.user.permissions = data;
-    //   });
 
     vm.$on('auth:logout-success', function(ev) {
       $state.go('login');

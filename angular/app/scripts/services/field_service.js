@@ -13,7 +13,7 @@ angular.module('angularApp')
 
     var fieldSVC = {
       get: function (modelInSnakeCase) {
-        return fields[modelInSnakeCase] || [];
+        return angular.copy(fields[modelInSnakeCase]) || [];
       }
     };
 

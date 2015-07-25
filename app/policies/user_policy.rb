@@ -4,10 +4,7 @@ class UserPolicy < ApplicationPolicy
       if @user.admin?
         scope.where('id > 1')
       else
-        user_ids = scope.select do |u|
-          u.branch && (u.branch[:id] == @user.branch.id)
-        end.map(&:id)
-        User.where(id: user_ids)
+        User.where(id: @user.id)
       end
     end
   end
