@@ -1,5 +1,5 @@
 namespace :app do
-  desc 'Creates default user: admin'
+  desc 'Creates default roles'
   task :setup_roles => :environment do |t, args|
 
     # Default user roles
