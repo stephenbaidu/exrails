@@ -135,7 +135,7 @@ angular.module('angularApp')
       
       resourceManager.create(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-created', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('model:record-created', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' created successfully');
           vm.record.id = data.id;
           vm.redirectBack();
@@ -162,7 +162,7 @@ angular.module('angularApp')
       
       resourceManager.update(vm.model.name, data)
         .then(function (data) {
-          $rootScope.$broadcast('model:record-updated', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('model:record-updated', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' updated successfully');
           vm.redirectBack();
         })
