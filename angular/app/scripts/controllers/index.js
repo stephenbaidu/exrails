@@ -71,12 +71,6 @@ angular.module('angularApp')
       return vm.hasAccess(vm.model.name + ':delete');
     }
 
-    vm.$on('model:records-loaded', function (e, modelName, records) {
-      if(vm.model.name != modelName) return;
-
-      vm.updatePreviousNext();
-    });
-
     vm.$on('model:record-loaded', function (e, modelName, record) {
       if(vm.model.name != modelName) return;
 
