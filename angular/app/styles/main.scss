@@ -28,6 +28,12 @@ body {
     margin-left: -15px;
     margin-right: -15px;
   }
+  .formly-field-input, .formly-field-ui-select, .formly-field-datepicker {
+    .form-control {
+      min-height: 38px;
+      padding: 8px 8px;
+    }
+  }
 }
 
 .rowlink tr td:first-child, .rowlink tr td:last-child {
