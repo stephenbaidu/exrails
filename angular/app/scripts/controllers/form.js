@@ -150,7 +150,7 @@ angular.module('angularApp')
     };
 
     vm.edit = function () {
-      $state.go('^.edit', $stateParams.id);
+      $state.go('^.edit', $stateParams);
     };
 
     vm.update = function () {
