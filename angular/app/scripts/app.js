@@ -125,6 +125,17 @@ app.config(function ($stateProvider, $urlRouterProvider) {
       },
       controller: 'FormCtrl'
     })
+    .state('app.module.reports', {
+      url: '/report',
+      template: '<div ui-view></div>'
+    })
+    .state('app.module.reports.report', {
+      url: '/:report',
+      templateUrl: function (stateParams) {
+        return 'views/app/reports/show.html';
+      },
+      controller: 'ReportCtrl'
+    })
     .state('app.module.model', {
       url: '/:model',
       templateUrl: function (stateParams) {
