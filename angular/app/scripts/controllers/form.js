@@ -12,16 +12,27 @@ angular.module('angularApp')
     var vm = $scope;
     window.formCtrl = vm;
 
-    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
-    
+    vm.model     = {};
+    vm.modelName = null;
+    vm.recordId  = null;
     vm.record = {};
     vm.action = { loading: true, saving: false, creating: false, updating: false, deleting: false };
-    
     vm.schema = {};
-
-    vm.formlyFields  = fieldService.get(vm.model.key);
+    vm.formlyFields  = {};
     vm.formlyOptions = {};
     vm.formlyForm    = {};
+
+    vm.init = function (modelName, recordId) {
+      vm.modelName = modelName;
+      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
+      vm.formlyFields = fieldService.get(vm.model.key);
+      vm.loadConfig();
+
+      if (recordId) {
+        vm.recordId = recordId;
+        vm.loadRecord(recordId);
+      }
+    }
 
     vm.loadConfig = function () {
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
@@ -34,6 +45,26 @@ angular.module('angularApp')
         })
         .error(function(data, status, headers, config) {
           exMsg.error('error');
+        });
+    };
+
+    vm.loadRecord = function (recordId) {
+      if(!recordId) { return; }
+
+      vm.action.loading = true;
+
+      var data = { id: recordId };
+      resourceManager.get(vm.model.name, data)
+        .then(function (data) {
+          vm.record = data;
+          vm.sanitizeRecord();
+          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
+          vm.action.loading = false;
+          vm.$broadcast('schemaFormRedraw');
+        })
+        .catch(function (error) {
+          vm.error(error);
+          vm.action.loading = false;
         });
     };
 
@@ -65,28 +96,6 @@ angular.module('angularApp')
       }
       vm.$broadcast('schemaFormRedraw');
     }
-
-    vm.loadRecord = function () {
-      vm.action.loading = true;
-
-      if($stateParams.id) {
-        var data = { id: $stateParams.id };
-        resourceManager.get(vm.model.name, data)
-          .then(function (data) {
-            vm.record = data;
-            vm.sanitizeRecord();
-            $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
-            vm.action.loading = false;
-            vm.$broadcast('schemaFormRedraw');
-          })
-          .catch(function (error) {
-            vm.error(error);
-            vm.action.loading = false;
-          });
-      } else {
-        $rootScope.$broadcast('model:record-new', vm.model.name, vm.record, vm);
-      }
-    };
 
     vm.$on('model:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
@@ -126,7 +135,7 @@ angular.module('angularApp')
       }
     };
 
-    vm.create = function () {
+    vm.create = function (redirectBack) {
       vm.action.saving = true;
       vm.action.creating = true;
 
@@ -138,7 +147,10 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:record-created', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' created successfully');
           vm.record.id = data.id;
-          vm.redirectBack();
+          
+          if (redirectBack) {
+            vm.redirectBack();
+          }
         })
         .catch(function (error) {
           vm.error(error);
@@ -153,18 +165,23 @@ angular.module('angularApp')
       $state.go('^.edit', $stateParams);
     };
 
-    vm.update = function () {
+    vm.update = function (redirectBack) {
+      if(!vm.record.id) { return; }
+
       vm.action.saving = true;
       vm.action.updating = true;
 
-      var data = { id: $stateParams.id };
+      var data = { id: vm.record.id };
       data[vm.model.key] = vm.record;
       
       resourceManager.update(vm.model.name, data)
         .then(function (data) {
           $rootScope.$broadcast('model:record-updated', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' updated successfully');
-          vm.redirectBack();
+
+          if (redirectBack) {
+            vm.redirectBack();
+          }
         })
         .catch(function (error) {
           vm.error(error);
@@ -175,7 +192,7 @@ angular.module('angularApp')
         });
     };
 
-    vm.save = function () {
+    vm.save = function (redirectBack) {
       PNotify.removeAll();
       vm.$broadcast('schemaFormValidate');
 
@@ -183,10 +200,14 @@ angular.module('angularApp')
         return;
       }
 
-      if($stateParams.id) {
-        vm.update();
+      if (redirectBack === undefined) {
+        redirectBack = true;
+      }
+
+      if(vm.record.id) {
+        vm.update(redirectBack);
       } else {
-        vm.create();
+        vm.create(redirectBack);
       }
     };
 
@@ -213,6 +234,7 @@ angular.module('angularApp')
       });
     };
 
-    vm.loadConfig();
-    vm.loadRecord();
+    if (!vm.modelName) {
+      vm.init($stateParams.model, $stateParams.id);
+    }
   });
