@@ -71,6 +71,7 @@ module.exports = function(config) {
       'bower_components/angular-schema-form-datepicker/bootstrap-datepicker.min.js',
       'bower_components/angular-schema-form-uiselect/angular-schema-form-uiselect.min.js',
       'bower_components/ngDialog/js/ngDialog.js',
+      'bower_components/ng-mfb/src/mfb-directive.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
