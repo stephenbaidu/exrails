@@ -1,6 +1,9 @@
+$main-color: #03A9F4;
 $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+
 // bower:scss
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+@import "ng-mfb/mfb/src/mfb.scss";
 // endbower
 
 body {
@@ -32,6 +35,29 @@ body {
     .form-control {
       min-height: 38px;
       padding: 8px 8px;
+    }
+  }
+}
+
+.formly-form-compact {
+  .formly-field {
+    .form-group {
+      margin-bottom: 5px;
+      label {
+        margin-bottom: 1px;
+      }
+    }
+  }
+}
+
+.formly-form-condensed {
+  .panel-body {
+    padding: 5px 15px;
+  }
+  .formly-field-input, .formly-field-ui-select, .formly-field-datepicker {
+    .form-control {
+      min-height: 30px;
+      padding: 5px 5px;
     }
   }
 }

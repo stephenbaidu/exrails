@@ -1,0 +1,28 @@
+
+.mfb-component__wrap a, .mfb-component__list li a {
+  outline: none;
+
+  &:hover, &:visited {
+    color: #fff;
+  }
+}
+
+.mfb-component__list {
+  li:nth-child(1) a {
+    background: teal;
+  }
+
+  li:nth-child(2) a {
+    background: orange;
+  }
+
+  li:nth-child(3) a {
+    background: cyan;
+  }
+}
+
+.mfb-component__button--child {
+  // height: 45px;
+  // width: 45px;
+  // margin-left: 11px;
+}

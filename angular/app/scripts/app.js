@@ -22,6 +22,7 @@ var app = angular.module('angularApp', [
   'angular-underscore',
   // 'ui.bootstrap',
   'ngDialog',
+  'ng-mfb',
   'ui.select',
   'xeditable',
   'daterangepicker',
