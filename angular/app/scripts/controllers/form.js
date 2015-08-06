@@ -68,6 +68,27 @@ angular.module('angularApp')
         });
     };
 
+    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      var actionsConfig = [];
+
+      if (vm.state.isShow && vm.hasCreateAccess()) {
+        actionsConfig.push({
+          icon: 'fa fa-plus',
+          label: 'New ' + vm.model.name,
+          handler: function () { $state.go('^.new') }
+        });
+      }
+
+      // Add back button
+      actionsConfig.push({
+        icon: 'fa fa-chevron-left',
+        label: 'Close',
+        handler: vm.redirectBack
+      });
+      
+      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
+    });
+
     vm.hasCreateAccess = function () {
       return vm.hasAccess(vm.model.name + ':create');
     }
@@ -99,7 +120,7 @@ angular.module('angularApp')
 
     vm.$on('model:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
-        vm.loadRecord();
+        vm.loadRecord(vm.record.id);
       }
     });
 

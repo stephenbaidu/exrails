@@ -12,14 +12,14 @@ angular.module('angularApp')
     var vm = $scope;
     window.indexCtrl = vm;
 
-    vm.model = resourceManager.register($stateParams.model, APP.apiPrefix + $stateParams.model.replace(/-/gi, '_') + '/:id');
-    
+    vm.model     = {};
+    vm.modelName = null;
     vm.grid = {};
     vm.recordsHash = {};
     vm.records = [];
     vm.currentRecord = {};
     vm.searchQuery = null;
-    vm.action = { loading: false, deleting: false };
+    vm.action = { loading: false, searching: false, deleting: false };
     vm.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
@@ -28,6 +28,69 @@ angular.module('angularApp')
       currentId: 0,
       nextId: 0
     };
+
+    vm.init = function (modelName) {
+      vm.modelName = modelName;
+      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
+      vm.loadConfig();
+    }
+
+    vm.loadConfig = function () {
+      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
+        .success(function (data) {
+          vm.lookups = data.lookups;
+          vm.schema  = data.schema;
+          vm.grid    = data.grid;
+          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
+        })
+        .error(function(data, status, headers, config) {
+          exMsg.error('error');
+        });
+    };
+
+    vm.$on('model:do-search', function (evt, modelName, queryParams) {
+      if (modelName === vm.modelName) {
+        vm.recordsHash = {};
+        vm.records = [];
+        vm.paging.currentPage = 1;
+        vm.queryRecords(1, 1000, queryParams);
+      }
+    });
+
+    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      if (!vm.state.isIndex) return;
+
+      var actionsConfig = [];
+
+      if (vm.hasCreateAccess()) {
+        actionsConfig.push({
+          icon: 'fa fa-plus',
+          label: 'New ' + vm.model.name,
+          handler: vm.new
+        });
+      }
+
+      // Add search button
+      actionsConfig.push({
+        icon: 'fa fa-search',
+        label: 'Search',
+        handler: vm.showSearch
+      });
+
+      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
+    });
+
+    vm.showSearch = function () {
+      vm.action.searching = true;
+    }
+
+    vm.hideSearch = function () {
+      vm.action.searching = false;
+    }
+
+    vm.new = function () {
+      $state.go('.new');
+    }
 
     vm.queryRecords = function (page, size, query) {
       vm.action.loading = true;
@@ -253,18 +316,7 @@ angular.module('angularApp')
       $rootScope.$broadcast('report:pdf-generated', vm.model.name);
     };
 
-    vm.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.lookups = data.lookups;
-          vm.schema  = data.schema;
-          vm.grid    = data.grid;
-          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
-        })
-        .error(function(data, status, headers, config) {
-          exMsg.error('error');
-        });
-    };
-
-    vm.loadConfig();
+    if (!vm.modelName) {
+      vm.init($stateParams.model);
+    }
   });

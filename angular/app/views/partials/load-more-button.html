@@ -1,0 +1,6 @@
+<div class="pull-right-">
+  <button ng-disabled="action.loading" type="button" class="btn btn-success" ng-click="loadMore()">
+    <span class="fa fa-spinner" ng-class="{'fa-pulse': action.loading}"></span>
+    {{ (action.loading)? "Loading..." : "More" }}
+  </button>
+</div>
