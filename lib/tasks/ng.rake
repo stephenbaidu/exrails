@@ -373,116 +373,39 @@ Dashboard View
 <div class="row">
   <div class="col-md-12">
     <div id="page_header" class="clearfix content-header">
-      <h3 class="pull-left"> 
-        <i class="glyphicon glyphicon-list"></i>
-        {{ model.title }}
-      </h3>
-      <div ng-show="hasCreateAccess()" class="btn-group pull-right">
-        <a class="btn btn-primary" ng-click="search_on=!search_on" data-toggle="button">
-          <span class="fa fa-search"></span>
-        </a>
-        <a class="btn btn-success pull-right" ui-sref=".new">
-          <span class="fa fa-plus"></span> New
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-4 form-group hidden-sm hidden-xs">
-    <div class="input-group">
-      <div class="input-group-btn">
-        <button type="button" class="btn btn-default" aria-expanded="false"><span class="fa fa-search"></span></button>
-      </div>
-      <input type="text" class="form-control" ng-model="filterText" aria-label="...">
-    </div>
-  </div>
-  <div ng-hide="state.isIndex" class="col-md-8 no-left" style="padding-bottom: 5px;">
-    <div class="row">
-      <div class="col-xs-6">
-        <button class="btn btn-default" ng-click="back()">
-          <span class="fa fa-chevron-left"></span>
-          Back
-        </button>
-      </div>
-      <div class="col-xs-6">
-        <div ng-if="paging.currentId" class="btn-group pull-right">
-          <a ng-disabled="!paging.previousId" class="btn btn-default" ui-sref=".show({id: paging.previousId})">
-            <span class="fa fa-chevron-left"></span>
-          </a>
-          <a ng-disabled="!paging.currentId" class="btn btn-default" ui-sref=".edit({id: paging.currentId})">
-            {{ paging.currentId }}
-          </a>
-          <a ng-disabled="!paging.nextId" class="btn btn-default" ui-sref=".show({id: paging.nextId})">
-            <span class="fa fa-chevron-right"></span>
-          </a>
+      <div class="row">
+        <div class="col-md-8">
+          <h3 class="pull-left"> 
+            <i class="glyphicon glyphicon-list"></i>
+            {{ model.title }}
+          </h3>
+        </div>
+        <div ng-show="state.isIndex" class="col-md-4 form-group hidden-sm hidden-xs">
+          <div ng-include="partials.filterInput"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<div ng-if="state.isIndex">
+  <div ng-include="partials.searchForm"></div>
+</div>
+<div class="row" ng-hide="state.isIndex">
+  <div class="col-md-4 form-group hidden-sm hidden-xs">
+    <div ng-include="partials.filterInput"></div>
+  </div>
+  <div class="col-md-8" style="padding-bottom: 5px;">
+    <div ng-include="partials.formControls"></div>
+  </div>
+</div>
 <div class="row">
   <div ng-show="state.isIndex" class="col-md-12">
-    <table class="table table-bordered table-striped table-hover">
-      <thead>
-        <tr>
-          <th class='grid-action-1'></th>
-          <th ng-repeat="field in grid">
-            {{ schema.properties[field].title }}
-          </th>
-          <th class="grid-action-1"></th>
-        </tr>
-      </thead>
-      <tbody data-link="row" class="rowlink">
-        <tr ng-repeat="rec in records | filter:filterText">
-          <td>{{ $index + 1 }}.</td>
-          <td ng-repeat="field in grid">
-            {{ fieldData(rec, field) }}
-          </td>
-          <td>
-            <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
-              <span class="fa fa-lg fa-chevron-right"></span>
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pull-right">
-      <button ng-disabled="action.loading" type="button" class="btn btn-success" ng-click="loadMore()">
-        <span class="fa fa-spinner" ng-class="{'fa-pulse': action.loading}"></span>
-        {{ (action.loading)? "Loading..." : "More" }}
-      </button>
-    </div>
+    <div ng-include="partials.indexGrid"></div>
+    <div ng-include="partials.loadMoreButton"></div>
   </div>
   <div ng-hide="state.isIndex" class="col-md-4 hidden-sm hidden-xs">
-    <table class="table table-bordered table-striped table-hover">
-      <thead>
-        <tr>
-          <th class='grid-action-1'></th>
-          <th>Name</th>
-          <th class="grid-action-1"></th>
-        </tr>
-      </thead>
-      <tbody data-link="row" class="rowlink">
-        <tr ng-repeat="rec in records | filter:filterText" ng-class="{active: rec.id === paging.currentId}">
-          <td>{{ $index + 1 }}.</td>
-          <td>
-            {{ rec.name }}
-          </td>
-          <td>
-            <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
-              <span class="fa fa-lg fa-chevron-right"></span>
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pull-right">
-      <button ng-disabled="action.loading" type="button" class="btn btn-success" ng-click="loadMore()">
-        <span class="fa fa-spinner" ng-class="{'fa-pulse': action.loading}"></span>
-        {{ (action.loading)? "Loading..." : "More" }}
-      </button>
-    </div>
+    <div ng-include="partials.nameGrid"></div>
+    <div ng-include="partials.loadMoreButton"></div>
   </div>
   <div ng-hide="state.isIndex" class="col-md-8 no-left">
     <div ui-view></div>

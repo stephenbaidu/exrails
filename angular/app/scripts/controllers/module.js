@@ -14,6 +14,7 @@ angular.module('angularApp')
 
     vm.partials = {
       fab: 'views/partials/floating-action-button.html',
+      filterInput: 'views/partials/filter-input.html',
       searchForm: 'views/partials/search-form.html',
       formControls: 'views/partials/form-controls.html',
       indexGrid: 'views/partials/index-grid.html',
