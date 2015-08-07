@@ -1,9 +1,10 @@
 <div class="input-group">
-  <div class="input-group-btn">
-    <button type="button" class="btn btn-default" aria-expanded="false">
-      <span class="fa fa-filter"></span>
-      Filter
-    </button>
-  </div>
-  <input type="text" class="form-control" ng-model="action.filterText" aria-label="...">
+  <span class="input-group-addon">
+    <span class="fa fa-filter"></span>
+    Filter
+  </span>
+  <input type="text" class="form-control"
+    ng-model="action.filterText"
+    placeholder="Type here to filter data ..."
+    aria-label="..." />
 </div>
