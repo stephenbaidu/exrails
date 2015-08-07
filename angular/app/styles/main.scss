@@ -11,6 +11,22 @@ body {
   font-size: 14px;
 }
 
+.search-form {
+  background-color: whitesmoke;
+  margin-bottom: 7px;
+  padding: 5px 5px 2px 5px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+  .breadcrumb {
+    padding: 0px;
+    margin-bottom: 0px;
+  }
+
+  .form-group {
+    margin-bottom: 5px;
+  }
+}
+
 .formly-field-ui-select-multiple {
   input.ui-select-search {
     height: 1.666666em !important;
@@ -248,11 +264,18 @@ table {
 .content {
   padding: 0px;
   margin-left: 130px;
+  
   .content-header {
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 7px;
+    
+    h3 {
+      margin-top: 15px;
+    }
+    
     .form-group {
       margin-top: 10px;
+      margin-bottom: 0px;
     }
   }
 }
