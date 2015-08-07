@@ -9,15 +9,7 @@
           </h3>
         </div>
         <div ng-show="state.isIndex" class="col-md-4 form-group hidden-sm hidden-xs">
-          <div class="input-group">
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default" aria-expanded="false">
-                <span class="fa fa-filter"></span>
-                Filter
-              </button>
-            </div>
-            <input type="text" class="form-control" ng-model="filterText" aria-label="...">
-          </div>
+          <div ng-include="partials.filterInput"></div>
         </div>
       </div>
     </div>
@@ -28,15 +20,7 @@
 </div>
 <div class="row" ng-hide="state.isIndex">
   <div class="col-md-4 form-group hidden-sm hidden-xs">
-    <div class="input-group">
-      <div class="input-group-btn">
-        <button type="button" class="btn btn-default" aria-expanded="false">
-          <span class="fa fa-filter"></span>
-          Filter
-        </button>
-      </div>
-      <input type="text" class="form-control" ng-model="filterText" aria-label="...">
-    </div>
+    <div ng-include="partials.filterInput"></div>
   </div>
   <div class="col-md-8" style="padding-bottom: 5px;">
     <div ng-include="partials.formControls"></div>
