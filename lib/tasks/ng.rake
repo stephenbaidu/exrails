@@ -370,23 +370,7 @@ Dashboard View
     data = {}
 
     data[:index] = <<-eos
-<div class="row">
-  <div class="col-md-12">
-    <div id="page_header" class="clearfix content-header">
-      <div class="row">
-        <div class="col-md-8">
-          <h3 class="pull-left"> 
-            <i class="glyphicon glyphicon-list"></i>
-            {{ model.title }}
-          </h3>
-        </div>
-        <div ng-show="state.isIndex" class="col-md-4 form-group hidden-sm hidden-xs">
-          <div ng-include="partials.filterInput"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div ng-include="partials.header"></div>
 <div ng-if="state.isIndex">
   <div ng-include="partials.searchForm"></div>
 </div>
@@ -398,7 +382,7 @@ Dashboard View
     <div ng-include="partials.formControls"></div>
   </div>
 </div>
-<div class="row">
+<div class="row model-container">
   <div ng-show="state.isIndex" class="col-md-12">
     <div ng-include="partials.indexGrid"></div>
     <div ng-include="partials.loadMoreButton"></div>
