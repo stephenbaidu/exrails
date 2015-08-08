@@ -11,6 +11,10 @@ body {
   font-size: 14px;
 }
 
+:focus {
+  outline: 0;
+}
+
 .nav-arrow {
   color: #919191;
 }
