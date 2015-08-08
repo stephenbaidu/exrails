@@ -15,10 +15,10 @@ angular.module('angularApp')
     vm.search = { fields: [], inputType: '', params: {}, queries: {} };
 
     vm.$on('model:index-config-loaded', function (evt, modelName, configData) {
-      vm.initSeach(configData.schema.properties);
+      vm.initSearch(configData.schema.properties);
     });
 
-    vm.initSeach = function (schemaProperties) {
+    vm.initSearch = function (schemaProperties) {
       vm.search.fields = _.map(schemaProperties, function(value, key) {
         value.key = key;
         value.inputType = 'text';
@@ -135,5 +135,9 @@ angular.module('angularApp')
 
     vm.doSearch = function () {
       $rootScope.$broadcast('model:do-search', vm.modelName, vm.getQueryParams());
+    }
+
+    if (vm.schema && vm.schema.properties) {
+      vm.initSearch(vm.schema.properties);
     }
   });
