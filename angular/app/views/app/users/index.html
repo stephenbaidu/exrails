@@ -28,7 +28,7 @@
 </div>
 <div class="row">
   <div ng-show="state.isIndex" class="col-md-12">
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th class='grid-action-1'></th>
@@ -51,7 +51,7 @@
               {{ (schema.properties.role_ids.items | byValue:roleId).label }}
             </span>
           </td>
-          <td>
+          <td class="nav-arrow">
             <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
               <span class="fa fa-lg fa-chevron-right"></span>
             </a>
