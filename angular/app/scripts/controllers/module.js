@@ -17,7 +17,7 @@ angular.module('angularApp')
       filterInput: 'views/partials/filter-input.html',
       header: 'views/partials/header.html',
       searchForm: 'views/partials/search-form.html',
-      formControls: 'views/partials/form-controls.html',
+      formNav: 'views/partials/form-nav.html',
       indexGrid: 'views/partials/index-grid.html',
       nameGrid: 'views/partials/name-grid.html',
       loadMoreButton: 'views/partials/load-more-button.html'
