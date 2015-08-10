@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody data-link="row" class="rowlink">
-        <tr ng-repeat="rec in records | filter:filterText">
+        <tr ng-repeat="rec in records | filter:action.filterText">
           <td>{{ $index + 1 }}.</td>
           <td>{{ fieldData(rec, 'name') }}</td>
           <td>{{ fieldData(rec, 'permissions').length }}</td>

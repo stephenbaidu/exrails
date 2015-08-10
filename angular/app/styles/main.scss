@@ -154,7 +154,7 @@ table {
 .schema-form-section { 
   .has-success {
     .form-control-feedback {
-      top: 25px !important;
+      top: -25px !important;
       float: right;
       font-size: 12px;
       width: 35px;
@@ -168,7 +168,7 @@ table {
 
   .has-error {
     .form-control-feedback {
-      top: 25px !important;
+      top: -25px !important;
       float: right;
       font-size: 12px;
       width: 35px;
