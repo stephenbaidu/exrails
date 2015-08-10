@@ -40,7 +40,7 @@ app.constant('APP', {
     main: {
       text: 'Main Menu', url: 'app', icon: 'fa fa-home fa-lg',
       links: [
-        { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user color-teal-500' }
+        { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user' }
       ]
     },
     reports:  {
