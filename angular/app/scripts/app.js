@@ -40,7 +40,7 @@ app.constant('APP', {
     main: {
       text: 'Main Menu', url: 'app', icon: 'fa fa-home fa-lg',
       links: [
-        { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user' }
+        { text: 'Samples', url: 'samples', icon: 'glyphicon glyphicon-user color-teal-500' }
       ]
     },
     reports:  {
@@ -53,10 +53,10 @@ app.constant('APP', {
     setups: {
       text: 'Setups', url: 'setups', icon: 'fa fa-cogs fa-lg',
       links: [
-        { text: 'Users', url: 'users', icon: 'fa fa-user' },
-        { text: 'New User', url: 'form/users', icon: 'fa fa-user' },
-        { text: 'Roles', url: 'roles', icon: 'fa fa-user' },
-        { text: 'Sample Status', url: 'sample-statuses', icon: 'fa fa-tags' }
+        { text: 'Users', url: 'users', icon: 'fa fa-user color-red-100' },
+        { text: 'New User', url: 'form/users', icon: 'color-deep-purple-300 fa fa-user' },
+        { text: 'Roles', url: 'roles', icon: 'fa fa-user color-teal-500' },
+        { text: 'Sample Status', url: 'sample-statuses', icon: 'fa fa-tags color-blue-grey-500' }
       ]
     }
   }

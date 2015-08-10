@@ -2,7 +2,7 @@
   <ul class="nav nav-pills nav-stacked">
     <li ng-repeat="l in modules.reports.links" ng-class='{ active: hasUrl("#/reports/{{ l.url }}") }'>
       <a href="#/reports/{{ l.url }}">
-        <span class="{{ l.icon }}"></span>
+        <span class="link-icon {{ l.icon }}"></span>
         <br><span class="link-text">{{ l.text }}</span>
       </a>
     </li>
