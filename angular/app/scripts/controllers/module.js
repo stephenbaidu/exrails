@@ -17,10 +17,15 @@ angular.module('angularApp')
       filterInput: 'views/partials/filter-input.html',
       header: 'views/partials/header.html',
       searchForm: 'views/partials/search-form.html',
-      formNav: 'views/partials/form-nav.html',
       indexGrid: 'views/partials/index-grid.html',
       nameGrid: 'views/partials/name-grid.html',
-      loadMoreButton: 'views/partials/load-more-button.html'
+      loadMoreButton: 'views/partials/load-more-button.html',
+      formNav: 'views/partials/form-nav.html',
+      formlyForm: 'views/partials/formly-form.html',
+      schemaForm: 'views/partials/schema-form.html',
+      formNewButtons: 'views/partials/form-new-buttons.html',
+      formShowButtons: 'views/partials/form-show-buttons.html',
+      formEditButtons: 'views/partials/form-edit-buttons.html'
     };
 
     vm.hideFloatingActionButton = true;

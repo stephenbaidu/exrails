@@ -396,17 +396,10 @@ Dashboard View
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <div ng-include="partials.schemaForm"></div>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="close()">
-      <span class="glyphicon glyphicon-remove"></span>
-      Close
-    </button>
-    <button ng-show="hasCreateAccess()" ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
-      <span class="glyphicon glyphicon-ok"></span>
-      {{ (action.creating)? "Saving..." : "Save" }}
-    </button>
+    <div ng-include="partials.formNewButtons"></div>
   </div>
 </div>
     eos
@@ -417,17 +410,10 @@ Dashboard View
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form disabled-form sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <div ng-include="partials.schemaForm"></div>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="close()">
-      <span class="glyphicon glyphicon-remove"></span>
-      Close
-    </button>
-    <button ng-show="hasUpdateAccess()" class="btn btn-info btn-sm" ng-click="edit()">
-      <span class="glyphicon glyphicon-pencil"></span>
-      Edit
-    </button>
+    <div ng-include="partials.formShowButtons"></div>
   </div>
 </div>
     eos
@@ -438,24 +424,10 @@ Dashboard View
     <h3 class="panel-title">{{ schema.title }}</h3>
   </div>
   <div class="panel-body">
-    <form name="formObject" sf-schema="schema" sf-form="form" sf-model="record"></form>
+    <div ng-include="partials.schemaForm"></div>
   </div>
   <div class="panel-footer">
-    <button class="btn btn-default btn-sm" ng-click="close()">
-      <span class="glyphicon glyphicon-remove"></span>
-      Close
-    </button>
-    <button ng-show="hasUpdateAccess()" ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
-      <span class="glyphicon glyphicon-ok"></span>
-      {{ (action.updating)? "Updating..." : "Update" }}
-    </button>
-    <div class="pull-right">
-      <button ng-show="hasDeleteAccess()" ng-disabled="action.deleting" class="btn btn-warning btn-sm" ng-click="delete(record.id)">
-        <span class="fa fa-trash"></span>
-        Delete
-      </button>
-    </div>
-    <div class="clearfix"></div>
+    <div ng-include="partials.formEditButtons"></div>
   </div>
 </div>
     eos
