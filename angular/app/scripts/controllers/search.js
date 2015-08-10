@@ -64,6 +64,11 @@ angular.module('angularApp')
         return memo;
       }, {});
 
+      if (vm.search.dateRange) {
+        queryParams['created_at.gte'] = vm.search.dateRange.startDate.toString()
+        queryParams['created_at.lte'] = vm.search.dateRange.endDate.toString()
+      }
+
       return queryParams;
     }
 
