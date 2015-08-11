@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/stephenbaidu/resourcify.git
+  revision: 2455e5db81af8629bc97a0b195eccd2dc985a29d
+  specs:
+    resourcify (0.1.3)
+      pundit
+      rails (~> 4.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -148,9 +156,6 @@ GEM
     rb-readline (0.5.2)
     rdoc (4.2.0)
     request_store (1.1.0)
-    resourcify (0.1.3)
-      pundit
-      rails (~> 4.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
@@ -178,7 +183,7 @@ GEM
       rdoc (~> 4.0)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
-    spring (1.3.4)
+    spring (1.3.6)
     sprockets (3.2.0)
       rack (~> 1.0)
     sprockets-rails (2.3.2)
@@ -230,7 +235,7 @@ DEPENDENCIES
   rails-settings-cached (= 0.4.1)
   rails_12factor
   rb-readline
-  resourcify
+  resourcify!
   rest-client
   rspec-rails (~> 3.0)
   sdoc (~> 0.4.0)
