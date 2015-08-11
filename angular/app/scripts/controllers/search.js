@@ -31,7 +31,7 @@ angular.module('angularApp')
 
         return value;
       });
-      vm.search.dateRange = moment().startOf('month'), moment().endOf('month');
+      vm.search.dateRange = {startDate: moment(), endDate: moment()};
     }
 
     // Reinitialize searchValue if inputType is date
@@ -49,24 +49,22 @@ angular.module('angularApp')
         if (!field) return memo;
 
         if (field.inputType === 'date') {
-          memo[key + '.gte'] = value[0].startDate.toString();
-          memo[key + '.lte'] = value[0].endDate.toString();
+          memo[key + '.between'] = _.map(value, function (val) {
+            return val.startDate.toString() + '|' + val.endDate.toString();
+          }).join('||');
         } else if (field.inputType === 'select') {
           memo[key + '.in'] = value.join();
         } else if (field.inputType === 'text') {
-          if (value.length === 1) {
-            memo[key + '.like'] = value[0];
-          } else {
-            memo[key + '.in'] = value.join();
-          }
+          memo[key + '.like'] = value.join('|');
         }
 
         return memo;
       }, {});
 
-      if (vm.search.dateRange) {
-        queryParams['created_at.gte'] = vm.search.dateRange.startDate.toString()
-        queryParams['created_at.lte'] = vm.search.dateRange.endDate.toString()
+      if (vm.search.dateRange && vm.search.dateRange.startDate) {
+        var startDate = vm.search.dateRange.startDate.toString();
+        var endDate   = vm.search.dateRange.endDate.toString();
+        queryParams['created_at.between'] = startDate + '|' + endDate;
       }
 
       return queryParams;
@@ -117,11 +115,7 @@ angular.module('angularApp')
         vm.search.params[fieldKey] = [];
       }
 
-      if (vm.search.searchField.inputType === 'select') {
-        vm.search.params[fieldKey].push(vm.search.searchValue);
-      } else {
-        vm.search.params[fieldKey][0] = vm.search.searchValue;
-      }
+      vm.search.params[fieldKey].push(vm.search.searchValue);
 
       vm.search.searchValue = null;
 
