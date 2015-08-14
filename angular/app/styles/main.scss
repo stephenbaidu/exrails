@@ -313,3 +313,17 @@ table {
   line-height: 3.4;
   font-weight: bold;
 }
+
+.mfb-component__list {
+  li:nth-child(1) a {
+    background: teal;
+  }
+
+  li:nth-child(2) a {
+    background: orange;
+  }
+
+  li:nth-child(3) a {
+    background: cyan;
+  }
+}
