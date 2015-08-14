@@ -161,7 +161,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     .state('app.module.model.view', {
       url: '/:view',
       templateUrl: function (stateParams) {
-        return 'views/app/' + stateParams.model + '/' + stateParams.view + '/.html';
+        return 'views/app/' + stateParams.model + '/' + stateParams.view + '.html';
       },
       controller: 'FormCtrl'
     })
