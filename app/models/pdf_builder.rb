@@ -1,4 +1,4 @@
-class PDFBuilder
+class PdfBuilder
   attr_accessor :template_name, :report_data, :report_options
 
   def initialize(template_name, report_data = {}, report_options = {})
@@ -9,7 +9,7 @@ class PDFBuilder
 
   def get_kit
     begin
-      kit = PDFBuilder.get(@template_name, @report_data, @report_options)
+      kit = PdfBuilder.get(@template_name, @report_data, @report_options)
       kit
     rescue
       nil
