@@ -214,16 +214,16 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   formlyConfig.setType({
     name: 'ui-select',
     extends: 'select',
-    templateUrl: 'views/templates/ui-select.html'
+    templateUrl: 'app/templates/ui-select.html'
   });
   formlyConfig.setType({
     name: 'ui-select-multiple',
     extends: 'ui-select',
-    templateUrl: 'views/templates/ui-select-multiple.html'
+    templateUrl: 'app/templates/ui-select-multiple.html'
   });
   formlyConfig.setType({
     name: 'datepicker',
     extends: 'input',
-    templateUrl: 'views/templates/datepicker.html'
+    templateUrl: 'app/templates/datepicker.html'
   });
 });
