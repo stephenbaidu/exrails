@@ -1,0 +1,16 @@
+<div id="sidebar" class="sidebar">
+  <ul class="nav nav-pills nav-stacked">
+    <li ng-repeat="l in modules.reports" ng-class='{ active: hasUrl("#/reports/{{ l.url }}") }' ng-show-="hasAccess(l.url)">
+      <a href="#/reports/{{ l.url }}">
+        <span class="link-icon {{ l.icon }}"></span>
+        <br><span class="link-text">{{ l.text }}</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="content" class="content">
+  <ui-view>
+    <div ng-include="'app/layouts/dashboard.html'" ng-controller="DashboardCtrl"></div>
+  </ui-view>
+</div>
+<div ng-include="partials.fab"></div>

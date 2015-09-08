@@ -25,6 +25,7 @@ module.exports = function(config) {
       'bower_components/jquery/dist/jquery.js',
       'bower_components/angular/angular.js',
       'bower_components/underscore/underscore.js',
+      'bower_components/lodash/lodash.js',
       'bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-aria/angular-aria.js',
@@ -72,9 +73,14 @@ module.exports = function(config) {
       'bower_components/angular-schema-form-uiselect/angular-schema-form-uiselect.min.js',
       'bower_components/ngDialog/js/ngDialog.js',
       'bower_components/ng-mfb/src/mfb-directive.js',
+      'bower_components/Chart.js/Chart.js',
+      'bower_components/angular-chart.js/dist/angular-chart.js',
+      'bower_components/angular-file-upload/dist/angular-file-upload.min.js',
+      'bower_components/jszip/dist/jszip.js',
+      'bower_components/js-xlsx/dist/xlsx.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
-      "app/scripts/**/*.js",
+      "src/scripts/**/*.js",
       "test/mock/**/*.js",
       "test/spec/**/*.js"
     ],

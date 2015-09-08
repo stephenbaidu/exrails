@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-12">
+    <div id="page_header" class="clearfix content-header">
+      <h3 class="pull-left"> 
+        <i class="fa fa-file-o"></i>
+        {{ report.title }}
+      </h3>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <div class="panel panel-default formly-form">
+      <div class="panel-heading">
+        <h3 class="panel-title">Filters</h3>
+      </div>
+      <div class="panel-body">
+        <form novalidate>
+          <formly-form model="filter" fields="report.fields">
+          </formly-form>
+        </form>
+      </div>
+      <div class="panel-footer">
+        <button ng-disabled="action.generating" class="btn btn-info btn-sm" ng-click="previewReport()">
+          <span class="fa fa-table"></span>
+          {{ (action.generating)? "Generating..." : "Preview" }}
+        </button>
+        <div class="btn-group btn-group-sm pull-right">
+          <button ng-disabled="action.generating" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Download
+            <span class="fa fa-download" aria-hidden="true"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <!-- <li><a href="" ng-click="downloadAsCSV()">as CSV</a></li> -->
+            <!-- <li><a href="" ng-click="downloadAsXLS()">as XLS</a></li> -->
+            <li><a href="" ng-click="downloadAsPDF()">as PDF</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Preview</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-bind-html="report.html"></div>
+      </div>
+    </div>
+  </div>
+</div>

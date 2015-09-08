@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-md-4">
+    <button class="btn btn-default btn-sm" ng-click="back()">
+      <span class="fa fa-chevron-left"></span>
+      Back
+    </button>
+  </div>
+  <div class="col-md-4">
+    <span class="btn btn-primary btn-file btn-sm">
+      <span class="fa fa-files-o"></span>
+      Choose file to upload
+      <input type="file" ng-file="upload.file" accept=".xlsx,.xls"/>
+    </span>
+    <button ng-disabled="!upload.records" class="btn btn-success btn-sm" ng-click="bulkUpload()">
+      <span class="fa fa-upload"></span>
+      Upload to server
+    </button>
+  </div>
+  <div class="col-md-4">
+    <span class="pull-right">
+      <select ng-model="upload.selectedSheet" class="form-control input-sm">
+        <option ng-repeat="(key, _) in upload.data.sheets" value="{{ key }}">
+          {{ key }}
+        </option>
+      </select>
+    </span>
+  </div>
+</div>

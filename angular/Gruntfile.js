@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'app',
+    app: require('./bower.json').appPath || 'src',
     dist: '../public'
   };
 
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/**/*.js'],
+        files: ['<%= yeoman.app %>/scripts/**/*.js', '<%= yeoman.app %>/app/components/**/*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -93,8 +93,8 @@ module.exports = function (grunt) {
                 connect.static('./bower_components')
               ),
               connect().use(
-                '/app/styles',
-                connect.static('./app/styles')
+                '/<%= yeoman.app %>/styles',
+                connect.static('./<%= yeoman.app %>/styles')
               ),
               connect.static(appConfig.app)
             ];
@@ -347,7 +347,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'views/**/*.html'],
+          src: ['*.html', 'app/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -385,7 +385,7 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             '*.html',
-            'views/**/*.html',
+            'app/**/*.html',
             'images/**/*.{webp}',
             'styles/fonts/**/*.*'
           ]
