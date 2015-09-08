@@ -27,14 +27,12 @@
 #  email                  :string
 #  tokens                 :text
 #  role_ids               :string           default([])
+#  password_expired_at    :datetime
 #  created_at             :datetime
 #  updated_at             :datetime
-#  client_id              :integer
-#  password_expired_at    :datetime
 #
 # Indexes
 #
-#  index_users_on_client_id             (client_id)
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
@@ -53,9 +51,7 @@ class User < ActiveRecord::Base
           :confirmable, :omniauthable, :lockable
   include DeviseTokenAuth::Concerns::User
 
-  belongs_to :client
-
-  validates :name, :client_id, presence: true
+  validates :name, presence: true
 
   def admin?
     has_role? 'Admin'

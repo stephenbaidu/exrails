@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150209150005) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
@@ -30,7 +27,7 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "updated_at"
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "permissions", force: :cascade do |t|
     t.string   "name"
@@ -39,7 +36,7 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "permissions", ["name"], name: "index_permissions_on_name", unique: true, using: :btree
+  add_index "permissions", ["name"], name: "index_permissions_on_name", unique: true
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -49,7 +46,7 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "updated_at",                       null: false
   end
 
-  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false
@@ -60,7 +57,7 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "updated_at"
   end
 
-  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
+  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
 
   create_table "users", force: :cascade do |t|
     t.string   "provider",                                    null: false
@@ -92,11 +89,11 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email"
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
+  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true
 
   create_table "versions", force: :cascade do |t|
     t.string   "item_type",  null: false
@@ -107,6 +104,6 @@ ActiveRecord::Schema.define(version: 20150209150005) do
     t.datetime "created_at"
   end
 
-  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
 
 end
