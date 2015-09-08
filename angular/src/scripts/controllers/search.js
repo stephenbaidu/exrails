@@ -50,7 +50,7 @@ angular.module('angularApp')
 
         if (field.inputType === 'date') {
           memo[key + '.between'] = _.map(value, function (val) {
-            return val.startDate.toString() + '|' + val.endDate.toString();
+            return val.startDate.toISOString() + '|' + val.endDate.toISOString();
           }).join('||');
         } else if (field.inputType === 'select') {
           memo[key + '.in'] = value.join();
@@ -62,8 +62,8 @@ angular.module('angularApp')
       }, {});
 
       if (vm.search.dateRange && vm.search.dateRange.startDate) {
-        var startDate = vm.search.dateRange.startDate.toString();
-        var endDate   = vm.search.dateRange.endDate.toString();
+        var startDate = vm.search.dateRange.startDate.toISOString();
+        var endDate   = vm.search.dateRange.endDate.toISOString();
         queryParams['created_at.between'] = startDate + '|' + endDate;
       }
 
