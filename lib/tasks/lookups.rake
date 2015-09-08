@@ -1,5 +1,5 @@
 namespace :app do
-  desc "Creates lookups"
+  desc 'Creates lookups'
   task :lookups => :environment do |t, args|
 
     # # **********************************

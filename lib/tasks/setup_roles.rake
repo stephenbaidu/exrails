@@ -25,7 +25,6 @@ namespace :app do
           }[p2.to_sym]
         end
       end.flatten
-      p permissions
 
       Role.create name: role[:name], permissions: permissions
     end

@@ -3,12 +3,7 @@ namespace :app do
   task :permissions => :environment do |t, args|
     Rails.application.eager_load!
     excluded_models = [
-      'Permission',
-      'Service',
-      'UserInfo',
-      'Network',
-      'TransactionStatus',
-      'TopupRequest'
+      'Permission', 'ReportBuilder', 'Setting'
     ]
     model_actions = [:index, :create, :show, :update, :delete]
     
