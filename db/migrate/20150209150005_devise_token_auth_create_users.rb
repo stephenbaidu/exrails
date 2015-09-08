@@ -45,6 +45,9 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration
       ## Roles
       t.string :role_ids, default: [].to_yaml
 
+      ## Password expiration
+      t.datetime :password_expired_at
+
       t.timestamps
     end
 

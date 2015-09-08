@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508141906) do
+ActiveRecord::Schema.define(version: 20150209150005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,23 +51,6 @@ ActiveRecord::Schema.define(version: 20150508141906) do
 
   add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
 
-  create_table "sample_statuses", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "samples", force: :cascade do |t|
-    t.string   "name"
-    t.string   "description"
-    t.date     "sample_date"
-    t.integer  "sample_status_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
-  add_index "samples", ["sample_status_id"], name: "index_samples_on_sample_status_id", using: :btree
-
   create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false
     t.text     "value"
@@ -104,6 +87,7 @@ ActiveRecord::Schema.define(version: 20150508141906) do
     t.string   "email"
     t.text     "tokens"
     t.string   "role_ids",               default: "--- []\n"
+    t.datetime "password_expired_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -125,5 +109,4 @@ ActiveRecord::Schema.define(version: 20150508141906) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  add_foreign_key "samples", "sample_statuses"
 end
