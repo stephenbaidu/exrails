@@ -9,7 +9,7 @@ gem 'rails', '4.2.3'
 gem 'uglifier'
 # gem 'therubyracer'
 # gem 'turbolinks'
-
+gem 'sqlite3'
 gem 'pg'
 gem 'omniauth'
 gem 'devise_token_auth'
