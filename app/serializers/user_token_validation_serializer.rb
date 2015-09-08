@@ -27,14 +27,12 @@
 #  email                  :string
 #  tokens                 :text
 #  role_ids               :string           default([])
+#  password_expired_at    :datetime
 #  created_at             :datetime
 #  updated_at             :datetime
-#  client_id              :integer
-#  password_expired_at    :datetime
 #
 # Indexes
 #
-#  index_users_on_client_id             (client_id)
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
@@ -42,58 +40,22 @@
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
-class User < ActiveRecord::Base
-  resourcify
-  
-  serialize :role_ids, Array
-  
-  # Include default devise modules.
-  devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable,
-          :confirmable, :omniauthable, :lockable
-  include DeviseTokenAuth::Concerns::User
+class UserTokenValidationSerializer < ActiveModel::Serializer
+  attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid, :status
+  attributes :sign_in_count, :current_sign_in_ip, :last_sign_in_ip, :current_sign_in_at, :last_sign_in_at, :failed_attempts
+  attributes :permissions, :has_admin_role, :has_manager_role, :has_clerk_role
 
-  belongs_to :client
-
-  validates :name, :client_id, presence: true
-
-  def admin?
-    has_role? 'Admin'
+  def status
+    object.locked_at ? 'Locked' : 'Active'
   end
 
-  def manager?
-    has_role? 'Manager'
+  def client
+    object.client.slice(:id, :name)
   end
 
-  def clerk?
-    has_role? 'Clerk'
-  end
+  def has_admin_role() object.admin? end
 
-  def has_role?(role_name)
-    roles.map(&:name).include?(role_name)
-  end
+  def has_manager_role() object.system_admin? end
 
-  def roles
-    Role.unscoped.where id: self.role_ids
-  end
-
-  def permissions
-    if self.admin?
-      Permission.pluck(:name)
-    else
-      self.roles.map(&:permissions).flatten
-    end
-  end
-
-  def has_permission?(permission)
-    if Permission.where(name: permission).exists?
-      self.roles.map(&:permissions).flatten.include? permission
-    else
-      false
-    end
-  end
-
-  def token_validation_response
-    UserTokenValidationSerializer.new(self, root: false)
-  end
+  def has_clerk_role() object.finance? end
 end
