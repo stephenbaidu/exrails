@@ -55,7 +55,7 @@ class UserTokenValidationSerializer < ActiveModel::Serializer
 
   def has_admin_role() object.admin? end
 
-  def has_manager_role() object.system_admin? end
+  def has_manager_role() object.manager? end
 
-  def has_clerk_role() object.finance? end
+  def has_clerk_role() object.clerk? end
 end
