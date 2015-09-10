@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get 'form/:model'    => 'config#form'
 
     resources :users do
+      post 'send_confirmation_instructions', on: :collection
       post 'lock', on: :member
       post 'unlock', on: :member
       post 'reset_password', on: :member

@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   resourcify
 
   before_action :set_record, only: [:show, :update, :destroy, :lock, :unlock, :reset_password, :change_password, :permissions]
+  
+  skip_before_filter :authenticate_user!, only: [:send_confirmation_instructions]
 
   def index
     authorize _RC.new
@@ -60,6 +62,26 @@ class UsersController < ApplicationController
     end
   end
 
+  def send_confirmation_instructions
+    email = params[:email]
+    @error[:message] = 'Invalid email'
+    
+    if email
+      user = User.where(email: email).first
+      if user
+        user.send_confirmation_instructions({
+          redirect_url: ActionMailer::Base.default_url_options[:host]
+        })
+        render json: {
+          success: true, 
+          message: 'Confirmation instructions has been sent to ' + email.downcase
+        } and return
+      end
+    end
+
+    render json: @error and return
+  end
+
   def lock
     authorize @record, :update?
 
@@ -94,7 +116,7 @@ class UsersController < ApplicationController
       password_confirmation: params[:password_confirmation]
     }
 
-    if @record.update_without_password(data)
+    if @record.update(data)
       render json: @record and return
     else
       @error[:type]     = 'Validation'

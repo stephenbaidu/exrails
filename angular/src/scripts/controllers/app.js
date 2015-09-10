@@ -106,14 +106,6 @@ angular.module('angularApp')
       return result;
     };
 
-    vm.$on('auth:logout-success', function(ev) {
-      $state.go('login');
-    });
-
-    vm.$on('auth:logout-error', function(ev) {
-      exMsg.error('Unable to complete logout. Please try again.');
-    });
-
     vm.showPasswordChange = function () {
       exMsg.sweetAlert({
         title: 'Change Password',

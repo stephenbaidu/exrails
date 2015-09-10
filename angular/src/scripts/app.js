@@ -75,6 +75,10 @@ app.config(function ($stateProvider, $urlRouterProvider) {
       // templateUrl: 'app/layouts/maintenance.html',
       controller: 'LoginCtrl'
     })
+    .state('maintenance', {
+      url: '/maintenance',
+      templateUrl: 'app/layouts/maintenance.html'
+    })
     .state('ussd', {
       url: '/ussd',
       templateUrl: 'app/layouts/ussd.html',
