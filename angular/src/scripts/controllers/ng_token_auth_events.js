@@ -64,8 +64,10 @@ angular.module('angularApp')
 
     vm.$on('auth:registration-email-success', function(ev, resp) {
       console.log('auth:registration-email-success');
-      var text = 'A registration email was ' + 'sent to ' + resp.email + '. Follow the instructions contained in the email to complete registration.';
-      exMsg.sweetAlert({title: 'Registration Successful', text: text, type: 'success', animation: 'slide-from-top'});
+      var text = 'A registration email was sent to ' + resp.email + '. Follow the instructions contained in the email to complete registration.';
+      exMsg.sweetAlert({title: 'Registration Successful', text: text, type: 'success', animation: 'slide-from-top'}, function () {
+        $state.go('.', {}, { reload: true });
+      });
     });
 
     vm.$on('auth:registration-email-error', function(ev, resp) {
