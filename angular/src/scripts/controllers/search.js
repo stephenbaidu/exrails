@@ -31,7 +31,7 @@ angular.module('angularApp')
 
         return value;
       });
-      vm.search.dateRange = {startDate: moment(), endDate: moment()};
+      vm.search.dateRange = {startDate: moment().startOf('month'), endDate: moment().endOf('month')};
     }
 
     // Reinitialize searchValue if inputType is date
@@ -39,7 +39,7 @@ angular.module('angularApp')
       if (!vm.search.searchField) return;
 
       if (vm.search.searchField.inputType === 'date') {
-        vm.search.searchValue = [new Date(), new Date()];
+        vm.search.searchValue = {startDate: moment().endOf('day'), endDate: moment().endOf('day')};
       }
     });
 

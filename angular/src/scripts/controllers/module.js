@@ -38,10 +38,10 @@ angular.module('angularApp')
     vm.drpOptions = {
       showDropdowns: true,
       ranges: {
-         'Today': [new Date(), new Date()],
+         'Today': [moment().startOf('day'), moment().endOf('day')],
          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-         'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
-         'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+         'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
+         'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
          'This Month': [moment().startOf('month'), moment().endOf('month')],
          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
       },
@@ -51,10 +51,10 @@ angular.module('angularApp')
     vm.drpOptionsR = {
       showDropdowns: true,
       ranges: {
-         'Today': [new Date(), new Date()],
+         'Today': [moment().startOf('day'), moment().endOf('day')],
          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-         'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
-         'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+         'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
+         'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
          'This Month': [moment().startOf('month'), moment().endOf('month')],
          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
       },
