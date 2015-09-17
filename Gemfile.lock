@@ -110,10 +110,10 @@ GEM
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
     orm_adapter (0.5.0)
-    paper_trail (4.0.0.rc1)
+    paper_trail (4.0.0)
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
-      request_store (~> 1.1.0)
+      request_store (~> 1.1)
     pdfkit (0.7.0)
     pg (0.18.1)
     pundit (0.3.0)
@@ -155,7 +155,7 @@ GEM
     rake (10.4.2)
     rb-readline (0.5.2)
     rdoc (4.2.0)
-    request_store (1.1.0)
+    request_store (1.2.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
@@ -209,8 +209,6 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
-    wicked_pdf (0.11.0)
-      rails
     wkhtmltopdf-binary (0.9.9.3)
 
 PLATFORMS
@@ -228,7 +226,7 @@ DEPENDENCIES
   faker
   newrelic_rpm
   omniauth
-  paper_trail (~> 4.0.0.rc)
+  paper_trail (~> 4.0.0)
   pdfkit
   pg
   pundit
@@ -246,5 +244,7 @@ DEPENDENCIES
   table_print
   uglifier
   web-console (~> 2.0)
-  wicked_pdf
   wkhtmltopdf-binary
+
+BUNDLED WITH
+   1.10.6
