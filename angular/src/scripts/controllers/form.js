@@ -26,6 +26,7 @@ angular.module('angularApp')
       vm.modelName = modelName;
       vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
       vm.formlyFields = fieldService.get(vm.model.key);
+      window[vm.model.name + 'Form'] = vm;
       vm.loadConfig();
 
       if (recordId) {

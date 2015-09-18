@@ -33,6 +33,7 @@ angular.module('angularApp')
       vm.modelName = modelName;
       vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
       vm.loadConfig();
+      window[vm.model.name + 'Index'] = vm;
     }
 
     vm.loadConfig = function () {
