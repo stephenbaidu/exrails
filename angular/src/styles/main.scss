@@ -11,6 +11,17 @@ body {
   font-size: 14px;
 }
 
+.ui-select-bootstrap .ui-select-choices-row > a{
+  white-space: normal;
+}
+
+.ui-select-placeholder, .ui-select-match-text {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+}
+
 :focus {
   outline: 0;
 }
