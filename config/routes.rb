@@ -8,8 +8,6 @@ Rails.application.routes.draw do
     get 'config/:model'  => 'config#show'
     get 'lookups/:model' => 'config#lookups'
     get 'schema/:model'  => 'config#schema'
-    get 'grid/:model'    => 'config#grid'
-    get 'form/:model'    => 'config#form'
 
     resources :users do
       post 'send_confirmation_instructions', on: :collection

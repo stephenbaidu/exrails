@@ -19,8 +19,6 @@ class ConfigController < ApplicationController
     json_data = {}
     json_data[:lookups] = lookups(true)
     json_data[:schema]  = schema(true)
-    json_data[:grid]    = grid(true)
-    json_data[:form]    = form(true)
 
     render json: json_data
   end
@@ -97,8 +95,8 @@ class ConfigController < ApplicationController
             prop[:title]  = "Parent #{@model_class.name.split('::').last.singularize.titleize}"
           end
           prop[:lookup] = lookup
-          prop[:format] = 'uiselect'
-          prop[:placeholder] = "Select #{prop[:title]} ..."
+          # prop[:format] = 'uiselect'
+          # prop[:placeholder] = "Select #{prop[:title]} ..."
           prop[:items] = lookup_list[lookup].map { |e| {value: e[:value], label: e[:name]} }
         elsif col.name == 'tags'
           # Assumes there is a model with the name "model_name + _tag"
@@ -106,8 +104,8 @@ class ConfigController < ApplicationController
             tag_model_class = "#{@model_class.name}Tag".constantize
             prop[:type] = 'array'
             prop[:default] = []
-            prop[:format] = 'uiselect'
-            prop[:placeholder] = 'Select tags ...'
+            # prop[:format] = 'uiselect'
+            # prop[:placeholder] = 'Select tags ...'
             prop[:items] = tag_model_class.all.map { |e| {value: e.id, label: e.name} }
           rescue Exception => e
             
@@ -119,8 +117,8 @@ class ConfigController < ApplicationController
             prop[:title] = title.titleize.pluralize
             prop[:type] = 'array'
             prop[:default] = []
-            prop[:format] = 'uiselect'
-            prop[:placeholder] = "Select #{title.pluralize.underscore} ..."
+            # prop[:format] = 'uiselect'
+            # prop[:placeholder] = "Select #{title.pluralize.underscore} ..."
             prop[:items] = tag_model_class.all.map { |e| {value: e.id, label: e.name} }
           rescue Exception => e
             pp e
@@ -135,88 +133,6 @@ class ConfigController < ApplicationController
       json_schema
     else
       render json: json_schema
-    end
-  end
-
-  def grid(get = false)
-    grid_columns = []
-
-    grid_columns = @model_class.columns.map { |e| e.name }
-    grid_columns = grid_columns.select {|e| !excluded_field? e }
-    grid_columns = grid_columns.take(5)
-    
-    if get
-      grid_columns
-    else
-      render json: grid_columns
-    end
-  end
-
-  def form(get = false)
-
-    json_form = []
-    # lookup_list = lookups(true)
-
-    foreign_keys = @model_class.reflections.each_with_object({}) {|(k, v), h| h[v.foreign_key] = v.name.to_sym }
-
-    columns = @model_class.columns.select {|c| !excluded_field? c.name }
-    slice_size = params[:columns].to_i
-    slice_size = 2 if slice_size < 1
-    columns.each_slice(slice_size) do |cols|
-      section = {
-        type: "section",
-        htmlClass: "row",
-        items: []
-      }
-      cols.each do |col|
-        field = { key: col.name.to_sym }
-        field[:fieldHtmlClass] = "input-lg"
-
-        # Check if date
-        if col.type == :date
-          field[:type] = "datepicker"
-          field[:pickadate] = {
-            selectYears: true,
-            selectMonths: true
-          }
-        elsif col.type == :datetime
-          field[:type] = "datepicker"
-          # field[:format] = "yyyy-mm-dd"
-          field[:pickadate] = {
-            selectYears: true,
-            selectMonths: true,
-            format: "yyyy-mm-dd"
-          }
-        end
-
-        # Is it a lookup
-        if foreign_keys.keys.include?(col.name) ||
-          (@model_class.respond_to?(:acts_as_nested_set) && col.name == 'parent_id')
-          
-          lookup = foreign_keys[col.name]
-          field[:fieldHtmlClass] = "input-lg selectpicker"
-
-          if foreign_keys[col.name] == :children
-            lookup = :parent
-          end
-
-          field[:lookup] = lookup
-        end
-
-        section[:items] << {
-          type: "section",
-          htmlClass: "col-sm-6 col-xs-12",
-          items: [field]
-        }
-      end
-
-      json_form << section
-    end
-
-    if get
-      json_form
-    else
-      render json: json_form
     end
   end
 
