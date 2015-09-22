@@ -1,57 +1,14 @@
 
 angular.module('angularApp')
-  .run(function (formService, fieldService) {
-    // Set config for angular-schema-form
-    formService.set('role', formConfig());
+  .run(function (gridService, fieldService) {
+    // Set grid config
+    gridService.set('role', gridConfig());
 
     // Set config for angular-formly
     fieldService.set('role', fieldConfig());
 
-    function formConfig () {
-      return [
-        {
-          "type": "section",
-          "htmlClass": "row",
-          "items": [
-            {
-              "type": "section",
-              "htmlClass": "col-sm-6 col-xs-12",
-              "items": [
-                {
-                  "key": "name",
-                  "fieldHtmlClass": "input-lg"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "htmlClass": "col-sm-6 col-xs-12",
-              "items": [
-                {
-                  "key": "status",
-                  "fieldHtmlClass": "input-lg"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "section",
-          "htmlClass": "row",
-          "items": [
-            {
-              "type": "section",
-              "htmlClass": "col-xs-12",
-              "items": [
-                {
-                  "key": "permissions",
-                  "fieldHtmlClass": "input-lg"
-                }
-              ]
-            }
-          ]
-        }
-      ];
+    function gridConfig () {
+      return ['name', 'permissions', 'status'];
     }
     
     function fieldConfig () {
@@ -61,7 +18,7 @@ angular.module('angularApp')
             {
               "className": "col-xs-6",
               "key": "name",
-              "type": "input",
+              "type": "ex-input",
               "templateOptions": {
                 "required": true,
                 "label": "Name"
@@ -70,7 +27,7 @@ angular.module('angularApp')
             {
               "className": "col-xs-6",
               "key": "status",
-              "type": "input",
+              "type": "ex-input",
               "templateOptions": {
                 "required": false,
                 "label": "Status"
@@ -81,9 +38,9 @@ angular.module('angularApp')
         {
           "fieldGroup": [
             {
-              "className": "col-xs-12",
+              "className": "col-xs-12 large-tags",
               "key": "permissions",
-              "type": "ui-select-multiple",
+              "type": "ex-select-multiple",
               "templateOptions": {
                 "required": false,
                 "label": "Permissions",

@@ -29,7 +29,6 @@ var app = angular.module('angularApp', [
   'daterangepicker',
   'angular-loading-bar',
   'pascalprecht.translate',
-  'schemaForm',
   'formly',
   'formlyBootstrap'
 ]);
@@ -37,6 +36,23 @@ var app = angular.module('angularApp', [
 app.constant('APP', {
   root: '/',
   apiPrefix: '/api/',
+  partials: {
+    fab: 'app/partials/floating-action-button.html',
+    filterInput: 'app/partials/filter-input.html',
+    header: 'app/partials/header.html',
+    searchForm: 'app/partials/search-form.html',
+    indexGrid: 'app/partials/index-grid.html',
+    nameGrid: 'app/partials/name-grid.html',
+    loadMoreButton: 'app/partials/load-more-button.html',
+    formNav: 'app/partials/form-nav.html',
+    formlyForm: 'app/partials/formly-form.html',
+    formNewButtons: 'app/partials/form-new-buttons.html',
+    formShowButtons: 'app/partials/form-show-buttons.html',
+    formEditButtons: 'app/partials/form-edit-buttons.html',
+    bulkNav: 'app/partials/bulk-nav.html',
+    bulkGrid: 'app/partials/bulk-grid.html',
+    uploadsGrid: 'app/partials/uploads-grid.html'
+  },
   modules: {
     main: [
       { text: 'Users', url: 'users', icon: 'fa fa-users color-deep-purple-300' },
@@ -81,41 +97,41 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('app.dashboard', {
       url: 'dashboard',
-      templateUrl: function (stateParams) {
+      templateUrl: function ($stateParams) {
         return 'app/layouts/dashboard.html';
       },
       controller: 'ModuleCtrl'
     })
     .state('app.reports', {
       url: 'reports',
-      templateUrl: function (stateParams) {
+      templateUrl: function ($stateParams) {
         return 'app/layouts/reports_module.html';
       }
     })
     .state('app.reports.report', {
       url: '/:report',
-      templateUrl: function (stateParams) {
+      templateUrl: function ($stateParams) {
         return 'app/components/reports/show.html';
       },
       controller: 'ReportCtrl'
     })
     .state('app.module', {
       url: ':module',
-      templateUrl: function (stateParams) {
-        return 'app/layouts/' + stateParams.module + '_module.html';
+      templateUrl: function ($stateParams) {
+        return 'app/layouts/' + $stateParams.module + '_module.html';
       },
       controller: 'ModuleCtrl'
     })
     .state('app.module.form', {
       url: '/form',
-      templateUrl: function (stateParams) {
+      templateUrl: function ($stateParams) {
         return 'app/layouts/form.html';
       }
     })
     .state('app.module.form.model', {
       url: '/:model',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/new.html';
+      templateUrl: function ($stateParams) {
+        return 'app/components/' + $stateParams.model + '/new.html';
       },
       controller: 'FormCtrl'
     })
@@ -125,66 +141,45 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     })
     .state('app.module.reports.report', {
       url: '/:report',
-      templateUrl: function (stateParams) {
+      templateUrl: function ($stateParams) {
         return 'app/components/reports/show.html';
       },
       controller: 'ReportCtrl'
     })
     .state('app.module.model', {
       url: '/:model',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/index.html';
-      },
-      controller: 'IndexCtrl'
-    })
-    .state('app.module.model.index', {
-      url: '/index',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/index.html';
+      templateUrl: function ($stateParams) {
+        return 'app/components/' + $stateParams.model + '/index.html';
       },
       controller: 'IndexCtrl'
     })
     .state('app.module.model.new', {
       url: '/new',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/new.html';
-      },
-      controller: 'FormCtrl'
-    })
-    .state('app.module.model.view', {
-      url: '/:view',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/' + stateParams.view + '.html';
+      templateUrl: function ($stateParams) {
+        return 'app/components/' + $stateParams.model + '/new.html';
       },
       controller: 'FormCtrl'
     })
     .state('app.module.model.show', {
-      url: '/:id/show',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/show.html';
+      url: '/:id',
+      template: function ($stateParams) {
+        var showPath = 'app/components/' + $stateParams.model + '/show.html';
+        return "<div ui-view><div ng-include='\"" + showPath + "\"'></div></div>";
       },
       controller: 'FormCtrl'
     })
-    .state('app.module.model.edit', {
-      url: '/:id/edit',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/edit.html';
-      },
-      controller: 'FormCtrl'
+    .state('app.module.model.show.view', {
+      url: '/:view',
+      templateUrl: function ($stateParams) {
+        return 'app/components/' + $stateParams.model + '/' + $stateParams.view + '.html';
+      }
     })
-    .state('app.module.model.bulk', {
-      url: '/:id/bulk/:table',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/bulk.html';
+    .state('app.module.model.show.bulk', {
+      url: '/bulk/:table',
+      templateUrl: function ($stateParams) {
+        return 'app/components/' + $stateParams.model + '/bulk.html';
       },
       controller: 'BulkCtrl'
-    })
-    .state('app.module.model.uploads', {
-      url: '/:id/uploads',
-      templateUrl: function (stateParams) {
-        return 'app/components/' + stateParams.model + '/uploads.html';
-      },
-      controller: 'UploadsCtrl'
     });
 }).config(function($authProvider) {
   $authProvider.configure({
@@ -203,26 +198,68 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   }
 }).config(function($httpProvider) {
   $httpProvider.interceptors.push('auth401Interceptor');
+})
+.factory('auth404Interceptor', function($q, $location, exMsg){
+  return {
+    responseError: function(rejection) {
+      if (rejection.status === 404) {
+        exMsg.sweetAlert('Invalid request', '', 'error')
+      }
+      return $q.reject(rejection);
+    }
+  }
+}).config(function($httpProvider) {
+  $httpProvider.interceptors.push('auth404Interceptor');
 }).factory('$exceptionHandler', function() {
   return function(exception, cause) {};
 }).run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 }).config(function(cfpLoadingBarProvider) {
   cfpLoadingBarProvider.includeSpinner = false;
-}).run(function(formlyConfig, formlyValidationMessages) {
-  formlyConfig.setType({
-    name: 'ui-select',
-    extends: 'select',
-    templateUrl: 'app/templates/ui-select.html'
+}).config(function(formlyConfigProvider) {
+  formlyConfigProvider.setType({
+    name: 'ex-input',
+    templateUrl: 'app/templates/ex-input.html',
+    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    overwriteOk: true
   });
-  formlyConfig.setType({
-    name: 'ui-select-multiple',
-    extends: 'ui-select',
-    templateUrl: 'app/templates/ui-select-multiple.html'
+  formlyConfigProvider.setType({
+    name: 'ex-select',
+    templateUrl: 'app/templates/ex-select.html',
+    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    overwriteOk: true
   });
-  formlyConfig.setType({
-    name: 'datepicker',
-    extends: 'input',
-    templateUrl: 'app/templates/datepicker.html'
+  formlyConfigProvider.setType({
+    name: 'ex-select-multiple',
+    templateUrl: 'app/templates/ex-select-multiple.html',
+    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    overwriteOk: true
   });
+  formlyConfigProvider.setType({
+    name: 'ex-datepicker',
+    templateUrl: 'app/templates/ex-datepicker.html',
+    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+    overwriteOk: true
+  });
+
+  formlyConfigProvider.setWrapper({
+    name: 'validation',
+    types: ['ex-input', 'ex-select', 'ex-select-multiple', 'ex-datepicker'],
+    templateUrl: 'app/templates/error-messages.html'
+  });
+}).run(function run(formlyConfig, formlyValidationMessages) {
+  formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
+  formlyValidationMessages.addStringMessage('required', 'This field is required'); 
+}).filter('whereMulti', function() {
+  return function(items, key, values) {
+    var out = [];
+    if (angular.isArray(values)) {
+      values.forEach(function(value) {
+        for (var i = 0; i < items.length; i++) {
+          if (value == items[i][key]) { out.push(items[i]); break; }
+        }
+      });
+    }
+    return out;
+  };
 });

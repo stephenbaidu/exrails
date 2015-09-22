@@ -1,8 +1,27 @@
-<button class="btn btn-default btn-sm" ng-click="close()">
+<button ng-show="formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="close()">
   <span class="glyphicon glyphicon-remove"></span>
   Close
 </button>
-<button ng-show="hasUpdateAccess()" class="btn btn-info btn-sm" ng-click="edit()">
+<!-- <button ng-show="hasUpdateAccess()" class="btn btn-info btn-sm" ng-click="edit()">
+  <span class="glyphicon glyphicon-pencil"></span>
+  Edit
+</button> -->
+<button ng-show="hasUpdateAccess() && formly.options.formState.readOnly" class="btn btn-info btn-sm" ng-click="edit()">
   <span class="glyphicon glyphicon-pencil"></span>
   Edit
 </button>
+<button ng-hide="formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="cancelEdit()">
+  <span class="glyphicon glyphicon-remove"></span>
+  Cancel
+</button>
+<button ng-show="hasUpdateAccess() && !formly.options.formState.readOnly" ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
+  <span class="glyphicon glyphicon-ok"></span>
+  {{ (action.updating)? "Updating..." : "Update" }}
+</button>
+<div class="pull-right">
+  <button ng-show="hasDeleteAccess() && !formly.options.formState.readOnly" ng-disabled="action.deleting" class="btn btn-warning btn-sm" ng-click="delete(record.id)">
+    <span class="fa fa-trash"></span>
+    Delete
+  </button>
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,6 @@
+<div>
+  <input ng-if="!formState.readOnly" class="form-control" ng-model="model[options.key]">
+  <p ng-if="formState.readOnly" class="form-control-static">
+    {{model[options.key] || '...'}}
+  </p>
+</div>

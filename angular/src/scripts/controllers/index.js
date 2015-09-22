@@ -8,18 +8,19 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService, lookupService, byIdFilter) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService, lookupService, byIdFilter, gridService) {
     var vm = $scope;
     window.indexCtrl = vm;
 
-    vm.model     = {};
+    vm.model = {};
     vm.modelName = null;
-    vm.grid = {};
     vm.recordsHash = {};
     vm.records = [];
     vm.currentRecord = {};
     vm.searchQuery = null;
     vm.action = { loading: false, searching: false, deleting: false };
+    vm.schema = {};
+    vm.grid = [];
     vm.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
@@ -32,16 +33,15 @@ angular.module('angularApp')
     vm.init = function (modelName) {
       vm.modelName = modelName;
       vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
+      vm.grid = gridService.get(vm.model.key);
       vm.loadConfig();
-      window[vm.model.name + 'Index'] = vm;
     }
 
     vm.loadConfig = function () {
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
           vm.lookups = data.lookups;
-          vm.schema  = data.schema;
-          vm.grid    = data.grid;
+          vm.schema = data.schema;
           $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
         })
         .error(function(data, status, headers, config) {

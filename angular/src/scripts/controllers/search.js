@@ -25,7 +25,7 @@ angular.module('angularApp')
 
         if (value.type === 'string' && value.format === 'date') {
           value.inputType = 'date';
-        } else if (value.type === 'number' && value.format === 'uiselect') {
+        } else if (value.type === 'number' && value.items) {
           value.inputType = 'select';
         }
 

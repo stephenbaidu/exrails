@@ -8,25 +8,22 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, formService) {
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, byValueFilter) {
     var vm = $scope;
     window.formCtrl = vm;
 
-    vm.model     = {};
+    vm.model = {};
     vm.modelName = null;
-    vm.recordId  = null;
+    vm.recordId = null;
     vm.record = {};
-    vm.action = { loading: true, saving: false, creating: false, updating: false, deleting: false };
+    vm.action = { editMode: false, loading: true, saving: false, creating: false, updating: false, deleting: false };
     vm.schema = {};
-    vm.formlyFields  = {};
-    vm.formlyOptions = {};
-    vm.formlyForm    = {};
+    vm.formly = { model: {}, fields: [], options: {formState: {readOnly: true}}, form: {} };
 
     vm.init = function (modelName, recordId) {
       vm.modelName = modelName;
       vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
-      vm.formlyFields = fieldService.get(vm.model.key);
-      window[vm.model.name + 'Form'] = vm;
+      vm.formly.fields = fieldService.get(vm.model.key);
       vm.loadConfig();
 
       if (recordId) {
@@ -38,9 +35,7 @@ angular.module('angularApp')
     vm.loadConfig = function () {
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
-          vm.schema  = data.schema;
-          vm.setDisableFields();
-          vm.form = formService.get(vm.model.key);
+          vm.schema = data.schema;
           $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, vm);
           vm.setRecord();
         })
@@ -58,10 +53,10 @@ angular.module('angularApp')
       resourceManager.get(vm.model.name, data)
         .then(function (data) {
           vm.record = data;
+          vm.formly.model = angular.copy(vm.record);
           vm.sanitizeRecord();
           $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
           vm.action.loading = false;
-          vm.$broadcast('schemaFormRedraw');
         })
         .catch(function (error) {
           vm.error(error);
@@ -72,12 +67,16 @@ angular.module('angularApp')
     vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
       var actionsConfig = [];
 
-      if (vm.state.isShow && vm.hasCreateAccess()) {
+      if (vm.state.isNew) {
+        vm.formly.options.formState.readOnly = false;
+      } else if (vm.state.isShow && vm.hasCreateAccess()) {
         actionsConfig.push({
           icon: 'fa fa-plus',
           label: 'New ' + vm.model.name,
           handler: function () { $state.go('^.new') }
         });
+      } else if (vm.state.isView) {
+        vm.formly.options.formState.readOnly = false;
       }
 
       // Add back button
@@ -104,19 +103,6 @@ angular.module('angularApp')
 
     vm.hasDeleteAccess = function () {
       return vm.hasAccess(vm.model.name + ':delete');
-    }
-
-    vm.setDisableFields = function () {
-      if ($state.$current.name === 'app.module.model.show') {
-        angular.forEach(vm.schema.properties, function (field) {
-          field.readonly = true;
-        });
-      } else {
-        angular.forEach(vm.schema.properties, function (field) {
-          field.readonly = false;
-        });
-      }
-      vm.$broadcast('schemaFormRedraw');
     }
 
     vm.$on('model:reload-record', function(evt, modelName, record) {
@@ -162,13 +148,15 @@ angular.module('angularApp')
       vm.action.creating = true;
 
       var data = {};
-      data[vm.model.key] = vm.record;
+      data[vm.model.key] = vm.formly.model;
       
       resourceManager.create(vm.model.name, data)
         .then(function (data) {
+          // vm.formly.model.id = data.id;
+          vm.record = data;
+          vm.formly.model = angular.copy(vm.record);
           $rootScope.$broadcast('model:record-created', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' created successfully');
-          vm.record.id = data.id;
           
           if (redirectBack) {
             vm.redirectBack();
@@ -184,7 +172,14 @@ angular.module('angularApp')
     };
 
     vm.edit = function () {
-      $state.go('^.edit', $stateParams);
+      vm.formly.options.formState.readOnly = false;
+      vm.action.editMode = true;
+    };
+
+    vm.cancelEdit = function () {
+      vm.formly.model = angular.copy(vm.record);
+      vm.formly.options.formState.readOnly = true;
+      vm.action.editMode = false;
     };
 
     vm.uploads = function () {
@@ -198,10 +193,12 @@ angular.module('angularApp')
       vm.action.updating = true;
 
       var data = { id: vm.record.id };
-      data[vm.model.key] = vm.record;
+      data[vm.model.key] = vm.formly.model;
       
       resourceManager.update(vm.model.name, data)
         .then(function (data) {
+          vm.record = data;
+          vm.formly.model = angular.copy(vm.record);
           $rootScope.$broadcast('model:record-updated', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' updated successfully');
 
@@ -220,9 +217,9 @@ angular.module('angularApp')
 
     vm.save = function (redirectBack) {
       PNotify.removeAll();
-      vm.$broadcast('schemaFormValidate');
 
-      if (vm.formObject && !vm.formObject.$valid) {
+      vm.formly.form.$setSubmitted(true);
+      if (!vm.formly.form.$valid) {
         return;
       }
 

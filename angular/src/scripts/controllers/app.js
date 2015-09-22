@@ -11,15 +11,19 @@ angular.module('angularApp')
   .controller('AppCtrl', function ($scope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
     var vm = $scope;
     window.appCtrl = vm;
+    window.$auth = $auth;
     
-    vm.modules = APP['modules'] || {};
+    vm.partials = APP.partials || {};
+    vm.modules = APP.modules || {};
+
+    // Force permissions to be loaded
+    $auth.validateToken();
     
     vm.state = {
       isIndex: true,
       isNew: false,
       isShow: false,
-      isEdit: false,
-      isUploads: false,
+      isView: false,
       isBulk: false,
       hideNameGrid: false,
       hideFormNav: false,
@@ -29,12 +33,37 @@ angular.module('angularApp')
         this.isIndex = (state.name === 'app.module.model');
         this.isNew   = (state.name === 'app.module.model.new' || state.name === 'app.module.form.model');
         this.isShow  = (state.name === 'app.module.model.show');
-        this.isEdit  = (state.name === 'app.module.model.edit');
-        this.isBulk  = (state.name === 'app.module.model.bulk');
-        this.isUploads = (state.name === 'app.module.model.uploads');
+        this.isView  = (state.name === 'app.module.model.show.view');
+        this.isBulk  = (state.name === 'app.module.model.show.bulk');
         this.hideNameGrid = (this.isIndex || this.isBulk);
         this.hideFormNav = (this.isBulk);
       }
+    };
+
+    vm.drpOptions = {
+      showDropdowns: true,
+      ranges: {
+         'Today': [moment().startOf('day'), moment().endOf('day')],
+         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+         'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
+         'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
+         'This Month': [moment().startOf('month'), moment().endOf('month')],
+         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      },
+      opens: 'left',
+    };
+
+    vm.drpOptionsR = {
+      showDropdowns: true,
+      ranges: {
+         'Today': [moment().startOf('day'), moment().endOf('day')],
+         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+         'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
+         'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
+         'This Month': [moment().startOf('month'), moment().endOf('month')],
+         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      },
+      opens: 'right',
     };
 
     vm.hasAccess = function (urlOrPermission) {
