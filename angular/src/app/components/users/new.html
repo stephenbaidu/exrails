@@ -4,7 +4,7 @@
   </div>
   <div class="panel-body">
     <div ng-include="partials.formlyForm"></div>
-    <div ng-show="record.enforce_confirmation" class="row">
+    <div ng-show="formly.model.enforce_confirmation" class="row">
       <div class="col-md-12">
         <div class="alert alert-info" role="alert">
           A confirmation email will be sent to the User to confirm this account.
