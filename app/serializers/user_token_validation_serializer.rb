@@ -49,10 +49,6 @@ class UserTokenValidationSerializer < ActiveModel::Serializer
     object.locked_at ? 'Locked' : 'Active'
   end
 
-  def client
-    object.client.slice(:id, :name)
-  end
-
   def has_admin_role() object.admin? end
 
   def has_manager_role() object.manager? end
