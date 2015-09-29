@@ -22,7 +22,12 @@ namespace :exrails do
     # Generate components for models
     models.each do |model|
       begin
-        ng_generate_component_files(model.classify.constantize)
+        klass = model.classify.constantize
+        puts "Generating files for #{klass.name} ..."
+        ng_generate_component_files(klass)
+        insert_component_scripts(klass)
+        generate_controller_file(klass)
+        add_resources_route(klass)
       rescue
       end
     end
@@ -34,7 +39,12 @@ namespace :exrails do
       # Generate components for models
       resourcified_models.each do |model|
         begin
-          ng_generate_component_files(model.classify.constantize)
+          klass = model.classify.constantize
+          puts "Generating files for #{klass.name} ..."
+          ng_generate_component_files(klass)
+          insert_component_scripts(klass)
+          generate_controller_file(klass)
+          add_resources_route(klass)
         rescue
         end
       end
@@ -42,7 +52,6 @@ namespace :exrails do
   end
 
   def ng_generate_component_files(klass)
-    puts "Generating component for #{klass.name} ..."
     components_dir = Rails.root.join('angular', 'src', 'app', 'components').to_s
 
     dir = File.join(components_dir, klass.name.pluralize.underscore.dasherize)
@@ -70,7 +79,48 @@ namespace :exrails do
       config_tpl.gsub! '/* MODELNAME */', klass.name
       config_tpl.gsub! '/* MODELKEY */', klass.name.underscore
       file.write(config_tpl)
+
     end unless File.exists?(file_path)
+  end
+
+  def insert_component_scripts(klass)
+    index_file = Rails.root.join('angular', 'src', 'index.html')
+    pattern = '<script src="app/components/roles/config.js"></script>'
+    url = klass.name.underscore.dasherize.pluralize
+    replace = "#{' ' * 8}<script src=\"app/components/#{url}/config.js\"></script>\n"
+    insert_into_file(index_file, pattern, replace)
+  end
+
+  def generate_controller_file(klass)
+    controllers_dir = Rails.root.join('app', 'controllers').to_s
+
+    controller_tpl = "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
+    controller_tpl += "  resourcify\n"
+    controller_tpl += "end\n"
+    file_path = File.join(controllers_dir, "#{klass.name.pluralize.underscore.dasherize}_controller.rb")
+    File.open(file_path, 'w') do |file|
+      file.write(controller_tpl)
+    end unless File.exists?(file_path)
+  end
+
+  def add_resources_route(klass)
+    routes_file = Rails.root.join('config', 'routes.rb')
+    pattern = 'resources :roles'
+    replace = "#{' ' * 4}resources :#{klass.name.underscore.pluralize}\n"
+    insert_into_file(routes_file, pattern, replace)
+  end
+
+  def insert_into_file(file, pattern, replace, after_pattern = true)
+    lines = File.readlines(file)
+    lines.each_with_index do |line, index|
+      if line.include? pattern
+        insert_at = (after_pattern)? index + 1 : index - 1
+        insert_at = (insert_at < 0)? 0 : insert_at
+        lines.insert(insert_at, replace)
+        break
+      end
+    end
+    File.write(file, lines.join)
   end
 
   def resourcified_models
@@ -86,6 +136,15 @@ namespace :exrails do
       end
     end
     models
+  end
+
+  def insert(file, pattern, content_to_insert, after_pattern = true)
+    if after_pattern
+      content_to_insert = "#{pattern}\n#{content_to_insert}"
+    else
+      content_to_insert = "#{content_to_insert}\n#{pattern}"
+    end
+    File.write(file, File.read(file).gsub(pattern, content_to_insert))
   end
 
   def ng_component_files_tpl
