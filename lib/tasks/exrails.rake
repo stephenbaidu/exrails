@@ -97,7 +97,7 @@ namespace :exrails do
     controller_tpl = "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
     controller_tpl += "  resourcify\n"
     controller_tpl += "end\n"
-    file_path = File.join(controllers_dir, "#{klass.name.pluralize.underscore.dasherize}_controller.rb")
+    file_path = File.join(controllers_dir, "#{klass.name.pluralize.underscore}_controller.rb")
     File.open(file_path, 'w') do |file|
       file.write(controller_tpl)
     end unless File.exists?(file_path)
