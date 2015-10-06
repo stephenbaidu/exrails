@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService, lookupService, byIdFilter, gridService) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, dateFilter, reportService, lookupService, byIdFilter, gridService) {
     var vm = $scope;
     window.indexCtrl = vm;
 
@@ -160,6 +160,10 @@ angular.module('angularApp')
 
       if (!!lookup) {
         return byValueFilter(vm.lookups[lookup], value).name;
+      } else if(property.type === 'date') {
+        return dateFilter(value);
+      } else if(property.type === 'datetime') {
+        return dateFilter(value, 'yyyy-MM-dd HH:mm:ss');
       }
       
       return value;

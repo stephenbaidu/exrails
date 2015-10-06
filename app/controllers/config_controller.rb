@@ -71,10 +71,10 @@ class ConfigController < ApplicationController
           type:  col.type.to_s
         }
 
-        if col.type == :date || col.type == :datetime
-          prop[:type] = 'string'
-          prop[:format] = 'date'
-        end
+        # if col.type == :date || col.type == :datetime
+        #   prop[:type] = 'string'
+        #   prop[:format] = 'date'
+        # end
 
         prop[:type] = 'string' if col.type == :text
         prop[:type] = 'string' if col.type == :decimal
