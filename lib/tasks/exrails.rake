@@ -87,8 +87,8 @@ namespace :exrails do
     index_file = Rails.root.join('angular', 'src', 'index.html')
     pattern = '<script src="app/components/roles/config.js"></script>'
     url = klass.name.underscore.dasherize.pluralize
-    replace = "#{' ' * 8}<script src=\"app/components/#{url}/config.js\"></script>\n"
-    insert_into_file(index_file, pattern, replace)
+    insert_str = "#{' ' * 8}<script src=\"app/components/#{url}/config.js\"></script>\n"
+    insert_into_file(index_file, pattern, insert_str)
   end
 
   def generate_controller_file(klass)
@@ -106,17 +106,18 @@ namespace :exrails do
   def add_resources_route(klass)
     routes_file = Rails.root.join('config', 'routes.rb')
     pattern = 'resources :roles'
-    replace = "#{' ' * 4}resources :#{klass.name.underscore.pluralize}\n"
-    insert_into_file(routes_file, pattern, replace)
+    insert_str = "#{' ' * 4}resources :#{klass.name.underscore.pluralize}\n"
+    insert_into_file(routes_file, pattern, insert_str)
   end
 
-  def insert_into_file(file, pattern, replace, after_pattern = true)
+  def insert_into_file(file, pattern, insert_str, after_pattern = true)
     lines = File.readlines(file)
+    return if lines.join.include? insert_str 
     lines.each_with_index do |line, index|
       if line.include? pattern
         insert_at = (after_pattern)? index + 1 : index - 1
         insert_at = (insert_at < 0)? 0 : insert_at
-        lines.insert(insert_at, replace)
+        lines.insert(insert_at, insert_str)
         break
       end
     end
