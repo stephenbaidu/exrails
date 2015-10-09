@@ -45,7 +45,7 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
         })
         .error(function(data, status, headers, config) {
-          exMsg.error('error');
+          // exMsg.error('error');
         });
     };
 
@@ -175,7 +175,7 @@ angular.module('angularApp')
       lookupService.load(vm.model.key).then(function (response) {
         var lookups = response.data;
         angular.forEach(vm.schema.properties, function (value, key) {
-          if (value.lookup && lookups[value.lookup]) {
+          if (value.lookup && lookups[value.lookup] && !record[value.lookup]) {
             record[value.lookup] = byValueFilter(lookups[value.lookup], record[key]);
           }
         });
@@ -308,8 +308,11 @@ angular.module('angularApp')
         .map(function (e) {
           return {key: e, title: vm.schema.properties[e].title}
         }).value();
-      var reportData = _.map(vm.records, function (rec) {
+      // Add no column
+      columns.unshift({key: 'no', title: 'No'});
+      var reportData = _.map(vm.records, function (rec, index) {
         var data = {};
+        data['no'] = index + 1;
         _.each(vm.grid, function (e) {
           data[e] = vm.fieldData(rec, e) || '';
         });
