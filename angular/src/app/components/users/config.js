@@ -59,7 +59,7 @@ angular.module('angularApp')
     fieldService.set('user', fieldConfig());
 
     function gridConfig () {
-      return ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip', 'roles'];
+      return ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip'];
     }
     
     function fieldConfig () {
