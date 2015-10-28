@@ -17,7 +17,8 @@ angular.module('angularApp')
       formEditButtons: 'app/partials/form-edit-buttons.html',
       bulkNav: 'app/partials/bulk-nav.html',
       bulkGrid: 'app/partials/bulk-grid.html',
-      uploadsGrid: 'app/partials/uploads-grid.html'
+      uploadsGrid: 'app/partials/uploads-grid.html',
+      modalCloseButton: 'app/partials/modal-close-button.html'
     },
     modules: {
       main: [

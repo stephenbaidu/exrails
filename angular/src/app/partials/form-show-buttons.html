@@ -1,3 +1,9 @@
+<div class="pull-left">
+  <button ng-show="hasDeleteAccess() && !formly.options.formState.readOnly" ng-disabled="action.deleting" class="btn btn-danger btn-sm" ng-click="delete(record.id)">
+    <span class="fa fa-trash"></span>
+    Delete
+  </button>
+</div>
 <button ng-show="formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="close()">
   <span class="glyphicon glyphicon-remove"></span>
   Close
@@ -14,10 +20,4 @@
   <span class="glyphicon glyphicon-ok"></span>
   {{ (action.updating)? "Updating..." : "Update" }}
 </button>
-<div class="pull-left">
-  <button ng-show="hasDeleteAccess() && !formly.options.formState.readOnly" ng-disabled="action.deleting" class="btn btn-danger btn-sm" ng-click="delete(record.id)">
-    <span class="fa fa-trash"></span>
-    Delete
-  </button>
-</div>
 <div class="clearfix"></div>

@@ -11,7 +11,6 @@ angular.module('angularApp')
   .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
     var vm = $scope;
     window.appCtrl = vm;
-    window.$auth = $auth;
     
     vm.partials = APP.partials || {};
     vm.modules = APP.modules || {};
@@ -19,7 +18,7 @@ angular.module('angularApp')
     // Force permissions to be loaded
     $auth.validateToken();
     
-    vm.state = {
+    $rootScope.state = {
       isIndex: true,
       isNew: false,
       isShow: false,
@@ -112,10 +111,10 @@ angular.module('angularApp')
       $state.go('^');
     }
 
-    vm.state.update(vm.state.update($state.current));
+    $rootScope.state.update($rootScope.state.update($state.current));
 
     vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      vm.state.update(toState);
+      $rootScope.state.update(toState);
     });
 
     vm.hasUrl = function(url) {

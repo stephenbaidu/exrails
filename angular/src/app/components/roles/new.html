@@ -1,7 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close" ng-click="close()" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <div ng-include="partials.modalCloseButton"></div>
   <h4 class="modal-title">
     {{ schema.title }}
   </h4>

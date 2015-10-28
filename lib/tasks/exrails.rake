@@ -157,7 +157,7 @@ namespace :exrails do
   <div ng-include="partials.searchForm"></div>
 </div>
 <div class="row model-container">
-  <div ng-show="state.isIndex" class="col-md-12">
+  <div ng-show="state.showIndex" class="col-md-12">
     <div ng-include="partials.indexGrid"></div>
     <div ng-include="partials.loadMoreButton"></div>
   </div>
