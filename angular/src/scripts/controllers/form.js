@@ -18,76 +18,23 @@ angular.module('angularApp')
     vm.record = {};
     vm.action = { editMode: false, loading: true, saving: false, creating: false, updating: false, deleting: false };
     vm.schema = {};
-    vm.formly = { model: {}, fields: [], options: {formState: {readOnly: true}}, form: {} };
+    vm.formly = { model: {}, fields: [], options: {formState: {readOnly: false}}, form: {} };
+    vm.partials = APP.partials;
 
-    vm.init = function (modelName, recordId) {
-      vm.modelName = modelName;
-      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
-      vm.formly.fields = fieldService.get(vm.model.key);
-      vm.loadConfig();
-
-      if (recordId) {
-        vm.recordId = recordId;
-        vm.loadRecord(recordId);
-      }
-    }
-
-    vm.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.schema = data.schema;
-          $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, vm);
-          vm.setRecord();
-        })
-        .error(function(data, status, headers, config) {
-          exMsg.error('error');
-        });
-    };
-
-    vm.loadRecord = function (recordId) {
-      if(!recordId) { return; }
-
-      vm.action.loading = true;
-
-      var data = { id: recordId };
-      resourceManager.get(vm.model.name, data)
-        .then(function (data) {
-          vm.record = data;
-          vm.formly.model = angular.copy(vm.record);
-          vm.sanitizeRecord();
-          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
-          vm.action.loading = false;
-        })
-        .catch(function (error) {
-          vm.error(error);
-          vm.action.loading = false;
-        });
-    };
-
-    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      var actionsConfig = [];
-
-      if (vm.state.isNew) {
-        vm.formly.options.formState.readOnly = false;
-      } else if (vm.state.isShow && vm.hasCreateAccess()) {
-        actionsConfig.push({
-          icon: 'fa fa-plus',
-          label: 'New ' + vm.model.name,
-          handler: function () { $state.go('^.new') }
-        });
-      } else if (vm.state.isView) {
-        vm.formly.options.formState.readOnly = false;
-      }
-
-      // Add back button
-      actionsConfig.push({
-        icon: 'fa fa-chevron-left',
-        label: 'Close',
-        handler: vm.redirectBack
-      });
-      
-      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
-    });
+    vm.init = init;
+    vm.loadConfig = loadConfig;
+    vm.loadRecord = loadRecord;
+    vm.sanitizeRecord = sanitizeRecord;
+    vm.setRecord = setRecord;
+    vm.close = close;
+    vm.redirectBack = redirectBack;
+    vm.create = create;
+    vm.edit = edit;
+    vm.cancelEdit = cancelEdit;
+    vm.uploads = uploads;
+    vm.update = update;
+    vm.save = save;
+    vm.delete = deleteRecord;
 
     vm.hasCreateAccess = function () {
       return vm.hasAccess(vm.model.name + ':create');
@@ -111,7 +58,82 @@ angular.module('angularApp')
       }
     });
 
-    vm.sanitizeRecord = function () {
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      loadFloatingButtonActions();
+    });
+
+    if (!vm.modelName) {
+      vm.init($stateParams.model, $stateParams.id);
+    }
+
+
+    function init (modelName, recordId) {
+      vm.modelName = modelName;
+      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
+      vm.formly.fields = fieldService.get(vm.model.key);
+      vm.loadConfig();
+
+      if (recordId) {
+        vm.recordId = recordId;
+        vm.loadRecord(recordId);
+      }
+    }
+
+    function loadConfig () {
+      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
+        .success(function (data) {
+          vm.schema = data.schema;
+          $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, vm);
+          vm.setRecord();
+        })
+        .error(function(data, status, headers, config) {
+          exMsg.error('error');
+        });
+    };
+
+    function loadRecord (recordId) {
+      if(!recordId) { return; }
+
+      vm.action.loading = true;
+
+      var data = { id: recordId };
+      resourceManager.get(vm.model.name, data)
+        .then(function (data) {
+          vm.record = data;
+          vm.formly.model = angular.copy(vm.record);
+          vm.sanitizeRecord();
+          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
+          vm.action.loading = false;
+          vm.formly.options.formState.readOnly = true;
+        })
+        .catch(function (error) {
+          vm.error(error);
+          vm.action.loading = false;
+        });
+    };
+
+    function loadFloatingButtonActions() {
+      var actionsConfig = [];
+      
+      if ($rootScope.state.isShow && vm.hasCreateAccess()) {
+        actionsConfig.push({
+          icon: 'fa fa-plus',
+          label: 'New ' + vm.model.name,
+          handler: function () { $state.go('^.new') }
+        });
+      }
+
+      // Add back button
+      actionsConfig.push({
+        icon: 'fa fa-chevron-left',
+        label: 'Close',
+        handler: vm.redirectBack
+      });
+      
+      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
+    }
+
+    function sanitizeRecord () {
       _.each(vm.record, function (value, key) {
         if (value === null) {
           vm.record[key] = '';
@@ -119,7 +141,7 @@ angular.module('angularApp')
       });
     }
 
-    vm.setRecord = function () {
+    function setRecord () {
       if (!vm.record.id && $stateParams.q) {
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
@@ -128,22 +150,24 @@ angular.module('angularApp')
       }
     };
 
-    vm.close = function () {
+    function close () {
       vm.record = {};
+      vm.$dismiss();
       $state.go('^');
     };
 
-    vm.redirectBack = function () {
+    function redirectBack () {
       vm.record = {};
       
       if ($state.$current.name === 'app.module.form.model') {
         $state.go('.', $stateParams, { reload: true });
       } else {
+        vm.$dismiss();
         $state.go('^');
       }
     };
 
-    vm.create = function (redirectBack) {
+    function create (redirectBack) {
       vm.action.saving = true;
       vm.action.creating = true;
 
@@ -171,22 +195,22 @@ angular.module('angularApp')
         });
     };
 
-    vm.edit = function () {
+    function edit () {
       vm.formly.options.formState.readOnly = false;
       vm.action.editMode = true;
     };
 
-    vm.cancelEdit = function () {
+    function cancelEdit () {
       vm.formly.model = angular.copy(vm.record);
       vm.formly.options.formState.readOnly = true;
       vm.action.editMode = false;
     };
 
-    vm.uploads = function () {
+    function uploads () {
       $state.go('^.uploads', $stateParams);
     };
 
-    vm.update = function (redirectBack) {
+    function update (redirectBack) {
       if(!vm.record.id) { return; }
 
       vm.action.saving = true;
@@ -215,7 +239,7 @@ angular.module('angularApp')
         });
     };
 
-    vm.save = function (redirectBack) {
+    function save (redirectBack) {
       PNotify.removeAll();
 
       vm.formly.form.$setSubmitted(true);
@@ -234,7 +258,7 @@ angular.module('angularApp')
       }
     };
 
-    vm.delete = function () {
+    function deleteRecord () {
       vm.action.deleting = true;
 
       var msg = "Are you sure you want to delete this " + vm.schema.title + "?";
@@ -256,8 +280,4 @@ angular.module('angularApp')
         vm.action.deleting = false;
       });
     };
-
-    if (!vm.modelName) {
-      vm.init($stateParams.model, $stateParams.id);
-    }
   });

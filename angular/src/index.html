@@ -22,8 +22,6 @@
     <link rel="stylesheet" href="bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
-    <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog.css" />
-    <link rel="stylesheet" href="bower_components/ngDialog/css/ngDialog-theme-default.css" />
     <link rel="stylesheet" href="bower_components/ng-mfb/mfb/dist/mfb.css" />
     <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
     <!-- endbower -->
@@ -60,7 +58,6 @@
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -93,12 +90,12 @@
     <script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
     <script src="bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
     <script src="bower_components/angular-ui-select/dist/select.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.js"></script>
     <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="bower_components/api-check/dist/api-check.js"></script>
     <script src="bower_components/angular-formly/dist/formly.js"></script>
     <script src="bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
-    <script src="bower_components/ngDialog/js/ngDialog.js"></script>
     <script src="bower_components/ng-mfb/src/mfb-directive.js"></script>
     <script src="bower_components/Chart.js/Chart.js"></script>
     <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
@@ -109,10 +106,13 @@
     <!-- endbuild -->
 
         <!-- build:js({.tmp,src}) scripts/scripts.js -->
-        <script src="scripts/inflection.js"></script>
-        <script src="scripts/modernizr-touch.js"></script>
-        <script src="scripts/xlsx-reader.js"></script>
-        <script src="scripts/app.js"></script>
+        <script src="scripts/libs/inflection.js"></script>
+        <script src="scripts/libs/modernizr-touch.js"></script>
+        <script src="scripts/libs/xlsx-reader.js"></script>
+        <script src="config/app.js"></script>
+        <script src="config/constants.js"></script>
+        <script src="config/routes.js"></script>
+        <script src="config/configs.js"></script>
         <script src="scripts/filters/by_id.js"></script>
         <script src="scripts/filters/by_value.js"></script>
         <script src="scripts/filters/previous_next_ids.js"></script>

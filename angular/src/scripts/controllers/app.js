@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AppCtrl', function ($scope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
+  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
     var vm = $scope;
     window.appCtrl = vm;
     window.$auth = $auth;
@@ -25,6 +25,7 @@ angular.module('angularApp')
       isShow: false,
       isView: false,
       isBulk: false,
+      showIndex: true,
       hideNameGrid: false,
       hideFormNav: false,
       update: function (state) {
@@ -35,8 +36,9 @@ angular.module('angularApp')
         this.isShow  = (state.name === 'app.module.model.show');
         this.isView  = (state.name === 'app.module.model.show.view');
         this.isBulk  = (state.name === 'app.module.model.show.bulk');
-        this.hideNameGrid = (this.isIndex || this.isBulk);
-        this.hideFormNav = (this.isBulk);
+        this.showIndex    = (this.isIndex || this.isNew || this.isShow);
+        this.hideNameGrid = (this.showIndex || this.isBulk);
+        this.hideFormNav  = (this.isBulk);
       }
     };
 
@@ -66,7 +68,7 @@ angular.module('angularApp')
       opens: 'right',
     };
 
-    vm.hasAccess = function (urlOrPermission) {
+    $rootScope.hasAccess = function (urlOrPermission) {
       var permission = urlOrPermission || '';
       permission = permission.replace(/-/gi, '_');
 

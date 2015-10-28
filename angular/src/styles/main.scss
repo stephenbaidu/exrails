@@ -11,6 +11,29 @@ body {
   font-size: 14px;
 }
 
+.modal-dialog {
+  margin: 100px auto;
+
+  .modal-content {
+    border: 5px solid #787878;
+
+    .modal-header {
+      border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      background: rgba(128, 128, 128, 0.32);
+
+      .close {
+        margin-top: -10px;
+        font-size: 35px;
+      }
+    }
+
+    .modal-footer {
+      border-top: 2px solid rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+
 .form-control-static {
   font-size: 17px;
   overflow: hidden;

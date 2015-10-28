@@ -58,7 +58,7 @@ namespace :exrails do
     Dir.mkdir(dir) unless File.directory?(dir)
 
     # Generate views: index.html, new.html, show.html, edit.html
-    ['index', 'new', 'show', 'edit', 'uploads', 'bulk'].each do |action|
+    ['index', 'new', 'show', 'uploads', 'bulk'].each do |action|
       file_path = File.join(dir, "#{action}.html")
       File.open(file_path, 'w') do |file|
         file_content = ng_component_files_tpl[action.to_sym]
@@ -165,7 +165,7 @@ namespace :exrails do
     <div ng-include="partials.nameGrid"></div>
     <div ng-include="partials.loadMoreButton"></div>
   </div>
-  <div ng-hide="state.isIndex" ng-class="{'col-md-8': !state.isBulk, 'col-md-12': state.isBulk}">
+  <div ng-hide="state.showIndex" ng-class="{'col-md-8': !state.isBulk, 'col-md-12': state.isBulk}">
     <div ng-if="!state.hideFormNav" ng-include="partials.formNav" style="margin-bottom: 6px;"></div>
     <div ui-view></div>
   </div>
@@ -174,44 +174,36 @@ namespace :exrails do
     eos
 
     data[:new] = <<-eos
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ schema.title }}</h3>
-  </div>
-  <div class="panel-body">
-    <div ng-include="partials.formlyForm"></div>
-  </div>
-  <div class="panel-footer">
-    <div ng-include="partials.formNewButtons"></div>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    {{ schema.title }}
+  </h4>
+</div>
+<div class="modal-body">
+  <div ng-include="partials.formlyForm"></div>
+</div>
+<div class="modal-footer">
+  <div ng-include="partials.formNewButtons"></div>
 </div>
     eos
 
     data[:show] = <<-eos
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ schema.title }}</h3>
-  </div>
-  <div class="panel-body">
-    <div ng-include="partials.formlyForm"></div>
-  </div>
-  <div class="panel-footer">
-    <div ng-include="partials.formShowButtons"></div>
-  </div>
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">
+    {{ schema.title }}
+  </h4>
 </div>
-    eos
-
-    data[:edit] = <<-eos
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ schema.title }}</h3>
-  </div>
-  <div class="panel-body">
-    <div ng-include="partials.formlyForm"></div>
-  </div>
-  <div class="panel-footer">
-    <div ng-include="partials.formEditButtons"></div>
-  </div>
+<div class="modal-body">
+  <div ng-include="partials.formlyForm"></div>
+</div>
+<div class="modal-footer">
+  <div ng-include="partials.formShowButtons"></div>
 </div>
     eos
 
