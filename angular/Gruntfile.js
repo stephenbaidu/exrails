@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/**/*.js', '<%= yeoman.app %>/app/components/**/*.js'],
+        files: ['<%= yeoman.app %>/scripts/**/*.js', '<%= yeoman.app %>/config/**/*.js', '<%= yeoman.app %>/app/components/**/*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -190,7 +190,8 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath:  /\.\.\//,
+        exclude: ['bower_components/underscore']
       },
       test: {
         devDependencies: true,
