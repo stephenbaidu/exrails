@@ -49,19 +49,12 @@ angular.module('angularApp')
         },
         controller: 'ModuleCtrl'
       })
-      .state('app.module.form', {
-        url: '/form',
-        templateUrl: function ($stateParams) {
-          return 'app/layouts/form.html';
-        }
-      })
-      .state('app.module.form.model', {
-        url: '/:model',
-        templateUrl: function ($stateParams) {
-          return 'app/components/' + $stateParams.model + '/new.html';
-        },
-        controller: 'FormCtrl'
-      })
+      // .state('app.module.form', {
+      //   url: '/form',
+      //   templateUrl: function ($stateParams) {
+      //     return 'app/layouts/form.html';
+      //   }
+      // })
       .state('app.module.reports', {
         url: '/report',
         template: '<div ui-view></div>'
@@ -72,6 +65,18 @@ angular.module('angularApp')
           return 'app/components/reports/show.html';
         },
         controller: 'ReportCtrl'
+      })
+      .state('app.module.form', {
+        url: '/form/:model',
+        onEnter: function ($stateParams, $state, $uibModal) {
+          $uibModal.open({
+            templateUrl: 'app/components/' + $stateParams.model + '/new.html',
+            size: 'lg',
+            controller: 'FormCtrl'
+          }).result.finally(function() {
+            $state.go('^');
+          });
+        }
       })
       .state('app.module.model', {
         url: '/:model',
@@ -106,6 +111,8 @@ angular.module('angularApp')
             templateUrl: 'app/components/' + $stateParams.model + '/new.html',
             size: 'lg',
             controller: 'FormCtrl'
+          }).result.finally(function() {
+            $state.go('^');
           });
         }
       })
@@ -116,6 +123,8 @@ angular.module('angularApp')
             templateUrl: 'app/components/' + $stateParams.model + '/show.html',
             size: 'lg',
             controller: 'FormCtrl'
+          }).result.finally(function() {
+            $state.go('^');
           });
         }
       });

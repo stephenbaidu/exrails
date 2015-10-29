@@ -78,15 +78,19 @@ angular.module('angularApp')
           permission = permission.classify() + ':index';
         } else {
           var regExNew  = /^([A-z-_]+)\/new/gi;
+          var regExForm = /^form\/([A-z-_]+)/gi;
           var regExShow = /^([A-z-_]+)\/(\d+)\/show/gi;
           var regExEdit = /^([A-z-_]+)\/(\d+)\/edit/gi;
 
           var matchNew  = regExNew.exec(permission)
+          var matchForm = regExForm.exec(permission)
           var matchShow = regExShow.exec(permission)
           var matchEdit = regExEdit.exec(permission)
 
           if (matchNew) {
             permission = matchNew[1].classify() + ':create';
+          } else if (matchForm) {
+            permission = matchForm[1].classify() + ':create';
           } else if (matchShow) {
             permission = matchShow[1].classify() + ':show';
           } else if (matchEdit) {
@@ -101,7 +105,7 @@ angular.module('angularApp')
       return (found === undefined)? false : true;
     }
 
-    vm.error = function (error) {
+    $rootScope.error = function (error) {
       error = error || {};
       error.message  && exMsg.error(error.message, error.type || 'Error');
       error.messages && exMsg.errorSummary(error.messages);

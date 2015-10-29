@@ -27,7 +27,6 @@ angular.module('angularApp')
     vm.sanitizeRecord = sanitizeRecord;
     vm.setRecord = setRecord;
     vm.close = close;
-    vm.redirectBack = redirectBack;
     vm.create = create;
     vm.edit = edit;
     vm.cancelEdit = cancelEdit;
@@ -56,10 +55,6 @@ angular.module('angularApp')
       if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord(vm.record.id);
       }
-    });
-
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      loadFloatingButtonActions();
     });
 
     if (!vm.modelName) {
@@ -112,27 +107,6 @@ angular.module('angularApp')
         });
     };
 
-    function loadFloatingButtonActions() {
-      var actionsConfig = [];
-      
-      if ($rootScope.state.isShow && vm.hasCreateAccess()) {
-        actionsConfig.push({
-          icon: 'fa fa-plus',
-          label: 'New ' + vm.model.name,
-          handler: function () { $state.go('^.new') }
-        });
-      }
-
-      // Add back button
-      actionsConfig.push({
-        icon: 'fa fa-chevron-left',
-        label: 'Close',
-        handler: vm.redirectBack
-      });
-      
-      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
-    }
-
     function sanitizeRecord () {
       _.each(vm.record, function (value, key) {
         if (value === null) {
@@ -156,18 +130,7 @@ angular.module('angularApp')
       $state.go('^');
     };
 
-    function redirectBack () {
-      vm.record = {};
-      
-      if ($state.$current.name === 'app.module.form.model') {
-        $state.go('.', $stateParams, { reload: true });
-      } else {
-        vm.$dismiss();
-        $state.go('^');
-      }
-    };
-
-    function create (redirectBack) {
+    function create () {
       vm.action.saving = true;
       vm.action.creating = true;
 
@@ -182,9 +145,7 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:record-created', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' created successfully');
           
-          if (redirectBack) {
-            vm.redirectBack();
-          }
+          vm.close();
         })
         .catch(function (error) {
           vm.error(error);
@@ -210,7 +171,7 @@ angular.module('angularApp')
       $state.go('^.uploads', $stateParams);
     };
 
-    function update (redirectBack) {
+    function update () {
       if(!vm.record.id) { return; }
 
       vm.action.saving = true;
@@ -226,9 +187,7 @@ angular.module('angularApp')
           $rootScope.$broadcast('model:record-updated', vm.model.name, data, vm);
           exMsg.success(vm.schema.title + ' updated successfully');
 
-          if (redirectBack) {
-            vm.redirectBack();
-          }
+          vm.close();
         })
         .catch(function (error) {
           vm.error(error);
@@ -239,7 +198,7 @@ angular.module('angularApp')
         });
     };
 
-    function save (redirectBack) {
+    function save () {
       PNotify.removeAll();
 
       vm.formly.form.$setSubmitted(true);
@@ -247,14 +206,10 @@ angular.module('angularApp')
         return;
       }
 
-      if (redirectBack === undefined) {
-        redirectBack = true;
-      }
-
       if(vm.record.id) {
-        vm.update(redirectBack);
+        vm.update();
       } else {
-        vm.create(redirectBack);
+        vm.create();
       }
     };
 
@@ -269,7 +224,7 @@ angular.module('angularApp')
           .then(function (data) {
           $rootScope.$broadcast('model:record-deleted', vm.model.name, vm.record, vm);
             exMsg.success(vm.schema.title + " deleted successfully");
-            vm.redirectBack();
+            vm.close();
           })
           .catch(function (error) {
             vm.error(error);

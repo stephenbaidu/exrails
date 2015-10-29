@@ -24,7 +24,7 @@ angular.module('angularApp')
       main: [
         { text: 'Users', url: 'users', icon: 'fa fa-users color-deep-purple-300' },
         { text: 'Roles', url: 'roles', icon: 'glyphicon glyphicon-user color-red-100' },
-        { text: 'UserForm', url: 'form/users', icon: 'fa fa-user color-teal-500' }
+        { text: 'UserForm', url: 'form/roles', icon: 'fa fa-user color-teal-500' }
       ],
       admin: [
         { text: 'Users', url: 'users', icon: 'fa fa-briefcase color-deep-purple-300' },
