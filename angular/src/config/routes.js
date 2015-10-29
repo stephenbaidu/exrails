@@ -49,12 +49,6 @@ angular.module('angularApp')
         },
         controller: 'ModuleCtrl'
       })
-      // .state('app.module.form', {
-      //   url: '/form',
-      //   templateUrl: function ($stateParams) {
-      //     return 'app/layouts/form.html';
-      //   }
-      // })
       .state('app.module.reports', {
         url: '/report',
         template: '<div ui-view></div>'
