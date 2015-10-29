@@ -12,8 +12,8 @@ angular.module('angularApp')
     var vm = $scope;
     window.appCtrl = vm;
     
-    vm.partials = APP.partials || {};
-    vm.modules = APP.modules || {};
+    $rootScope.partials = APP.partials || {};
+    $rootScope.modules = APP.modules || {};
 
     // Force permissions to be loaded
     $auth.validateToken();

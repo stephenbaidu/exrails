@@ -19,7 +19,6 @@ angular.module('angularApp')
     vm.action = { editMode: false, loading: true, saving: false, creating: false, updating: false, deleting: false };
     vm.schema = {};
     vm.formly = { model: {}, fields: [], options: {formState: {readOnly: false}}, form: {} };
-    vm.partials = APP.partials;
 
     vm.init = init;
     vm.loadConfig = loadConfig;
