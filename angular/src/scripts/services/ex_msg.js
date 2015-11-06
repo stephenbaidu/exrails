@@ -86,15 +86,20 @@ angular.module('angularApp')
         PNotify.removeAll();
       },
       sweetAlert: sweetAlert,
-      prompt: function(message, title) {
-        var d = $q.defer()
-        sweetAlert({
+      prompt: function(message, title, defaultValue, options) {
+        var d = $q.defer();
+        var swalOptions = {
           title: title || 'Input Needed',
           text: message,
           type: 'input',
+          inputValue: defaultValue || '',
           showCancelButton: true,
           animation: "slide-from-top"
-        }, function (inputValue) {
+        };
+
+        _.merge(swalOptions, options || {});
+
+        sweetAlert(swalOptions, function (inputValue) {
           if (inputValue === false) {
             d.reject(false);
             return false;
