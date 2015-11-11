@@ -17,7 +17,7 @@ angular.module('angularApp')
 
     vm.$on('auth:login-success', function(ev, user) {
       console.log('auth:login-success');
-      exMsg.info('Welcome, ' + user.email);
+      exMsg.info('Welcome, ' + user.name);
       $state.go('app');
     });
 
@@ -29,7 +29,7 @@ angular.module('angularApp')
 
     vm.$on('auth:invalid', function (ev) {
       console.log('auth:invalid');
-      exMsg.error('auth:invalid');
+      // exMsg.error('auth:invalid');
     });
 
     vm.$on('auth:validation-success', function (ev) {
@@ -41,7 +41,7 @@ angular.module('angularApp')
 
     vm.$on('auth:validation-error', function (ev) {
       console.log('auth:validation-error');
-      exMsg.error('auth:validation-error');
+      // exMsg.error('auth:validation-error');
     });
 
     vm.$on('auth:logout-success', function(ev) {
@@ -101,7 +101,6 @@ angular.module('angularApp')
 
     vm.$on('auth:password-reset-confirm-success', function() {
       console.log('auth:password-reset-confirm-success');
-      // $state.go('maintenance');
       // show password change modal
       exMsg.sweetAlert({
         title: 'Reset Password',
@@ -183,6 +182,9 @@ angular.module('angularApp')
 
     vm.$on('auth:session-expired', function(ev) {
       console.log('auth:session-expired');
-      exMsg.info('Session has expired');
+      // exMsg.info('Session has expired');
+      if ($state.$current.name !== 'login') {
+        $state.go('login');
+      }
     });
   });

@@ -2,17 +2,15 @@
   <thead>
     <tr>
       <th class='grid-action-1'></th>
-      <th ng-repeat="field in vm.grid">
-        {{ vm.schema.properties[field].title }}
-      </th>
+      <th>Name</th>
       <th class="grid-action-1"></th>
     </tr>
   </thead>
   <tbody data-link="row" class="rowlink">
-    <tr ng-repeat="rec in vm.records | filter:vm.action.filterText">
+    <tr ng-repeat="rec in vm.records | filter:vm.action.filterText" ng-class="{active: rec.id === vm.paging.currentId}">
       <td>{{ $index + 1 }}.</td>
-      <td ng-repeat="field in vm.grid">
-        {{ vm.fieldData(rec, field) }}
+      <td>
+        {{ rec.name }}
       </td>
       <td class="nav-arrow">
         <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">

@@ -8,8 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, byValueFilter) {
-    var vm = $scope;
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, byValueFilter, authService, $uibModalStack) {
+    var vm = this;
+    $scope.vmRef = vm;
     window.formCtrl = vm;
 
     vm.model = {};
@@ -20,8 +21,7 @@ angular.module('angularApp')
     vm.schema = {};
     vm.formly = { model: {}, fields: [], options: {formState: {readOnly: false}}, form: {} };
 
-    vm.init = init;
-    vm.loadConfig = loadConfig;
+    vm.initRoute = initRoute;
     vm.loadRecord = loadRecord;
     vm.sanitizeRecord = sanitizeRecord;
     vm.setRecord = setRecord;
@@ -35,37 +35,58 @@ angular.module('angularApp')
     vm.delete = deleteRecord;
 
     vm.hasCreateAccess = function () {
-      return vm.hasAccess(vm.model.name + ':create');
+      return authService.hasCreateAccess(vm.model.name);
     }
 
     vm.hasShowAccess = function () {
-      return vm.hasAccess(vm.model.name + ':show');
+      return authService.hasShowAccess(vm.model.name);
     }
 
     vm.hasUpdateAccess = function () {
-      return vm.hasAccess(vm.model.name + ':update');
+      return authService.hasUpdateAccess(vm.model.name);
     }
 
     vm.hasDeleteAccess = function () {
-      return vm.hasAccess(vm.model.name + ':delete');
+      return authService.hasDeleteAccess(vm.model.name);
     }
 
-    vm.$on('model:reload-record', function(evt, modelName, record) {
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      if (!$scope.state.isShow) return;
+      
+      var actionsConfig = [];
+      var mainActionConfig = {};
+
+      if (vm.hasCreateAccess()) {
+        mainActionConfig = {
+          icon: 'fa fa-plus',
+          label: 'New ' + vm.model.name,
+          handler: vm.new
+        };
+      }
+
+      // Add back button
+      actionsConfig.push({
+        icon: 'fa fa-chevron-left',
+        label: 'Back',
+        handler: function () { $state.go('^'); }
+      });
+      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig, mainActionConfig);
+    });
+
+    $scope.$on('model:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord(vm.record.id);
       }
     });
 
-    if (!vm.modelName) {
-      vm.init($stateParams.model, $stateParams.id);
-    }
 
-
-    function init (modelName, recordId) {
-      vm.modelName = modelName;
-      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
+    function initRoute (routeName, modelName) {
+      vm.modelName = modelName || resourceManager.getName(routeName);
+      vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + routeName + '/:id');
       vm.formly.fields = fieldService.get(vm.model.key);
-      vm.loadConfig();
+      loadConfig();
+
+      var recordId = $stateParams.id;
 
       if (recordId) {
         vm.recordId = recordId;
@@ -77,7 +98,7 @@ angular.module('angularApp')
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
           vm.schema = data.schema;
-          $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, vm);
+          $rootScope.$broadcast('model:form-config-loaded', vm.model.name, data, $scope);
           vm.setRecord();
         })
         .error(function(data, status, headers, config) {
@@ -96,7 +117,7 @@ angular.module('angularApp')
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
           vm.sanitizeRecord();
-          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, $scope);
           vm.action.loading = false;
           vm.formly.options.formState.readOnly = true;
         })
@@ -119,13 +140,15 @@ angular.module('angularApp')
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
         });
-        $rootScope.$broadcast('model:record-set', vm.model.name, vm.record, vm);
+        $rootScope.$broadcast('model:record-set', vm.model.name, vm.record, $scope);
       }
     };
 
     function close () {
       vm.record = {};
-      vm.$dismiss();
+      if ($uibModalStack.getTop()) {
+        $scope.$dismiss();
+      }
       $state.go('^');
     };
 
@@ -141,7 +164,7 @@ angular.module('angularApp')
           // vm.formly.model.id = data.id;
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
-          $rootScope.$broadcast('model:record-created', vm.model.name, data, vm);
+          $rootScope.$broadcast('model:record-created', vm.model.name, data, $scope);
           exMsg.success(vm.schema.title + ' created successfully');
           
           vm.close();
@@ -183,7 +206,7 @@ angular.module('angularApp')
         .then(function (data) {
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
-          $rootScope.$broadcast('model:record-updated', vm.model.name, data, vm);
+          $rootScope.$broadcast('model:record-updated', vm.model.name, data, $scope);
           exMsg.success(vm.schema.title + ' updated successfully');
 
           vm.close();
@@ -221,7 +244,7 @@ angular.module('angularApp')
         data[vm.model.key] = vm.record;
         resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-          $rootScope.$broadcast('model:record-deleted', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('model:record-deleted', vm.model.name, vm.record, $scope);
             exMsg.success(vm.schema.title + " deleted successfully");
             vm.close();
           })

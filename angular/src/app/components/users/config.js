@@ -14,37 +14,37 @@ angular.module('angularApp')
     vm.$on('model:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== 'User') return;
 
-      scope.lockUser = function () {
-        scope.action.locking = true;
+      scope.vmRef.lockUser = function () {
+        scope.vmRef.action.locking = true;
         $http.post(APP.apiPrefix + 'users/' + record.id + '/lock')
           .success(function (data) {
-            scope.record = data;
+            scope.vmRef.record = data;
             exMsg.success('User successfully locked');
           })
           .catch(function (error) {
             exMsg.error(error['message']);
           })
           .finally(function () {
-            scope.action.locking = false;
+            scope.vmRef.action.locking = false;
           });
       }
 
-      scope.unlockUser = function () {
-        scope.action.unlocking = true;
+      scope.vmRef.unlockUser = function () {
+        scope.vmRef.action.unlocking = true;
         $http.post(APP.apiPrefix + 'users/' + record.id + '/unlock')
           .success(function (data) {
-            scope.record = data;
+            scope.vmRef.record = data;
             exMsg.success('User successfully unlocked');
           })
           .catch(function (error) {
             exMsg.error(error['message']);
           })
           .finally(function () {
-            scope.action.unlocking = false;
+            scope.vmRef.action.unlocking = false;
           });
       }
 
-      scope.resetPassword = function () {
+      scope.vmRef.resetPassword = function () {
         //
       }
     });

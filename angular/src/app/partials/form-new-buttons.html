@@ -1,8 +1,8 @@
-<button class="btn btn-default btn-sm" ng-click="close()">
+<button class="btn btn-default btn-sm" ng-click="vm.close()">
   <span class="glyphicon glyphicon-remove"></span>
   Close
 </button>
-<button ng-show="hasCreateAccess()" ng-disabled="action.creating" class="btn btn-info btn-sm" ng-click="save()">
+<button ng-show="vm.hasCreateAccess()" ng-disabled="vm.action.creating" class="btn btn-info btn-sm" ng-click="vm.save()">
   <span class="glyphicon glyphicon-ok"></span>
-  {{ (action.creating)? "Saving..." : "Save" }}
+  {{ (vm.action.creating)? "Saving..." : "Save" }}
 </button>

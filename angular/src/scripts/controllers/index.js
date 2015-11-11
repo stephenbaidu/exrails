@@ -8,8 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, dateFilter, reportService, lookupService, byIdFilter, gridService) {
-    var vm = $scope;
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, dateFilter, reportService, lookupService, byIdFilter, gridService, authService) {
+    var vm = this;
+    $scope.vmRef = vm;
     window.indexCtrl = vm;
 
     vm.model = {};
@@ -30,26 +31,38 @@ angular.module('angularApp')
       nextId: 0
     };
 
-    vm.init = function (modelName) {
-      vm.modelName = modelName;
-      vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
-      vm.grid = gridService.get(vm.model.key);
-      vm.loadConfig();
-    }
+    vm.initRoute = initRoute;
+    vm.queryRecords = queryRecords;
+    vm.fieldData = fieldData;
+    vm.polishRecord = polishRecord;
+    vm.updateRecords = updateRecords;
+    vm.updateRecordInRecords = updateRecordInRecords;
+    vm.removeRecordInRecords = removeRecordInRecords;
+    vm.reload = reload;
+    vm.loadMore = loadMore;
+    vm.toPDF = toPDF;
+    vm.toCSV = toCSV;
 
-    vm.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.lookups = data.lookups;
-          vm.schema = data.schema;
-          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, vm);
-        })
-        .error(function(data, status, headers, config) {
-          // exMsg.error('error');
-        });
-    };
+    // Search related
+    vm.search = { fields: [], inputType: '', params: {}, queries: {} };
+    vm.initSearch = initSearch;
+    vm.getQueryParams = getQueryParams;
+    vm.buildSearchQueries = buildSearchQueries;
+    vm.addSearchParam = addSearchParam;
+    vm.clearSearchParams = clearSearchParams;
+    vm.removeSearchParam = removeSearchParam;
+    vm.doSearch = doSearch;
 
-    vm.$on('model:do-search', function (evt, modelName, queryParams) {
+    // Reinitialize searchValue if inputType is date
+    $scope.$watch('vm.search.searchField', function () {
+      if (!vm.search.searchField) return;
+
+      if (vm.search.searchField.inputType === 'date') {
+        vm.search.searchValue = {startDate: moment().endOf('day'), endDate: moment().endOf('day')};
+      }
+    });
+
+    $scope.$on('model:do-search', function (evt, modelName, queryParams) {
       if (modelName === vm.modelName) {
         vm.recordsHash = {};
         vm.records = [];
@@ -58,17 +71,79 @@ angular.module('angularApp')
       }
     });
 
-    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      if (!vm.state.isIndex) return;
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      updateFABActions();
+    });
+
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      updateFABActions();
+    });
+
+    $scope.$on('model:record-loaded', function (e, modelName, record) {
+      if(vm.model.name != modelName) return;
+
+      vm.currentRecord = record;
+      vm.paging.currentId = record.id;
+      vm.updateRecordInRecords(record);
+    });
+
+    $scope.$on('model:record-created', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.records.unshift(angular.copy(record));
+        vm.recordsHash[record.id] = true;
+        vm.polishRecord(vm.records[0]);
+      }
+    });
+
+    $scope.$on('model:record-updated', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.updateRecordInRecords(record);
+      }
+    });
+
+    $scope.$on('model:record-deleted', function (evt, modelName, record) {
+      if (vm.model.name === modelName) {
+        vm.removeRecordInRecords(record);
+      }
+    });
+
+    $scope.$watch('vm.paging.recordsPerPage', function() {
+      vm.paging.currentPage = 1;
+      vm.reload();
+    });
+
+    function initRoute (routeName, modelName) {
+      vm.modelName = modelName || resourceManager.getName(routeName);
+      vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + routeName + '/:id');
+      vm.grid = gridService.get(vm.model.key);
+      loadConfig();
+    }
+
+    function loadConfig () {
+      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
+        .success(function (data) {
+          vm.lookups = data.lookups;
+          vm.schema = data.schema;
+          vm.initSearch();
+          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, $scope);
+        })
+        .error(function(data, status, headers, config) {
+          // exMsg.error('error');
+        });
+    };
+
+    function updateFABActions () {
+      if (!$scope.state.isIndex) return;
 
       var actionsConfig = [];
+      var mainActionConfig = {};
 
       if (vm.hasCreateAccess()) {
-        actionsConfig.push({
+        mainActionConfig = {
           icon: 'fa fa-plus',
           label: 'New ' + vm.model.name,
           handler: vm.new
-        });
+        };
       }
 
       // Add search button
@@ -77,9 +152,8 @@ angular.module('angularApp')
         label: 'Search',
         handler: vm.showSearch
       });
-
-      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig);
-    });
+      $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig, mainActionConfig);
+    }
 
     vm.showSearch = function () {
       vm.action.searching = true;
@@ -87,13 +161,14 @@ angular.module('angularApp')
 
     vm.hideSearch = function () {
       vm.action.searching = false;
+      vm.reload();
     }
 
     vm.new = function () {
-      $state.go('.new');
+      $state.go('.newPop');
     }
 
-    vm.queryRecords = function (page, size, query) {
+    function queryRecords (page, size, query) {
       vm.action.loading = true;
 
       if(! query) {
@@ -108,7 +183,7 @@ angular.module('angularApp')
         })
         .then(function (data) {
           vm.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records, vm);
+          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records, $scope);
         })
         .catch(function (error) {
           console.log(error);
@@ -120,41 +195,23 @@ angular.module('angularApp')
     }
 
     vm.hasCreateAccess = function () {
-      return vm.hasAccess(vm.model.name + ':create');
+      return authService.hasCreateAccess(vm.model.name);
     }
 
     vm.hasShowAccess = function () {
-      return vm.hasAccess(vm.model.name + ':show');
+      return authService.hasShowAccess(vm.model.name);
     }
 
     vm.hasUpdateAccess = function () {
-      return vm.hasAccess(vm.model.name + ':update');
+      return authService.hasUpdateAccess(vm.model.name);
     }
 
     vm.hasDeleteAccess = function () {
-      return vm.hasAccess(vm.model.name + ':delete');
+      return authService.hasDeleteAccess(vm.model.name);
     }
 
-    vm.$on('model:record-loaded', function (e, modelName, record) {
-      if(vm.model.name != modelName) return;
-
-      vm.currentRecord = record;
-      vm.paging.currentId = record.id;
-      vm.updatePreviousNext();
-    });
-
-    vm.updatePreviousNext = function () {
-      if (vm.records.length == 0 || vm.paging.currentId == 0) return;
-
-      var indices = $filter('previousNextIds')(vm.records, vm.paging.currentId);
-      if (indices) {
-        vm.paging.previousId = indices.previousId;
-        vm.paging.nextId = indices.nextId;
-      }
-    }
-
-    vm.fieldData = function (record, field) {
-      var property = $scope['schema']['properties'][field];
+    function fieldData (record, field) {
+      var property = vm['schema']['properties'][field];
       var lookup = (property && property.lookup) || false;
       var value  = record[field];
 
@@ -169,7 +226,7 @@ angular.module('angularApp')
       return value;
     }
 
-    vm.polishRecord = function (record) {
+    function polishRecord (record) {
       if (!record || !record.id) return;
 
       lookupService.load(vm.model.key).then(function (response) {
@@ -182,7 +239,7 @@ angular.module('angularApp')
       });
     }
 
-    vm.updateRecords = function (records) {
+    function updateRecords (records) {
       angular.forEach(records, function(record) {
         if (!vm.recordsHash[record.id]) {
           vm.records.push(record);
@@ -192,7 +249,7 @@ angular.module('angularApp')
       });
     }
 
-    vm.updateRecordInRecords = function (record) {
+    function updateRecordInRecords (record) {
       if (!record) return;
 
       var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
@@ -203,7 +260,7 @@ angular.module('angularApp')
       }
     }
 
-    vm.removeRecordInRecords = function (record) {
+    function removeRecordInRecords (record) {
       if (!record) return;
 
       var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
@@ -214,40 +271,14 @@ angular.module('angularApp')
       }
     }
 
-    vm.$on('model:record-loaded', function (evt, modelName, record) {
-      if (vm.model.name === modelName) {
-        vm.updateRecordInRecords(record);
-      }
-    });
-
-    vm.$on('model:record-created', function (evt, modelName, record) {
-      if (vm.model.name === modelName) {
-        vm.records.unshift(angular.copy(record));
-        vm.recordsHash[record.id] = true;
-        vm.polishRecord(vm.records[0]);
-      }
-    });
-
-    vm.$on('model:record-updated', function (evt, modelName, record) {
-      if (vm.model.name === modelName) {
-        vm.updateRecordInRecords(record);
-      }
-    });
-
-    vm.$on('model:record-deleted', function (evt, modelName, record) {
-      if (vm.model.name === modelName) {
-        vm.removeRecordInRecords(record);
-      }
-    });
-
-    vm.reload = function () {
+    function reload () {
       vm.recordsHash = {};
       vm.records = [];
       vm.paging.currentPage = 1;
       vm.queryRecords();
     }
 
-    vm.loadMore = function () {
+    function loadMore () {
       if (vm.records.length < vm.paging.totalRecords) {
         vm.paging.currentPage = vm.paging.currentPage + 1;
         vm.queryRecords();
@@ -258,34 +289,7 @@ angular.module('angularApp')
       vm.searchQuery = q;
     }
 
-    vm.$watch('paging.recordsPerPage', function() {
-      vm.queryRecords();
-    });
-
-    vm.delete = function (id) {
-      vm.action.deleting = true;
-
-      var msg = "Are you sure you want to delete this " + vm.schema.title + "?";
-      exMsg.confirm(msg, "Confirm Delete").then(function () {
-        var data = { id: id };
-        data[vm.model.key] = vm.record;
-        resourceManager.delete(vm.model.name, data)
-          .then(function (data) {
-            $rootScope.$broadcast('model:record-deleted', vm.model.name, data);
-            exMsg.success(vm.schema.title + " deleted successfully");
-            // vm.reload();
-          })
-          .catch(function (error) {
-            vm.error(error);
-          }).finally(function () {
-            vm.action.deleting = false;
-          });
-      }).catch(function () {
-        vm.action.deleting = false;
-      });
-    };
-
-    vm.toCSV = function () {
+    function toCSV () {
       var columns = _.chain(vm.grid)
         .map(function (e) {
           return {key: e, title: vm.schema.properties[e].title}
@@ -303,7 +307,7 @@ angular.module('angularApp')
       $rootScope.$broadcast('report:csv-generated', vm.model.name);
     };
 
-    vm.toPDF = function () {
+    function toPDF () {
       var columns = _.chain(vm.grid)
         .map(function (e) {
           return {key: e, title: vm.schema.properties[e].title}
@@ -324,7 +328,114 @@ angular.module('angularApp')
       $rootScope.$broadcast('report:pdf-generated', vm.model.name);
     };
 
-    if (!vm.modelName) {
-      vm.init($stateParams.model);
+
+    // Search related
+    function initSearch () {
+      vm.search.fields = _.map(vm.schema.properties, function(value, key) {
+        value.key = key;
+        value.inputType = 'text';
+
+        if (value.type === 'string' && value.format === 'date') {
+          value.inputType = 'date';
+        } else if (value.type === 'number' && value.items) {
+          value.inputType = 'select';
+        }
+
+        return value;
+      });
+      vm.search.dateRange = {startDate: moment().startOf('month'), endDate: moment().endOf('month')};
+    }
+
+    function getQueryParams () {
+      var queryParams = _.reduce(vm.search.params, function (memo, value, key) {
+        var field = _.findWhere(vm.search.fields, {key: key});
+        if (!field) return memo;
+
+        if (field.inputType === 'date') {
+          memo[key + '.between'] = _.map(value, function (val) {
+            return val.startDate.toISOString() + '|' + val.endDate.toISOString();
+          }).join('||');
+        } else if (field.inputType === 'select') {
+          memo[key + '.in'] = value.join();
+        } else if (field.inputType === 'text') {
+          memo[key + '.like'] = value.join('|');
+        }
+
+        return memo;
+      }, {});
+
+      if (vm.search.dateRange && vm.search.dateRange.startDate) {
+        var startDate = vm.search.dateRange.startDate.toISOString();
+        var endDate   = vm.search.dateRange.endDate.toISOString();
+        queryParams['created_at.between'] = startDate + '|' + endDate;
+      }
+
+      return queryParams;
+    }
+
+    function buildSearchQueries () {
+      vm.search.queries = _.reduce(vm.search.params, function (memo, value, key) {
+        var field = _.findWhere(vm.search.fields, {key: key});
+        if (!field) return memo;
+
+        var queryVal = field.title + ': ';
+
+        if (field.inputType === 'select') {
+          var vals = _.map(value, function (val) {
+            var item = _.findWhere(field.items, {value: val}) || {};
+            return item.label;
+          });
+          queryVal = queryVal + _.uniq(vals);
+        } else if (field.inputType === 'date') {
+          var vals = _.map(value, function (val) {
+            var startDate = new Date(val.startDate).toISOString().slice(0, 10);
+            var endDate   = new Date(val.endDate).toISOString().slice(0, 10);
+            if (startDate === endDate) {
+              return startDate;
+            } else {
+              return '(' + startDate + ',' + endDate + ')';
+            }
+          });
+          queryVal = queryVal + _.uniq(vals);
+        } else {
+          queryVal = queryVal + _.uniq(value);
+        }
+
+        memo[key] = queryVal;
+        return memo;
+      }, {});
+    }
+
+    function addSearchParam () {
+      if (!vm.search.searchField || !vm.search.searchValue) {
+        return;
+      }
+
+      var fieldKey = vm.search.searchField.key;
+
+      // Check if field exists in params and initialize if not
+      if (!vm.search.params[fieldKey]) {
+        vm.search.params[fieldKey] = [];
+      }
+
+      vm.search.params[fieldKey].push(vm.search.searchValue);
+
+      vm.search.searchValue = null;
+
+      vm.buildSearchQueries();
+    }
+
+    function clearSearchParams () {
+      vm.search.params = {};
+      vm.search.queries  = {};
+    }
+    
+    function removeSearchParam (key) {
+      delete vm.search.params[key];
+      vm.buildSearchQueries();
+    }
+    
+    function doSearch () {
+      $rootScope.$broadcast('model:do-search', vm.modelName, vm.getQueryParams());
     }
   });

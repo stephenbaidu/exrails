@@ -13,6 +13,8 @@ angular.module('angularApp')
     var resMgr = {
       models: {}
     };
+
+    window.rm = resMgr;
     
     resMgr.getName = function(model) {
       model = model.replace(/-/gi, '_');

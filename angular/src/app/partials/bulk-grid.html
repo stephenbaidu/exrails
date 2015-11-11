@@ -2,22 +2,22 @@
   <thead>
     <tr>
       <th class='grid-action-1'></th>
-      <th ng-repeat="column in upload.selectedHeaders">{{ column }}</th>
+      <th ng-repeat="column in vm.upload.selectedHeaders">{{ column }}</th>
     </tr>
   </thead>
   <tbody>
-    <tr ng-show="upload.data">
+    <tr ng-show="vm.upload.data">
       <td><span class="fa fa-link"></span></td>
-      <td ng-repeat="column in upload.selectedHeaders">
-        <select ng-model="upload.matchedFields[column]"
-          ng-options="field.key as field.title for field in upload.matchFields">
+      <td ng-repeat="column in vm.upload.selectedHeaders">
+        <select ng-model="vm.upload.matchedFields[column]"
+          ng-options="field.key as field.title for field in vm.upload.matchFields">
           <option value="">N/A</option>
         </select>
       </td>
     </tr>
-    <tr ng-repeat="row in upload.records">
+    <tr ng-repeat="row in vm.upload.records">
       <td> {{ $index + 1}}.</td>
-      <td ng-repeat="column in upload.selectedHeaders">
+      <td ng-repeat="column in vm.upload.selectedHeaders">
         {{ row[column] }}
       </td>
     </tr>

@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $state, APP, exMsg, $stateParams) {
+  .controller('AppCtrl', function ($scope, $rootScope, $http, $auth, $q, $state, APP, exMsg, $stateParams, authService, stateService) {
     var vm = $scope;
     window.appCtrl = vm;
     
@@ -18,28 +18,8 @@ angular.module('angularApp')
     // Force permissions to be loaded
     $auth.validateToken();
     
-    $rootScope.state = {
-      isIndex: true,
-      isNew: false,
-      isShow: false,
-      isView: false,
-      isBulk: false,
-      showIndex: true,
-      hideNameGrid: false,
-      hideFormNav: false,
-      update: function (state) {
-        if (!state) return;
-        
-        this.isIndex = (state.name === 'app.module.model');
-        this.isNew   = (state.name === 'app.module.model.new' || state.name === 'app.module.form.model');
-        this.isShow  = (state.name === 'app.module.model.show');
-        this.isView  = (state.name === 'app.module.model.show.view');
-        this.isBulk  = (state.name === 'app.module.model.show.bulk');
-        this.showIndex    = (this.isIndex || this.isNew || this.isShow);
-        this.hideNameGrid = (this.showIndex || this.isBulk);
-        this.hideFormNav  = (this.isBulk);
-      }
-    };
+    $rootScope.state = stateService;
+    $rootScope.hasAccess = authService.hasAccess;
 
     vm.drpOptions = {
       showDropdowns: true,
@@ -67,44 +47,6 @@ angular.module('angularApp')
       opens: 'right',
     };
 
-    $rootScope.hasAccess = function (urlOrPermission) {
-      var permission = urlOrPermission || '';
-      permission = permission.replace(/-/gi, '_');
-
-      // Guess from url if not a specific permission
-      if (permission.indexOf(':') < 0) {
-        permission = permission.split('?')[0];
-        if (permission.indexOf('/') < 0) {
-          permission = permission.classify() + ':index';
-        } else {
-          var regExNew  = /^([A-z-_]+)\/new/gi;
-          var regExForm = /^form\/([A-z-_]+)/gi;
-          var regExShow = /^([A-z-_]+)\/(\d+)\/show/gi;
-          var regExEdit = /^([A-z-_]+)\/(\d+)\/edit/gi;
-
-          var matchNew  = regExNew.exec(permission)
-          var matchForm = regExForm.exec(permission)
-          var matchShow = regExShow.exec(permission)
-          var matchEdit = regExEdit.exec(permission)
-
-          if (matchNew) {
-            permission = matchNew[1].classify() + ':create';
-          } else if (matchForm) {
-            permission = matchForm[1].classify() + ':create';
-          } else if (matchShow) {
-            permission = matchShow[1].classify() + ':show';
-          } else if (matchEdit) {
-            permission = matchEdit[1].classify() + ':update';
-          }
-        }
-      }
-
-      var found = _.find($auth.user.permissions, function (p) {
-        return p === permission;
-      });
-      return (found === undefined)? false : true;
-    }
-
     $rootScope.error = function (error) {
       error = error || {};
       error.message  && exMsg.error(error.message, error.type || 'Error');
@@ -114,12 +56,6 @@ angular.module('angularApp')
     vm.back = function () {
       $state.go('^');
     }
-
-    $rootScope.state.update($rootScope.state.update($state.current));
-
-    vm.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $rootScope.state.update(toState);
-    });
 
     vm.hasUrl = function(url) {
       return window.location.hash.indexOf(url) >= 0;
@@ -197,7 +133,7 @@ angular.module('angularApp')
                 exMsg.sweetAlert('Great!', 'Password changed successfully', 'success');
               }
             }).catch(function (data) {
-              exMsg.sweetAlert('Nice!', 'You wrote: ' + inputValue, 'error');
+              exMsg.sweetAlert('Sorry!', 'Password changed failed', 'error');
             });
           })
         });

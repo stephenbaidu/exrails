@@ -7,3 +7,7 @@ namespace :app do
     # Rake::Task['app:setup_roles'].invoke
   end
 end
+
+# rake db:drop db:create db:migrate app:setup test:load_test_data
+# rake db:migrate VERSION=0
+# rake db:migrate app:setup test:load_test_data

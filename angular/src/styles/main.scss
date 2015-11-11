@@ -11,6 +11,27 @@ body {
   font-size: 14px;
 }
 
+#page {
+  .modal-header {
+    padding: 5.5px 0px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+    .close {
+      margin-top: -10px;
+      font-size: 30px;
+    }
+  }
+
+  .modal-body {
+    padding: 0px;
+  }
+
+  .modal-footer {
+    padding: 15px 0px;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
 .modal-dialog {
   margin: 100px auto;
 
@@ -18,11 +39,12 @@ body {
     border: 5px solid #787878;
 
     .modal-header {
+      padding: 15px 15px;
       border-bottom: 2px solid rgba(0, 0, 0, 0.1);
       background: rgba(128, 128, 128, 0.32);
 
       .close {
-        margin-top: -10px;
+        margin-top: -8px;
         font-size: 35px;
       }
     }

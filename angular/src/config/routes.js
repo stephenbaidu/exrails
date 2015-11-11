@@ -65,8 +65,7 @@ angular.module('angularApp')
         onEnter: function ($stateParams, $state, $uibModal) {
           $uibModal.open({
             templateUrl: 'app/components/' + $stateParams.model + '/new.html',
-            size: 'lg',
-            controller: 'FormCtrl'
+            size: 'lg'
           }).result.finally(function() {
             $state.go('^');
           });
@@ -76,8 +75,41 @@ angular.module('angularApp')
         url: '/:model',
         templateUrl: function ($stateParams) {
           return 'app/components/' + $stateParams.model + '/index.html';
-        },
-        controller: 'IndexCtrl'
+        }
+      })
+      .state('app.module.model.new', {
+        url: '/new',
+        templateUrl: function ($stateParams) {
+          return 'app/components/' + $stateParams.model + '/new.html';
+        }
+      })
+      .state('app.module.model.show', {
+        url: '/:id',
+        templateUrl: function ($stateParams) {
+          return 'app/components/' + $stateParams.model + '/show.html';
+        }
+      })
+      .state('app.module.model.newPop', {
+        url: '/new/pop',
+        onEnter: function ($stateParams, $state, $uibModal) {
+          $uibModal.open({
+            templateUrl: 'app/components/' + $stateParams.model + '/new.html',
+            size: 'lg'
+          }).result.finally(function() {
+            $state.go('^');
+          });
+        }
+      })
+      .state('app.module.model.showPop', {
+        url: '/:id/pop',
+        onEnter: function ($stateParams, $state, $uibModal) {
+          $uibModal.open({
+            templateUrl: 'app/components/' + $stateParams.model + '/show.html',
+            size: 'lg'
+          }).result.finally(function() {
+            $state.go('^');
+          });
+        }
       })
       .state('app.module.model.page', {
         url: '/p/:page',
@@ -85,41 +117,16 @@ angular.module('angularApp')
           return 'app/components/' + $stateParams.model + '/' + $stateParams.page + '.html';
         }
       })
-      .state('app.module.model.show.bulk', {
-        url: '/bulk/:table',
+      .state('app.module.model.bulk', {
+        url: '/:id/bulk/:table',
         templateUrl: function ($stateParams) {
           return 'app/components/' + $stateParams.model + '/bulk.html';
-        },
-        controller: 'BulkCtrl'
+        }
       })
       .state('app.module.model.view', {
         url: '/:id/:view',
         templateUrl: function ($stateParams) {
           return 'app/components/' + $stateParams.model + '/' + $stateParams.view + '.html';
-        }
-      })
-      .state('app.module.model.new', {
-        url: '/new',
-        onEnter: function ($stateParams, $state, $uibModal) {
-          $uibModal.open({
-            templateUrl: 'app/components/' + $stateParams.model + '/new.html',
-            size: 'lg',
-            controller: 'FormCtrl'
-          }).result.finally(function() {
-            $state.go('^');
-          });
-        }
-      })
-      .state('app.module.model.show', {
-        url: '/:id',
-        onEnter: function ($stateParams, $state, $uibModal) {
-          $uibModal.open({
-            templateUrl: 'app/components/' + $stateParams.model + '/show.html',
-            size: 'lg',
-            controller: 'FormCtrl'
-          }).result.finally(function() {
-            $state.go('^');
-          });
         }
       });
   })

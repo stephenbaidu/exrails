@@ -57,12 +57,13 @@ namespace :exrails do
     dir = File.join(components_dir, klass.name.pluralize.underscore.dasherize)
     Dir.mkdir(dir) unless File.directory?(dir)
 
-    # Generate views: index.html, new.html, show.html, edit.html
-    ['index', 'new', 'show', 'uploads', 'bulk'].each do |action|
+    # Generate views: index.html, new.html, show.html, bulk.html, uploads.html
+    ['index', 'new', 'show'].each do |action|
       file_path = File.join(dir, "#{action}.html")
       File.open(file_path, 'w') do |file|
         file_content = ng_component_files_tpl[action.to_sym]
         file_content.gsub! '/* MODELNAME */', klass.name
+        file_content.gsub! '/* MODELROUTE */', klass.name.underscore.pluralize
         file.write(file_content)
       end unless File.exists?(file_path)
     end
@@ -152,58 +153,57 @@ namespace :exrails do
     data = {}
 
     data[:index] = <<-eos
-<div ng-include="partials.header"></div>
-<div ng-if="state.isIndex">
+<div ng-controller="IndexCtrl as vm" ng-init="vm.initRoute('/* MODELROUTE */')">
+  <div ng-include="partials.header"></div>
   <div ng-include="partials.searchForm"></div>
-</div>
-<div class="row model-container">
-  <div ng-show="state.showIndex" class="col-md-12">
-    <div ng-include="partials.indexGrid"></div>
-    <div ng-include="partials.loadMoreButton"></div>
-  </div>
-  <div ng-hide="state.hideNameGrid" class="col-md-4 hidden-sm hidden-xs">
-    <div ng-include="partials.nameGrid"></div>
-    <div ng-include="partials.loadMoreButton"></div>
-  </div>
-  <div ng-hide="state.showIndex" ng-class="{'col-md-8': !state.isBulk, 'col-md-12': state.isBulk}">
-    <div ng-if="!state.hideFormNav" ng-include="partials.formNav" style="margin-bottom: 6px;"></div>
-    <div ui-view></div>
+  <div class="row model-container">
+    <div ng-show="state.showIndex" class="col-md-12">
+      <div ng-include="partials.indexGrid"></div>
+      <div ng-include="partials.loadMoreButton"></div>
+    </div>
+    <div ng-hide="state.hideNameGrid" class="col-md-4 hidden-sm hidden-xs">
+      <div ng-include="partials.indexGridName"></div>
+      <div ng-include="partials.loadMoreButton"></div>
+    </div>
+    <div ng-hide="state.showIndex" ng-class="{'col-md-8': !state.hideNameGrid, 'col-md-12': state.hideNameGrid}">
+      <div ui-view></div>
+    </div>
   </div>
 </div>
 <div ng-controller="/* MODELNAME */Ctrl"></div>
     eos
 
     data[:new] = <<-eos
-<div class="modal-header">
-  <button type="button" class="close" ng-click="close()" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <h4 class="modal-title">
-    {{ schema.title }}
-  </h4>
-</div>
-<div class="modal-body">
-  <div ng-include="partials.formlyForm"></div>
-</div>
-<div class="modal-footer">
-  <div ng-include="partials.formNewButtons"></div>
+<div ng-controller="FormCtrl as vm" ng-init="vm.initRoute('/* MODELROUTE */')">
+  <div class="modal-header">
+    <div ng-include="partials.closeButton"></div>
+    <h4 class="modal-title">
+      {{ vm.schema.title }}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div ng-include="partials.formlyForm"></div>
+  </div>
+  <div class="modal-footer">
+    <div ng-include="partials.formNewButtons"></div>
+  </div>
 </div>
     eos
 
     data[:show] = <<-eos
-<div class="modal-header">
-  <button type="button" class="close" ng-click="close()" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  <h4 class="modal-title">
-    {{ schema.title }}
-  </h4>
-</div>
-<div class="modal-body">
-  <div ng-include="partials.formlyForm"></div>
-</div>
-<div class="modal-footer">
-  <div ng-include="partials.formShowButtons"></div>
+<div ng-controller="FormCtrl as vm" ng-init="vm.initRoute('/* MODELROUTE */')">
+  <div class="modal-header">
+    <div ng-include="partials.closeButton"></div>
+    <h4 class="modal-title">
+      {{ vm.schema.title }}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div ng-include="partials.formlyForm"></div>
+  </div>
+  <div class="modal-footer">
+    <div ng-include="partials.formShowButtons"></div>
+  </div>
 </div>
     eos
 
@@ -219,15 +219,18 @@ namespace :exrails do
     eos
 
     data[:bulk] = <<-eos
-<div style="margin-bottom: 6px;">
-  <div ng-include="partials.bulkNav"></div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ schema.title }} Data Upload</h3>
+<div ng-controller="BulkCtrl as vm" ng-init="vm.initRoute('/* MODELROUTE */')">
+  <div class="modal-header">
+    <div ng-include="partials.closeButton"></div>
+    <h4 class="modal-title">
+      {{ vm.schema.title }} Data Upload
+    </h4>
   </div>
-  <div class="panel-body" style="overflow: auto">
+  <div class="modal-body">
     <div ng-include="partials.bulkGrid"></div>
+  </div>
+  <div class="modal-footer">
+      <div ng-include="partials.bulkNav"></div>
   </div>
 </div>
     eos

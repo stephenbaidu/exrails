@@ -1,52 +1,55 @@
-<div class="modal-header">
-  <div ng-include="partials.modalCloseButton"></div>
-  <h4 class="modal-title">
-    {{ schema.title }}
-  </h4>
-</div>
-<div class="modal-body">
-  <div ng-include="partials.formlyForm"></div>
-  <div ng-show="record.status === 'Locked'" class="row">
-    <div class="col-md-12">
-      <div class="alert alert-danger" role="alert">
-        This user is currently locked.
+<div ng-controller="FormCtrl as vm" ng-init="vm.initRoute('users')">
+  <div class="modal-header">
+    <div ng-include="partials.closeButton"></div>
+    <h4 class="modal-title">
+      {{ vm.schema.title }}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div ng-include="partials.formlyForm"></div>
+    <div ng-show="vm.record.status === 'Locked'" class="row">
+      <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+          This user is currently locked.
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button ng-show="formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="close()">
-    <span class="glyphicon glyphicon-remove"></span>
-    Close
-  </button>
-  <button ng-show="hasUpdateAccess() && formly.options.formState.readOnly" class="btn btn-info btn-sm" ng-click="edit()">
-    <span class="glyphicon glyphicon-pencil"></span>
-    Edit
-  </button>
-  <button ng-hide="formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="cancelEdit()">
-    <span class="glyphicon glyphicon-remove"></span>
-    Cancel
-  </button>
-  <button ng-show="hasUpdateAccess() && !formly.options.formState.readOnly" ng-disabled="action.updating" class="btn btn-info btn-sm" ng-click="save()">
-    <span class="glyphicon glyphicon-ok"></span>
-    {{ (action.updating)? "Updating..." : "Update" }}
-  </button>
-  <div class="pull-left">
-    <button ng-show="hasUpdateAccess() && !formly.options.formState.readOnly && record.status === 'Active'" ng-disabled="action.locking" class="btn btn-warning btn-sm" ng-click="lockUser()">
+  <div class="modal-footer">
+    <div class="pull-left">
+      <button ng-show="vm.hasUpdateAccess() && !vm.formly.options.formState.readOnly && vm.record.status === 'Active'" ng-disabled="vm.action.locking" class="btn btn-warning btn-sm" ng-click="vm.lockUser()">
+        <span class="glyphicon glyphicon-ok"></span>
+        {{ (vm.action.locking)? "Locking..." : "Lock User" }}
+      </button>
+      <button ng-show="vm.hasUpdateAccess() && !vm.formly.options.formState.readOnly && vm.record.status === 'Locked'" ng-disabled="vm.action.unlocking" class="btn btn-success btn-sm" ng-click="vm.unlockUser()">
+        <span class="glyphicon glyphicon-ok"></span>
+        {{ (vm.action.unlocking)? "Unlocking..." : "Unlock User" }}
+      </button>
+      <button ng-show="vm.hasUpdateAccess() && !vm.formly.options.formState.readOnly" ng-disabled="vm.action.updating" class="btn btn-primary btn-sm" ng-click="vm.resetPassword()">
+        <span class="glyphicon glyphicon-ok"></span>
+        {{ (vm.action.updating)? "Reseting..." : "Reset Password" }}
+      </button>
+      <button ng-show="vm.hasDeleteAccess() && !vm.formly.options.formState.readOnly" ng-disabled="vm.action.deleting" class="btn btn-danger btn-sm" ng-click="vm.delete(vm.record.id)">
+        <span class="fa fa-trash"></span>
+        {{ (vm.action.deleting)? "Deleting..." : "Delete" }}
+      </button>
+    </div>
+    <button ng-show="vm.formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="vm.close()">
+      <span class="glyphicon glyphicon-remove"></span>
+      Close
+    </button>
+    <button ng-show="vm.hasUpdateAccess() && vm.formly.options.formState.readOnly" class="btn btn-info btn-sm" ng-click="vm.edit()">
+      <span class="glyphicon glyphicon-pencil"></span>
+      Edit
+    </button>
+    <button ng-hide="vm.formly.options.formState.readOnly" class="btn btn-default btn-sm" ng-click="vm.cancelEdit()">
+      <span class="glyphicon glyphicon-remove"></span>
+      Cancel
+    </button>
+    <button ng-show="vm.hasUpdateAccess() && !vm.formly.options.formState.readOnly" ng-disabled="vm.action.updating" class="btn btn-info btn-sm" ng-click="vm.save()">
       <span class="glyphicon glyphicon-ok"></span>
-      {{ (action.locking)? "Locking..." : "Lock User" }}
+      {{ (vm.action.updating)? "Updating..." : "Update" }}
     </button>
-    <button ng-show="hasUpdateAccess() && !formly.options.formState.readOnly && record.status === 'Locked'" ng-disabled="action.unlocking" class="btn btn-success btn-sm" ng-click="unlockUser()">
-      <span class="glyphicon glyphicon-ok"></span>
-      {{ (action.unlocking)? "Unlocking..." : "Unlock User" }}
-    </button>
-    <button ng-show="hasUpdateAccess() && !formly.options.formState.readOnly" ng-disabled="action.updating" class="btn btn-primary btn-sm" ng-click="resetPassword()">
-      <span class="glyphicon glyphicon-ok"></span>
-      {{ (action.updating)? "Reseting..." : "Reset Password" }}
-    </button>
-    <button ng-show="hasDeleteAccess() && !formly.options.formState.readOnly" ng-disabled="action.deleting" class="btn btn-danger btn-sm" ng-click="delete(record.id)">
-      <span class="fa fa-trash"></span>
-      {{ (action.deleting)? "Deleting..." : "Delete" }}
-    </button>
+    <div class="clearfix"></div>
   </div>
 </div>

@@ -5,19 +5,13 @@
       <th ng-repeat="field in vm.grid">
         {{ vm.schema.properties[field].title }}
       </th>
-      <th class="grid-action-1"></th>
     </tr>
   </thead>
-  <tbody data-link="row" class="rowlink">
+  <tbody class="rowlink">
     <tr ng-repeat="rec in vm.records | filter:vm.action.filterText">
       <td>{{ $index + 1 }}.</td>
       <td ng-repeat="field in vm.grid">
         {{ vm.fieldData(rec, field) }}
-      </td>
-      <td class="nav-arrow">
-        <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
-          <span class="fa fa-lg fa-chevron-right"></span>
-        </a>
       </td>
     </tr>
   </tbody>

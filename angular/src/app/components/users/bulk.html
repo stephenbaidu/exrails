@@ -1,11 +1,14 @@
-<div style="margin-bottom: 6px;">
-  <div ng-include="partials.bulkNav"></div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">{{ schema.title }} Data Upload</h3>
+<div ng-controller="BulkCtrl as vm" ng-init="vm.initRoute('users')">
+  <div class="modal-header">
+    <div ng-include="partials.closeButton"></div>
+    <h4 class="modal-title">
+      {{ vm.schema.title }} Data Upload
+    </h4>
   </div>
-  <div class="panel-body" style="overflow: auto">
+  <div class="modal-body">
     <div ng-include="partials.bulkGrid"></div>
+  </div>
+  <div class="modal-footer">
+      <div ng-include="partials.bulkNav"></div>
   </div>
 </div>
