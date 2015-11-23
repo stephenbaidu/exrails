@@ -25,6 +25,9 @@ Rails.application.routes.draw do
     }, :constraints => {
       :format => /(html|csv|pdf)/
     }
+    
+    # Dashboard
+    get 'dashboard/:action'  => 'dashboard#:action'
   end
 
   # You can have the root of your site routed with "root"
