@@ -74,16 +74,21 @@ angular.module('angularApp')
       vm.modelName = resourceManager.getName(modelName || $stateParams.table);
       vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + $stateParams.table.replace(/-/gi, '_') + '/:id');
       loadConfig();
-      vm.masterRecordId = masterRecordId;
     }
 
     function loadConfig () {
       $http.get(APP.apiPrefix + 'config/' + vm.model.url)
         .success(function (data) {
           vm.schema = data.schema;
-          vm.upload.matchFields = _.map(vm.schema.properties, function (value, key) {
-            return { key: key, title: value.title };
-          });
+          vm.upload.matchFields = _.chain(vm.schema.properties)
+            .map(function (value, key) {
+              return { key: key, title: value.title };
+            })
+            .filter(function (field) {
+              return (['created_at', 'updated_at'].indexOf(field.key) < 0);
+            })
+            .value();
+
           $rootScope.$broadcast('model:bulk-config-loaded', vm.model.name, data, $scope);
         })
         .error(function(data, status, headers, config) {
