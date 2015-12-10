@@ -5,34 +5,26 @@ angular.module('angularApp')
       confirmationSuccessUrl:  window.location.href.split('#')[0],
     });
   })
-  .factory('auth401Interceptor', function($q, $location){
+  .factory('responseInterceptor', function($q, $location){
     return {
       responseError: function(rejection) {
         if (rejection.status === 401) {
           $location.path('/login');
         }
-        return $q.reject(rejection);
-      }
-    }
-  })
-  .config(function($httpProvider) {
-    $httpProvider.interceptors.push('auth401Interceptor');
-  })
-  .factory('auth404Interceptor', function($q, $location, exMsg){
-    return {
-      responseError: function(rejection) {
-        if (rejection.status === 404) {
-          exMsg.sweetAlert('Invalid request', '', 'error')
+        else if (rejection.status === 404) {
+          // exMsg.sweetAlert('Invalid request', '', 'error')
         }
         return $q.reject(rejection);
       }
     }
   })
   .config(function($httpProvider) {
-    $httpProvider.interceptors.push('auth404Interceptor');
-  }).factory('$exceptionHandler', function() {
+    $httpProvider.interceptors.push('responseInterceptor');
+  })
+  .factory('$exceptionHandler', function() {
     return function(exception, cause) {};
-  }).run(function(editableOptions) {
+  })
+  .run(function(editableOptions) {
     editableOptions.theme = 'bs3';
   })
   .config(function(cfpLoadingBarProvider) {

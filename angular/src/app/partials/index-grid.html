@@ -2,20 +2,29 @@
   <thead>
     <tr>
       <th class='grid-action-1'></th>
-      <th ng-repeat="field in vm.grid">
-        {{ vm.schema.properties[field].title }}
+      <th ng-show="state.collapsedGridMode">
+        {{ vm.collapsedColumn.title }}
       </th>
-      <th class="grid-action-1"></th>
+      <th ng-hide="state.collapsedGridMode" ng-repeat="column in vm.columns">
+        {{ column.title }}
+      </th>
+      <th ng-if="vm.options.openable" class="grid-action-1"></th>
     </tr>
   </thead>
-  <tbody data-link="row" class="rowlink">
-    <tr ng-repeat="rec in vm.records | filter:vm.action.filterText">
+  <tbody data-link="{{vm.options.openable? 'row':''}}" class="rowlink">
+    <tr ng-repeat="rec in vm.records | filter:vm.action.filterText" ng-class="{active: (rec.id === vm.paging.currentId) && state.collapsedGridMode}">
       <td>{{ $index + 1 }}.</td>
-      <td ng-repeat="field in vm.grid">
-        {{ vm.fieldData(rec, field) }}
+      <td ng-show="state.collapsedGridMode">
+        {{ vm.columnData(rec, vm.collapsedColumn) }}
       </td>
-      <td class="nav-arrow">
-        <a href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
+      <td ng-hide="state.collapsedGridMode" ng-repeat="column in vm.columns">
+        {{ vm.columnData(rec, column) }}
+      </td>
+      <td ng-if="vm.options.openable" class="nav-arrow">
+        <a ng-if="!vm.options.popable" href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
+          <span class="fa fa-lg fa-chevron-right"></span>
+        </a>
+        <a ng-if="vm.options.popable" href="#" ui-sref=".showPop({id: rec.id})" tooltip-placement="left" tooltip="View">
           <span class="fa fa-lg fa-chevron-right"></span>
         </a>
       </td>

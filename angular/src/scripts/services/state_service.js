@@ -17,8 +17,6 @@ angular.module('angularApp')
       isShowPop: false,
       isView: false,
       isBulk: false,
-      showIndex: true,
-      hideNameGrid: false,
       update: function (state) {
         if (!state) return;
         
@@ -29,8 +27,8 @@ angular.module('angularApp')
         this.isShowPop = (state.name === 'app.module.model.showPop');
         this.isView    = (state.name === 'app.module.model.view');
         this.isBulk    = (state.name === 'app.module.model.bulk');
-        this.showIndex    = (this.isIndex || this.isNewPop || this.isShowPop);
-        this.hideNameGrid = (this.showIndex || this.isBulk);
+        this.showGrid = (this.isIndex || this.isNew || this.isNewPop || this.isShow || this.isShowPop);
+        this.collapsedGridMode = (this.isNew || this.isShow);
       }
     };
 

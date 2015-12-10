@@ -21,27 +21,13 @@ angular.module('angularApp')
     vm.recordId  = null;
     vm.record = {};
     vm.action = { loading: true, saving: false, updating: false };
-    vm.schema = {};
 
     vm.init = function (modelName, recordId) {
       vm.modelName = modelName;
       vm.model = resourceManager.register(modelName, APP.apiPrefix + modelName.replace(/-/gi, '_') + '/:id');
-      vm.loadConfig();
       vm.recordId = recordId;
       vm.loadRecord(recordId);
     }
-
-    vm.loadConfig = function () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.schema  = data.schema;
-          $rootScope.$broadcast('model:uploads-config-loaded', vm.model.name, data, vm);
-          vm.setRecord();
-        })
-        .error(function(data, status, headers, config) {
-          exMsg.error('error');
-        });
-    };
 
     vm.loadRecord = function (recordId) {
       if(!recordId) { return; }
@@ -53,7 +39,7 @@ angular.module('angularApp')
         .then(function (data) {
           vm.record = data;
           vm.sanitizeRecord();
-          $rootScope.$broadcast('model:record-loaded', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('exui:record-loaded', vm.model.name, vm.record, vm);
           vm.action.loading = false;
         })
         .catch(function (error) {
@@ -66,7 +52,7 @@ angular.module('angularApp')
       return vm.hasAccess(vm.model.name + ':update');
     }
 
-    vm.$on('model:reload-record', function(evt, modelName, record) {
+    vm.$on('exui:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord(vm.record.id);
       }
@@ -85,7 +71,7 @@ angular.module('angularApp')
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
         });
-        $rootScope.$broadcast('model:record-set', vm.model.name, vm.record, vm);
+        $rootScope.$broadcast('exui:record-set', vm.model.name, vm.record, vm);
       }
     };
 

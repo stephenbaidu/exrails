@@ -8,10 +8,9 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $q, $http, APP, resourceManager, $filter, exMsg, byValueFilter, dateFilter, reportService, lookupService, byIdFilter, gridService, authService) {
+  .controller('IndexCtrl', function ($scope, $rootScope, $state, $stateParams, $http, APP, resourceManager, $filter, exMsg, byValueFilter, reportService, lookupService, schemaService, authService) {
     var vm = this;
     $scope.vmRef = vm;
-    window.indexCtrl = vm;
 
     vm.model = {};
     vm.modelName = null;
@@ -20,8 +19,6 @@ angular.module('angularApp')
     vm.currentRecord = {};
     vm.searchQuery = null;
     vm.action = { loading: false, searching: false, deleting: false };
-    vm.schema = {};
-    vm.grid = [];
     vm.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
@@ -30,11 +27,17 @@ angular.module('angularApp')
       currentId: 0,
       nextId: 0
     };
+    vm.columns = [];
+    vm.collapsedColumn = {};
+    vm.options = { openable: true, popable: true, collapsible: true };
 
     vm.initRoute = initRoute;
+    vm.configure = configure;
+    vm.column = column;
+    vm.setCollapsedColumn = setCollapsedColumn;
     vm.queryRecords = queryRecords;
-    vm.fieldData = fieldData;
-    vm.polishRecord = polishRecord;
+    vm.columnData = columnData;
+    vm.lookupData = lookupData;
     vm.updateRecords = updateRecords;
     vm.updateRecordInRecords = updateRecordInRecords;
     vm.removeRecordInRecords = removeRecordInRecords;
@@ -44,7 +47,7 @@ angular.module('angularApp')
     vm.toCSV = toCSV;
 
     // Search related
-    vm.search = { fields: [], inputType: '', params: {}, queries: {} };
+    vm.search = { fields: [], params: {}, queries: {} };
     vm.initSearch = initSearch;
     vm.getQueryParams = getQueryParams;
     vm.buildSearchQueries = buildSearchQueries;
@@ -52,24 +55,6 @@ angular.module('angularApp')
     vm.clearSearchParams = clearSearchParams;
     vm.removeSearchParam = removeSearchParam;
     vm.doSearch = doSearch;
-
-    // Reinitialize searchValue if inputType is date
-    $scope.$watch('vm.search.searchField', function () {
-      if (!vm.search.searchField) return;
-
-      if (vm.search.searchField.inputType === 'date') {
-        vm.search.searchValue = {startDate: moment().endOf('day'), endDate: moment().endOf('day')};
-      }
-    });
-
-    $scope.$on('model:do-search', function (evt, modelName, queryParams) {
-      if (modelName === vm.modelName) {
-        vm.recordsHash = {};
-        vm.records = [];
-        vm.paging.currentPage = 1;
-        vm.queryRecords(1, 1000, queryParams);
-      }
-    });
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
       updateFABActions();
@@ -79,7 +64,7 @@ angular.module('angularApp')
       updateFABActions();
     });
 
-    $scope.$on('model:record-loaded', function (e, modelName, record) {
+    $scope.$on('exui:record-loaded', function (e, modelName, record) {
       if(vm.model.name != modelName) return;
 
       vm.currentRecord = record;
@@ -87,7 +72,7 @@ angular.module('angularApp')
       vm.updateRecordInRecords(record);
     });
 
-    $scope.$on('model:record-created', function (evt, modelName, record) {
+    $scope.$on('exui:record-created', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.records.unshift(angular.copy(record));
         vm.recordsHash[record.id] = true;
@@ -95,13 +80,13 @@ angular.module('angularApp')
       }
     });
 
-    $scope.$on('model:record-updated', function (evt, modelName, record) {
+    $scope.$on('exui:record-updated', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.updateRecordInRecords(record);
       }
     });
 
-    $scope.$on('model:record-deleted', function (evt, modelName, record) {
+    $scope.$on('exui:record-deleted', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.removeRecordInRecords(record);
       }
@@ -112,25 +97,51 @@ angular.module('angularApp')
       vm.reload();
     });
 
-    function initRoute (routeName, modelName) {
-      vm.modelName = modelName || resourceManager.getName(routeName);
+    function initRoute (routeName, options) {
+      options = options || {};
+      vm.modelName = options.name || resourceManager.getName(routeName);
+      window[vm.modelName + 'IndexCtrl'] = vm;
       vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + routeName + '/:id');
-      vm.grid = gridService.get(vm.model.key);
-      loadConfig();
+
+      lookupService.load(vm.model.key, options.lookups).then(function () {
+        initSearch();
+        $rootScope.$broadcast('exui:index-ready', vm.model.name, vm, $scope);
+      });
     }
 
-    function loadConfig () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.lookups = data.lookups;
-          vm.schema = data.schema;
-          vm.initSearch();
-          $rootScope.$broadcast('model:index-config-loaded', vm.model.name, data, $scope);
-        })
-        .error(function(data, status, headers, config) {
-          // exMsg.error('error');
-        });
-    };
+    function configure (options) {
+      vm.options = _.merge(vm.options, options);
+    }
+
+    function column (name, title, filter, filterParam) {
+      if (!name) return;
+
+      title = title || _.startCase(name);
+
+      vm.columns.push({
+        name: name,
+        title: title,
+        filter: filter,
+        filterParam: filterParam
+      });
+
+      if (!vm.collapsedColumn.name) {
+        vm.collapsedColumn = _.last(vm.columns);
+      }
+    }
+
+    function setCollapsedColumn (name, title, filter, filterParam) {
+      if (!name) return;
+
+      title = title || _.startCase(name);
+
+      vm.collapsedColumn = {
+        name: name,
+        title: title,
+        filter: filter,
+        filterParam: filterParam
+      };
+    }
 
     function updateFABActions () {
       if (!$scope.state.isIndex) return;
@@ -183,7 +194,7 @@ angular.module('angularApp')
         })
         .then(function (data) {
           vm.updateRecords(data);
-          $rootScope.$broadcast('model:records-loaded', vm.model.name, vm.records, $scope);
+          $rootScope.$broadcast('exui:records-loaded', vm.model.name, vm.records, $scope);
         })
         .catch(function (error) {
           console.log(error);
@@ -210,33 +221,20 @@ angular.module('angularApp')
       return authService.hasDeleteAccess(vm.model.name);
     }
 
-    function fieldData (record, field) {
-      var property = vm['schema']['properties'][field];
-      var lookup = (property && property.lookup) || false;
-      var value  = record[field];
+    function columnData (record, column) {
+      if (!column) return '';
 
-      if (!!lookup) {
-        return byValueFilter(vm.lookups[lookup], value).name;
-      } else if(property.type === 'date') {
-        return dateFilter(value);
-      } else if(property.type === 'datetime') {
-        return dateFilter(value, 'yyyy-MM-dd HH:mm:ss');
+      var value = record[column.name];
+
+      if (column.filter) {
+        value = $filter(column.filter)(value, column.filterParam);
       }
-      
+
       return value;
     }
 
-    function polishRecord (record) {
-      if (!record || !record.id) return;
-
-      lookupService.load(vm.model.key).then(function (response) {
-        var lookups = response.data;
-        angular.forEach(vm.schema.properties, function (value, key) {
-          if (value.lookup && lookups[value.lookup] && !record[value.lookup]) {
-            record[value.lookup] = byValueFilter(lookups[value.lookup], record[key]);
-          }
-        });
-      });
+    function lookupData(lookupName) {
+      return lookupService.get(lookupName);
     }
 
     function updateRecords (records) {
@@ -244,7 +242,6 @@ angular.module('angularApp')
         if (!vm.recordsHash[record.id]) {
           vm.records.push(record);
           vm.recordsHash[record.id] = true;
-          vm.polishRecord(record);
         }
       });
     }
@@ -256,7 +253,6 @@ angular.module('angularApp')
 
       if (recordIndex >= 0) {
         vm.records[recordIndex] = angular.copy(record);
-        vm.polishRecord(vm.records[recordIndex]);
       }
     }
 
@@ -290,14 +286,14 @@ angular.module('angularApp')
     }
 
     function toCSV () {
-      var columns = _.chain(vm.grid)
+      var columns = _.chain(vm.columns)
         .map(function (e) {
-          return {key: e, title: vm.schema.properties[e].title}
+          return {key: e.name, title: e.title}
         }).value();
       var reportData = _.map(vm.records, function (rec) {
         var data = {};
-        _.each(vm.grid, function (e) {
-          data[e] = vm.fieldData(rec, e) || '';
+        _.each(vm.columns, function (e) {
+          data[e.name] = vm.columnData(rec, e) || '';
         });
 
         return data;
@@ -308,17 +304,17 @@ angular.module('angularApp')
     };
 
     function toPDF () {
-      var columns = _.chain(vm.grid)
+      var columns = _.chain(vm.columns)
         .map(function (e) {
-          return {key: e, title: vm.schema.properties[e].title}
+          return {key: e.name, title: e.title}
         }).value();
-      // Add no column
+      // Add number column
       columns.unshift({key: 'no', title: 'No'});
       var reportData = _.map(vm.records, function (rec, index) {
         var data = {};
         data['no'] = index + 1;
-        _.each(vm.grid, function (e) {
-          data[e] = vm.fieldData(rec, e) || '';
+        _.each(vm.columns, function (e) {
+          data[e.name] = vm.columnData(rec, e) || '';
         });
 
         return data;
@@ -331,18 +327,7 @@ angular.module('angularApp')
 
     // Search related
     function initSearch () {
-      vm.search.fields = _.map(vm.schema.properties, function(value, key) {
-        value.key = key;
-        value.inputType = 'text';
-
-        if (value.type === 'string' && value.format === 'date') {
-          value.inputType = 'date';
-        } else if (value.type === 'number' && value.items) {
-          value.inputType = 'select';
-        }
-
-        return value;
-      });
+      vm.search.fields = schemaService.get(vm.model.key).properties;
       vm.search.dateRange = {startDate: moment().startOf('month'), endDate: moment().endOf('month')};
     }
 
@@ -351,13 +336,13 @@ angular.module('angularApp')
         var field = _.findWhere(vm.search.fields, {key: key});
         if (!field) return memo;
 
-        if (field.inputType === 'date') {
+        if (field.format === 'date') {
           memo[key + '.between'] = _.map(value, function (val) {
             return val.startDate.toISOString() + '|' + val.endDate.toISOString();
           }).join('||');
-        } else if (field.inputType === 'select') {
+        } else if (field.format === 'select') {
           memo[key + '.in'] = value.join();
-        } else if (field.inputType === 'text') {
+        } else if (field.format === 'text') {
           memo[key + '.like'] = value.join('|');
         }
 
@@ -380,13 +365,9 @@ angular.module('angularApp')
 
         var queryVal = field.title + ': ';
 
-        if (field.inputType === 'select') {
-          var vals = _.map(value, function (val) {
-            var item = _.findWhere(field.items, {value: val}) || {};
-            return item.label;
-          });
-          queryVal = queryVal + _.uniq(vals);
-        } else if (field.inputType === 'date') {
+        if (field.format === 'select') {
+          queryVal = queryVal + $filter('lookup')(value, field.lookup, true);
+        } else if (field.format === 'date') {
           var vals = _.map(value, function (val) {
             var startDate = new Date(val.startDate).toISOString().slice(0, 10);
             var endDate   = new Date(val.endDate).toISOString().slice(0, 10);
@@ -436,6 +417,9 @@ angular.module('angularApp')
     }
     
     function doSearch () {
-      $rootScope.$broadcast('model:do-search', vm.modelName, vm.getQueryParams());
+      vm.recordsHash = {};
+      vm.records = [];
+      vm.paging.currentPage = 1;
+      vm.queryRecords(1, 1000, vm.getQueryParams());
     }
   });

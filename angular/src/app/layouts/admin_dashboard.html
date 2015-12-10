@@ -23,9 +23,13 @@
         </div>
         <div class="panel-body">
           <div ng-controller="IndexCtrl as vm" ng-init="vm.initRoute('users')">
-            <div ng-init="vm.grid=['name', 'email']"></div>
             <div ng-init="vm.paging.recordsPerPage=5"></div>
-            <div ng-include="partials.indexGridNoLink"></div>
+            <div ng-init="vm.configure({openable: false})"></div>
+            <div ng-init="vm.column('name')"></div>
+            <div ng-init="vm.column('email')"></div>
+            <div class="col-md-12">
+              <div ng-include="partials.indexGrid"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -37,9 +41,13 @@
         </div>
         <div class="panel-body">
           <div ng-controller="IndexCtrl as vm" ng-init="vm.initRoute('roles')">
-            <div ng-init="vm.grid=['name', 'status']"></div>
             <div ng-init="vm.paging.recordsPerPage=5"></div>
-            <div ng-include="partials.indexGridNoLink"></div>
+            <div ng-init="vm.configure({openable: false})"></div>
+            <div ng-init="vm.column('name')"></div>
+            <div ng-init="vm.column('permissions', 'Permissions', 'size')"></div>
+            <div class="col-md-12">
+              <div ng-include="partials.indexGrid"></div>
+            </div>
           </div>
         </div>
       </div>

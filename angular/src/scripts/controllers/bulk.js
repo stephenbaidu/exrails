@@ -8,17 +8,15 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('BulkCtrl', function ($scope, $rootScope, APP, exMsg, $stateParams, $state, $http, $translate, resourceManager, XLSXReaderService) {
+  .controller('BulkCtrl', function ($scope, $rootScope, APP, exMsg, $stateParams, $state, $http, $translate, resourceManager, schemaService, XLSXReaderService) {
     var vm = this;
     $scope.vmRef = vm;
-    window.bulkCtrl = vm;
 
     vm.model     = {};
     vm.routeName = null;
-    vm.masterRecordId  = null;
+    vm.masterRecordId = null;
     vm.modelName = null;
     vm.action = { loading: true, saving: false, updating: false };
-    vm.schema = {};
 
     vm.upload = {};
     vm.upload.matchedFields = {};
@@ -51,10 +49,10 @@ angular.module('angularApp')
 
       vm.upload.selectedHeaders = _.chain(rows[0]).keys().pull('$$hashKey').value();
       vm.upload.records = rows;
-      $rootScope.$broadcast('model:bulk-automatch-fields', vm.model.name, {}, $scope);
+      $rootScope.$broadcast('exui:bulk-automatch-fields', vm.model.name, {}, $scope);
     });
 
-    $scope.$on('model:bulk-automatch-fields', function (evt, modelName, config, scope) {
+    $scope.$on('exui:bulk-automatch-fields', function (evt, modelName, config, scope) {
       if (vm.model.name !== modelName) return;
 
       scope.vmRef.upload.matchedFields = {};
@@ -68,39 +66,30 @@ angular.module('angularApp')
       });
     });
 
-    function initRoute (routeName, modelName) {
+    function initRoute (routeName, options) {
+      options = options || {};
       vm.routeName = routeName;
       vm.masterRecordId = $stateParams.id;
-      vm.modelName = resourceManager.getName(modelName || $stateParams.table);
+      vm.modelName = resourceManager.getName(options.table || $stateParams.table);
+      // vm.modelName = resourceManager.getName(modelName || $stateParams.table);
+      window[vm.modelName + 'BulkCtrl'] = vm;
       vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + $stateParams.table.replace(/-/gi, '_') + '/:id');
-      loadConfig();
-    }
-
-    function loadConfig () {
-      $http.get(APP.apiPrefix + 'config/' + vm.model.url)
-        .success(function (data) {
-          vm.schema = data.schema;
-          vm.upload.matchFields = _.chain(vm.schema.properties)
-            .map(function (value, key) {
-              return { key: key, title: value.title };
-            })
-            .filter(function (field) {
-              return (['created_at', 'updated_at'].indexOf(field.key) < 0);
-            })
-            .value();
-
-          $rootScope.$broadcast('model:bulk-config-loaded', vm.model.name, data, $scope);
+      // loadConfig();
+      vm.upload.matchFields = _.chain(schemaService.get(vm.model.key).properties)
+        .map(function (value, key) {
+          return { key: key, title: value.title };
         })
-        .error(function(data, status, headers, config) {
-          exMsg.error('error');
-        });
-    };
+        .filter(function (field) {
+          return (['created_at', 'updated_at'].indexOf(field.key) < 0);
+        })
+        .value();
+      $rootScope.$broadcast('exui:bulk-view-ready', vm.model.name, {}, $scope);
+    }
 
     function bulkUpload () {
       var data = _.map(vm.upload.records, function (record) {
         var rec = {};
         _.each(vm.upload.matchedFields, function (field, column) {
-          // console.log(column, record, field, rec[field]);
           rec[field] = record[column];
         });
         return rec;

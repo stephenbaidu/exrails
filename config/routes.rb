@@ -5,9 +5,7 @@ Rails.application.routes.draw do
   scope 'api' do
     mount_devise_token_auth_for 'User', at: 'auth'
 
-    get 'config/:model'  => 'config#show'
-    get 'lookups/:model' => 'config#lookups'
-    get 'schema/:model'  => 'config#schema'
+    get 'lookups/:model' => 'lookups#show'
 
     resources :users do
       post 'send_confirmation_instructions', on: :collection

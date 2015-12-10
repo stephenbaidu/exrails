@@ -1,17 +1,18 @@
 
 angular.module('angularApp')
   .controller('UserCtrl', function ($scope, APP, $http, exMsg) {
-    var vm = $scope;
-
-    vm.$on('model:index-config-loaded', function (evt, modelName, config, scope) {
+    
+    $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
+      if (modelName !== 'User') return;
       // Do something
     });
 
-    vm.$on('model:form-config-loaded', function (evt, modelName, config, scope) {
+    $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
+      if (modelName !== 'User') return;
       // Do something
     });
 
-    vm.$on('model:record-loaded', function (evt, modelName, record, scope) {
+    $scope.$on('exui:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== 'User') return;
 
       scope.vmRef.lockUser = function () {
@@ -51,16 +52,9 @@ angular.module('angularApp')
   });
 
 angular.module('angularApp')
-  .run(function (gridService, fieldService) {
-    // Set grid config
-    gridService.set('user', gridConfig());
-
+  .run(function (fieldService) {
     // Set config for angular-formly
     fieldService.set('user', fieldConfig());
-
-    function gridConfig () {
-      return ['name', 'email', 'current_sign_in_at', 'current_sign_in_ip'];
-    }
     
     function fieldConfig () {
       return [
@@ -201,7 +195,7 @@ angular.module('angularApp')
               },
               "controller": /* @ngInject */ function($scope, lookupService) {
                 lookupService.load('user', 'role').then(function() {
-                  $scope.to.options = lookupService.get('user', $scope.to.lookup);
+                  $scope.to.options = lookupService.get($scope.to.lookup);
                 });
               }
             }
@@ -222,5 +216,95 @@ angular.module('angularApp')
           ]
         }
       ];
+    }
+  });
+
+angular.module('angularApp')
+  .run(function (schemaService) {
+    // Set config for json-schema
+    schemaService.set('user', schemaConfig());
+    
+    function schemaConfig () {
+      return {
+        "type": "object",
+        "title": "User",
+        "required": [
+          "name",
+          "email"
+        ],
+        "properties": {
+          "name": {
+            "key": "name",
+            "title": "Name",
+            "type": "string",
+            "format": "text"
+          },
+          "email": {
+            "key": "email",
+            "title": "Email",
+            "type": "string",
+            "pattern": "^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$",
+            "validationMessage": "Should be a correct Email Address",
+            "format": "text"
+          },
+          "role_ids": {
+            "key": "role_ids",
+            "title": "Roles",
+            "type": "array",
+            "default": [],
+            "lookup": "role",
+            "items": [],
+            "format": "select"
+          },
+          "sign_in_count": {
+            "key": "sign_in_count",
+            "title": "Sign In Count",
+            "type": "number",
+            "format": "text"
+          },
+          "current_sign_in_at": {
+            "key": "current_sign_in_at",
+            "title": "Current Sign In At",
+            "type": "datetime",
+            "format": "date"
+          },
+          "last_sign_in_at": {
+            "key": "last_sign_in_at",
+            "title": "Last Sign In At",
+            "type": "datetime",
+            "format": "date"
+          },
+          "current_sign_in_ip": {
+            "key": "current_sign_in_ip",
+            "title": "Current Sign In Ip",
+            "type": "string",
+            "format": "text"
+          },
+          "last_sign_in_ip": {
+            "key": "last_sign_in_ip",
+            "title": "Last Sign In Ip",
+            "type": "string",
+            "format": "text"
+          },
+          "failed_attempts": {
+            "key": "failed_attempts",
+            "title": "Failed Attempts",
+            "type": "number",
+            "format": "text"
+          },
+          "locked_at": {
+            "key": "locked_at",
+            "title": "Locked At",
+            "type": "datetime",
+            "format": "date"
+          },
+          "password_expired_at": {
+            "key": "password_expired_at",
+            "title": "Password Expired At",
+            "type": "datetime",
+            "format": "date"
+          }
+        }
+      };
     }
   });

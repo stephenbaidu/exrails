@@ -1,8 +1,8 @@
-<div ng-controller="FormCtrl as vm" ng-init="vm.initRoute('users')">
+<div ng-controller="FormCtrl as vm" ng-init="vm.initRoute('users', {})">
   <div class="modal-header">
     <div ng-include="partials.closeButton"></div>
     <h4 class="modal-title">
-      {{ vm.schema.title }}
+      {{ vm.model.title }}
     </h4>
   </div>
   <div class="modal-body">

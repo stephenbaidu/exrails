@@ -13,24 +13,24 @@
           </div>
         </div>
         <div class="col-md-5">
-          <input ng-if="vm.search.searchField.inputType === 'text'"
+          <input ng-if="vm.search.searchField.format === 'text'"
             ng-model="vm.search.searchValue" type="text" class="form-control" />
-          <div ng-if="vm.search.searchField.inputType === 'date'" class="form-group has-feedback"
+          <div ng-if="vm.search.searchField.format === 'date'" class="form-group has-feedback"
             ng-init="vm.search.searchValue = [new Date(), new Date()]">
             <input date-range-picker class="form-control date-picker" type="text"
               ng-model="vm.search.searchValue" options="drpOptionsR" />
             <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
           </div>
-          <ui-select ng-if="vm.search.searchField.inputType === 'select'" ng-model="vm.search.searchValue">
+          <ui-select ng-if="vm.search.searchField.format === 'select'" ng-model="vm.search.searchValue">
             <ui-select-match placeholder="{{ vm.search.searchField.placeholder}}">
-              {{$select.selected.label}}
+              {{$select.selected.name}}
             </ui-select-match>
-            <ui-select-choices repeat="item.value as item in vm.search.searchField.items | filter: $select.search">
-              <div ng-bind-html="item.label | highlight: $select.search"></div>
+            <ui-select-choices repeat="item.value as item in vm.lookupData(vm.search.searchField.lookup) | filter: $select.search">
+              <div ng-bind-html="item.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
         </div>
-        <div ng-show="vm.search.searchField.inputType" class="col-md-2">
+        <div ng-show="vm.search.searchField.format" class="col-md-2">
           <button class="btn btn-primary" ng-click="vm.addSearchParam()">
             <span class="fa fa-plus" aria-hidden="true"></span>
           </button>

@@ -1,15 +1,27 @@
 
 angular.module('angularApp')
-  .run(function (gridService, fieldService) {
-    // Set grid config
-    gridService.set('role', gridConfig());
+  .controller('RoleCtrl', function ($scope, APP, $http, exMsg) {
+    
+    $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
+      if (modelName !== 'Role') return;
+      // Do something
+    });
 
+    $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
+      if (modelName !== 'Role') return;
+      // Do something
+    });
+
+    $scope.$on('exui:record-loaded', function (evt, modelName, record, scope) {
+      if (modelName !== 'Role') return;
+      // Do something
+    });
+  });
+
+angular.module('angularApp')
+  .run(function (fieldService) {
     // Set config for angular-formly
     fieldService.set('role', fieldConfig());
-
-    function gridConfig () {
-      return ['name', 'permissions', 'status'];
-    }
     
     function fieldConfig () {
       return [
@@ -50,12 +62,49 @@ angular.module('angularApp')
               },
               "controller": /* @ngInject */ function($scope, lookupService) {
                 lookupService.load('role', 'permission').then(function() {
-                  $scope.to.options = lookupService.get('role', 'permission');
+                  $scope.to.options = lookupService.get('permission');
                 });
               }
             }
           ]
         }
       ];
+    }
+  });
+
+angular.module('angularApp')
+  .run(function (schemaService) {
+    // Set config for json-schema
+    schemaService.set('role', schemaConfig());
+    
+    function schemaConfig () {
+      return {
+        "type": "object",
+        "title": "Role",
+        "required": [
+          "name",
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "key": "name",
+            "title": "Name",
+            "type": "string",
+            "format": "text"
+          },
+          "permissions": {
+            "key": "permissions",
+            "title": "Permissions",
+            "type": "string",
+            "format": "text"
+          },
+          "status": {
+            "key": "status",
+            "title": "Status",
+            "type": "string",
+            "format": "text"
+          }
+        }
+      };
     }
   });

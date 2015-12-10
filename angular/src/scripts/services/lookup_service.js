@@ -8,25 +8,48 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('lookupService', function (APP, $http) {
+  .service('lookupService', function (APP, $http, $q) {
     var lookups = {};
-    return {
-      get: function (modelName, lookupName) {
-        if (!lookups[modelName]) {
+    var loadedModels = {};
+    var lookupSVC = {
+      get: function (lookupName, modelName) {
+        if (modelName && !lookupSVC.loaded(modelName)) {
           this.load(modelName);
         }
-        return lookups[modelName][lookupName];
+        return lookups[lookupName] || [];
       },
-      load: function(modelName, models) {
+      update: function (data, modelName) {
+        if (modelName) {
+          loadedModels[modelName] = true;
+        }
+        _.each(data, function (value, key) {
+          lookups[key] = value;
+        });
+      },
+      load: function (modelName, lookups, forceLoad) {
+        var d = $q.defer();
+
+        if (lookupSVC.loaded(modelName) && !forceLoad) {
+          d.resolve(true);
+        }
+
         var url = APP.apiPrefix + 'lookups/' + modelName;
-        return $http.get(url, {
-            cache: true,
-            params: { models: models }
-          })
+        $http.get(url, {cache: true, params: { lookups: lookups } })
           .success(function (data) {
-            lookups[modelName] = data;
-            return data;
+            lookupSVC.update(data, modelName);
+            console.log();
+            d.resolve(true);
           });
+        
+        return d.promise;
+      },
+      loaded: function (modelName) {
+        return loadedModels[modelName];
       }
-    }
+    };
+    window.l = lookups;
+    window.m = loadedModels;
+    window.lookupSVC = lookupSVC;
+    
+    return lookupSVC;
   });
