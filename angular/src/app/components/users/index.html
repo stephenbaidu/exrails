@@ -5,7 +5,7 @@
     <div ng-init="vm.configure({openable: true, popable: true})"></div>
     <div ng-init="vm.column('name')"></div>
     <div ng-init="vm.column('email')"></div>
-    <div ng-init="vm.column('role_ids', 'Roles', 'lookup', 'role')"></div>
+    <div ng-init="vm.column('role_names', 'Roles')"></div>
     <div ng-init="vm.setCollapsedColumn('name', 'Name')"></div>
     <div ng-show="state.showGrid" ng-class="{'col-md-12': !state.collapsedGridMode, 'col-md-4': state.collapsedGridMode}">
       <div ng-include="partials.indexGrid"></div>

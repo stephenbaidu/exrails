@@ -35,6 +35,7 @@ angular.module('angularApp')
     vm.configure = configure;
     vm.column = column;
     vm.setCollapsedColumn = setCollapsedColumn;
+    vm.fixLookups = fixLookups;
     vm.queryRecords = queryRecords;
     vm.columnData = columnData;
     vm.lookupData = lookupData;
@@ -76,7 +77,7 @@ angular.module('angularApp')
       if (vm.model.name === modelName) {
         vm.records.unshift(angular.copy(record));
         vm.recordsHash[record.id] = true;
-        vm.polishRecord(vm.records[0]);
+        fixLookups(vm.records[0]);
       }
     });
 
@@ -179,6 +180,31 @@ angular.module('angularApp')
       $state.go('.newPop');
     }
 
+    function fixLookups(record) {
+      var properties = schemaService.get(vm.model.key).properties;
+      
+      if (!properties) { return record; }
+      
+      _.chain(properties).map(function (config, key) {
+        return {
+          key: key, type: config.type, lookupModel: config.lookup
+        }
+      }).reject(function (config) {
+        return !config.lookupModel;
+      }).each(function(config) {
+        var propertyName = config.lookupModel + '_name';
+
+        // pluralize field
+        if (config.type === 'array') {
+          propertyName = propertyName + 's';
+        }
+
+        record[propertyName] = $filter('lookup')(record[config.key], config.lookupModel);
+      }).value();
+
+      return record;
+    }
+
     function queryRecords (page, size, query) {
       vm.action.loading = true;
 
@@ -240,7 +266,7 @@ angular.module('angularApp')
     function updateRecords (records) {
       angular.forEach(records, function(record) {
         if (!vm.recordsHash[record.id]) {
-          vm.records.push(record);
+          vm.records.push(fixLookups(record));
           vm.recordsHash[record.id] = true;
         }
       });
@@ -252,7 +278,7 @@ angular.module('angularApp')
       var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
 
       if (recordIndex >= 0) {
-        vm.records[recordIndex] = angular.copy(record);
+        vm.records[recordIndex] = fixLookups(angular.copy(record));
       }
     }
 

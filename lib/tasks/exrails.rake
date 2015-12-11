@@ -370,8 +370,10 @@ angular.module('angularApp')
       html = "<div ng-init=\"vm.column('#{name}', '#{title}')\"></div>"
     elsif input_type == 'ex-datepicker'
       html = "<div ng-init=\"vm.column('#{name}', '#{title}', 'date', 'yyyy-MM-dd HH:mm:ss')\"></div>"
-    elsif ['ex-select', 'ex-select-multiple'].include?(input_type)
-      html = "<div ng-init=\"vm.column('#{name}', '#{title}', 'lookup', '#{field[:templateOptions][:lookup]}')\"></div>"
+    elsif input_type == 'ex-select'
+      html = "<div ng-init=\"vm.column('#{field[:templateOptions][:lookup]}_name', '#{title}')\"></div>"
+    elsif input_type == 'ex-select-multiple'
+      html = "<div ng-init=\"vm.column('#{field[:templateOptions][:lookup]}_names', '#{title}')\"></div>"
     end
 
     html
