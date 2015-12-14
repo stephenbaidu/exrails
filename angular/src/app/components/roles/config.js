@@ -1,12 +1,16 @@
 
 angular.module('angularApp')
-  .controller('RoleCtrl', function ($scope, APP, $http, exMsg) {
+  .controller('RoleIndexCtrl', function ($scope, APP, $http, exMsg) {
     
     $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'Role') return;
       // Do something
     });
+  });
 
+angular.module('angularApp')
+  .controller('RoleFormCtrl', function ($scope, APP, $http, exMsg) {
+    
     $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'Role') return;
       // Do something

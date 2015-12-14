@@ -1,11 +1,15 @@
 
 angular.module('angularApp')
-  .controller('UserCtrl', function ($scope, APP, $http, exMsg) {
+  .controller('UserIndexCtrl', function ($scope, APP, $http, exMsg) {
     
     $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'User') return;
       // Do something
     });
+  });
+
+angular.module('angularApp')
+  .controller('UserFormCtrl', function ($scope, APP, $http, exMsg) {
 
     $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'User') return;
