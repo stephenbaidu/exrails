@@ -12,19 +12,19 @@
     </tr>
   </thead>
   <tbody data-link="{{vm.options.openable? 'row':''}}" class="rowlink">
-    <tr ng-repeat="rec in vm.records | filter:vm.action.filterText" ng-class="{active: (rec.id === vm.paging.currentId) && state.collapsedGridMode}">
-      <td>{{ $index + 1 }}.</td>
+    <tr ng-repeat="record in vm.records | filter:vm.action.filterText" ng-class="{active: (record.id === vm.paging.currentId) && state.collapsedGridMode}">
+      <td class="{{record.row_class}}">{{ $index + 1 }}.</td>
       <td ng-show="state.collapsedGridMode">
-        {{ vm.columnData(rec, vm.collapsedColumn) }}
+        {{ vm.columnData(record, vm.collapsedColumn) }}
       </td>
       <td ng-hide="state.collapsedGridMode" ng-repeat="column in vm.columns">
-        {{ vm.columnData(rec, column) }}
+        {{ vm.columnData(record, column) }}
       </td>
       <td ng-if="vm.options.openable" class="nav-arrow">
-        <a ng-if="!vm.options.popable" href="#" ui-sref=".show({id: rec.id})" tooltip-placement="left" tooltip="View">
+        <a ng-if="!vm.options.popable" href="#" ui-sref=".show({id: record.id})" tooltip-placement="left" tooltip="View">
           <span class="fa fa-lg fa-chevron-right"></span>
         </a>
-        <a ng-if="vm.options.popable" href="#" ui-sref=".showPop({id: rec.id})" tooltip-placement="left" tooltip="View">
+        <a ng-if="vm.options.popable" href="#" ui-sref=".showPop({id: record.id})" tooltip-placement="left" tooltip="View">
           <span class="fa fa-lg fa-chevron-right"></span>
         </a>
       </td>
