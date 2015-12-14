@@ -41,7 +41,7 @@ body {
     .modal-header {
       padding: 15px 15px;
       border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-      background: rgba(128, 128, 128, 0.32);
+      background: rgba(128, 128, 128, 0.16);
 
       .close {
         margin-top: -8px;
@@ -49,7 +49,12 @@ body {
       }
     }
 
+    .modal-body {
+      padding: 15px 15px 0px 15px;
+    }
+
     .modal-footer {
+      margin-top: 0px;
       border-top: 2px solid rgba(0, 0, 0, 0.1);
     }
   }
@@ -223,10 +228,6 @@ table {
   margin-bottom: 0px;
 }
 
-#project_name {
-  min-width: 130px;
-}
-
 .dropdown-menu > li > a {
   padding: 3px 15px;
 }
@@ -268,6 +269,10 @@ table {
   width: 89px;
 }
 
+#project_name {
+  min-width: 130px;
+}
+
 .sidebar {
   margin-left: -15px;
   height: 100%;
@@ -286,10 +291,7 @@ table {
   }
   
   ul li a {
-    border-radius: 10px 0px 0px 10px;
-    span {
-      // color: #3F6883;
-    }
+    border-radius: 0px;
   }
   
   ul li.active a {

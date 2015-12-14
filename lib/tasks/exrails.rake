@@ -39,7 +39,7 @@ namespace :exrails do
   end
 
   def g_generate_component_files(klass)
-    components_dir = Rails.root.join('angular', 'src', 'app', 'components').to_s
+    components_dir = Rails.root.join('angular2', 'src', 'app', 'components').to_s
 
     dir = File.join(components_dir, g_model_route(klass).dasherize)
     Dir.mkdir(dir) unless File.directory?(dir)
@@ -63,8 +63,8 @@ namespace :exrails do
   end
 
   def g_insert_component_scripts(klass)
-    index_file = Rails.root.join('angular', 'src', 'index.html')
-    pattern = '<script src="app/components/roles/config.js"></script>'
+    index_file = Rails.root.join('angular2', 'src', 'index.html')
+    pattern = '<script src="app/components/home/home.js"></script>'
     url = g_model_route(klass).dasherize
     insert_str = "#{' ' * 8}<script src=\"app/components/#{url}/config.js\"></script>\n"
     g_insert_line_into_file(index_file, pattern, insert_str)
@@ -92,7 +92,7 @@ namespace :exrails do
   def g_add_resources_route(klass)
     unless g_route_exists?(g_model_route(klass))
       routes_file = Rails.root.join('config', 'routes.rb')
-      pattern = 'resources :roles'
+      pattern = 'resources :banks'
       insert_str = "#{' ' * 4}resources :#{g_model_route(klass)}\n"
     
       g_insert_line_into_file(routes_file, pattern, insert_str)
@@ -147,7 +147,7 @@ namespace :exrails do
     </div>
   </div>
 </div>
-<div ng-controller="#{g_model_name(klass)}Ctrl"></div>
+<div ng-controller="#{g_model_name(klass)}IndexCtrl"></div>
     eos
 
     data[:new] = <<-eos
@@ -155,7 +155,7 @@ namespace :exrails do
   <div class="modal-header">
     <div ng-include="partials.closeButton"></div>
     <h4 class="modal-title">
-      {{ vm.model.title }}
+      #{g_model_title(klass)}
     </h4>
   </div>
   <div class="modal-body">
@@ -165,6 +165,7 @@ namespace :exrails do
     <div ng-include="partials.formNewButtons"></div>
   </div>
 </div>
+<div ng-controller="#{g_model_name(klass)}FormCtrl"></div>
     eos
 
     data[:show] = <<-eos
@@ -172,7 +173,7 @@ namespace :exrails do
   <div class="modal-header">
     <div ng-include="partials.closeButton"></div>
     <h4 class="modal-title">
-      {{ vm.model.title }}
+      #{g_model_title(klass)}
     </h4>
   </div>
   <div class="modal-body">
@@ -182,6 +183,7 @@ namespace :exrails do
     <div ng-include="partials.formShowButtons"></div>
   </div>
 </div>
+<div ng-controller="#{g_model_name(klass)}FormCtrl"></div>
     eos
 
     data[:uploads] = <<-eos
@@ -200,7 +202,7 @@ namespace :exrails do
   <div class="modal-header">
     <div ng-include="partials.closeButton"></div>
     <h4 class="modal-title">
-      {{ vm.model.title }} Data Upload
+      #{g_model_title(klass)} Data Upload
     </h4>
   </div>
   <div class="modal-body">
@@ -215,13 +217,17 @@ namespace :exrails do
     data[:config] = <<-eos
 
 angular.module('angularApp')
-  .controller('#{g_model_name(klass)}Ctrl', function ($scope, APP, $http, exMsg) {
+  .controller('#{g_model_name(klass)}IndexCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
     
     $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{g_model_name(klass)}') return;
       // Do something
     });
+  });
 
+angular.module('angularApp')
+  .controller('#{g_model_name(klass)}FormCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
+    
     $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{g_model_name(klass)}') return;
       // Do something

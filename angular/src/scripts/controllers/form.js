@@ -8,7 +8,7 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, schemaService, authService, $uibModalStack) {
+  .controller('FormCtrl', function ($scope, $rootScope, APP, resourceManager, exMsg, $state, $stateParams, $http, $translate, fieldService, lookupService, schemaService, authService, $uibModalStack) {
     var vm = this;
     $scope.vmRef = vm;
 
@@ -17,7 +17,7 @@ angular.module('angularApp')
     vm.recordId = null;
     vm.record = {};
     vm.action = { editMode: false, loading: true, saving: false, creating: false, updating: false, deleting: false };
-    vm.formly = { model: {}, fields: [], options: {formState: {readOnly: false}}, form: {} };
+    vm.formly = { model: {}, fields: [], options: {formState: {readOnly: true}}, form: {} };
 
     vm.initRoute = initRoute;
     vm.loadRecord = loadRecord;
@@ -26,6 +26,8 @@ angular.module('angularApp')
     vm.close = close;
     vm.create = create;
     vm.edit = edit;
+    vm.isViewMode = isViewMode;
+    vm.isEditMode = isEditMode;
     vm.cancelEdit = cancelEdit;
     vm.uploads = uploads;
     vm.update = update;
@@ -80,20 +82,30 @@ angular.module('angularApp')
 
     function initRoute (routeName, options) {
       options = options || {};
+      options.loadRecord = (options.loadRecord === undefined)? true : options.loadRecord;
       vm.modelName = options.name || resourceManager.getName(routeName);
       window[vm.modelName + 'FormCtrl'] = vm;
       vm.model = resourceManager.register(vm.modelName, APP.apiPrefix + routeName + '/:id');
       vm.formly.fields = fieldService.get(vm.model.key);
-      // loadConfig();
       
-      vm.setRecord();
-      $rootScope.$broadcast('exui:form-ready', vm.model.name, vm, $scope);
+      lookupService.load(vm.model.key, options.lookups, true).then(function () {
+        vm.setRecord();
+        $rootScope.$broadcast('exui:form-ready', vm.model.name, vm, $scope);
+      });
 
-      var recordId = $stateParams.id;
-
-      if (recordId) {
-        vm.recordId = recordId;
-        vm.loadRecord(recordId);
+      if (options.loadRecord && $stateParams.id) {
+        vm.recordId = $stateParams.id;
+      } else if(options.recordId) {
+        vm.recordId = options.recordId;
+      } else if ($rootScope[vm.model.key + '_id']) {
+        vm.recordId = $rootScope[vm.model.key + '_id'];
+        $rootScope[vm.model.key + '_id'] = null;
+      }
+      
+      if (vm.recordId) {
+        vm.loadRecord(vm.recordId);
+      } else {
+        vm.formly.options.formState.readOnly = false;
       }
     }
 
@@ -173,6 +185,14 @@ angular.module('angularApp')
       vm.formly.options.formState.readOnly = false;
       vm.action.editMode = true;
     };
+
+    function isViewMode () {
+      return vm.formly.options.formState.readOnly;
+    }
+
+    function isEditMode () {
+      return !vm.formly.options.formState.readOnly;
+    }
 
     function cancelEdit () {
       vm.formly.model = angular.copy(vm.record);

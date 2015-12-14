@@ -28,14 +28,15 @@ angular.module('angularApp')
       nextId: 0
     };
     vm.columns = [];
+    vm.classConfig = {field: '', data: ''};
     vm.collapsedColumn = {};
     vm.options = { openable: true, popable: true, collapsible: true };
 
     vm.initRoute = initRoute;
     vm.configure = configure;
+    vm.classes = classes;
     vm.column = column;
     vm.setCollapsedColumn = setCollapsedColumn;
-    vm.fixLookups = fixLookups;
     vm.queryRecords = queryRecords;
     vm.columnData = columnData;
     vm.lookupData = lookupData;
@@ -55,7 +56,6 @@ angular.module('angularApp')
     vm.addSearchParam = addSearchParam;
     vm.clearSearchParams = clearSearchParams;
     vm.removeSearchParam = removeSearchParam;
-    vm.doSearch = doSearch;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
       updateFABActions();
@@ -77,7 +77,7 @@ angular.module('angularApp')
       if (vm.model.name === modelName) {
         vm.records.unshift(angular.copy(record));
         vm.recordsHash[record.id] = true;
-        fixLookups(vm.records[0]);
+        setRowClass(setLookups(vm.records[0]));
       }
     });
 
@@ -114,6 +114,13 @@ angular.module('angularApp')
       vm.options = _.merge(vm.options, options);
     }
 
+    function classes(field, data) {
+      vm.classConfig = {
+        field: field,
+        data: data
+      }
+    }
+
     function column (name, title, filter, filterParam) {
       if (!name) return;
 
@@ -148,14 +155,18 @@ angular.module('angularApp')
       if (!$scope.state.isIndex) return;
 
       var actionsConfig = [];
-      var mainActionConfig = {};
+      var mainActionConfig = {
+        icon: 'fa fa-refresh',
+        label: 'Reload',
+        handler: vm.reload
+      };
 
       if (vm.hasCreateAccess()) {
-        mainActionConfig = {
+        actionsConfig.push({
           icon: 'fa fa-plus',
           label: 'New ' + vm.model.name,
           handler: vm.new
-        };
+        });
       }
 
       // Add search button
@@ -173,6 +184,7 @@ angular.module('angularApp')
 
     vm.hideSearch = function () {
       vm.action.searching = false;
+      vm.paging.recordsPerPage = 15;
       vm.reload();
     }
 
@@ -180,7 +192,7 @@ angular.module('angularApp')
       $state.go('.newPop');
     }
 
-    function fixLookups(record) {
+    function setLookups(record) {
       var properties = schemaService.get(vm.model.key).properties;
       
       if (!properties) { return record; }
@@ -205,10 +217,17 @@ angular.module('angularApp')
       return record;
     }
 
+    function setRowClass(record) {
+      record.row_class = vm.classConfig.data[record[vm.classConfig.field]];
+      return record;
+    }
+
     function queryRecords (page, size, query) {
       vm.action.loading = true;
 
-      if(! query) {
+      if (vm.action.searching) { // in search mode
+        query = vm.getQueryParams();
+      } else if(! query) {
         query = vm.searchQuery || {};
       }
       
@@ -266,7 +285,7 @@ angular.module('angularApp')
     function updateRecords (records) {
       angular.forEach(records, function(record) {
         if (!vm.recordsHash[record.id]) {
-          vm.records.push(fixLookups(record));
+          vm.records.push(setRowClass(setLookups(record)));
           vm.recordsHash[record.id] = true;
         }
       });
@@ -278,7 +297,7 @@ angular.module('angularApp')
       var recordIndex = _.findIndex(vm.records, _.pick(record, 'id'));
 
       if (recordIndex >= 0) {
-        vm.records[recordIndex] = fixLookups(angular.copy(record));
+        vm.records[recordIndex] = setRowClass(setLookups(angular.copy(record)));
       }
     }
 
@@ -354,7 +373,8 @@ angular.module('angularApp')
     // Search related
     function initSearch () {
       vm.search.fields = schemaService.get(vm.model.key).properties;
-      vm.search.dateRange = {startDate: moment().startOf('month'), endDate: moment().endOf('month')};
+      // vm.search.dateRange = {startDate: moment().startOf('month'), endDate: moment().endOf('month')};
+      vm.search.dateRange = {startDate: null, endDate: null};
     }
 
     function getQueryParams () {
@@ -440,12 +460,5 @@ angular.module('angularApp')
     function removeSearchParam (key) {
       delete vm.search.params[key];
       vm.buildSearchQueries();
-    }
-    
-    function doSearch () {
-      vm.recordsHash = {};
-      vm.records = [];
-      vm.paging.currentPage = 1;
-      vm.queryRecords(1, 1000, vm.getQueryParams());
     }
   });
