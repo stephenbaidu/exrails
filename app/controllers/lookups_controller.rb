@@ -15,6 +15,7 @@ class LookupsController < ApplicationController
     # Nested set lookup
     if @model_class.respond_to? 'acts_as_nested_set_options'
       json_lookups['parent'] = @model_class.all.map { |e| {value: e.id, name: e.name} }
+      json_lookups['parent'].unshift({ value: '', name: '' })
     end
 
     # Multi-select lookups
