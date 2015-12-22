@@ -21,10 +21,10 @@
         {{ vm.columnData(record, column) }}
       </td>
       <td ng-if="vm.options.openable" class="nav-arrow">
-        <a ng-if="!vm.options.popable" href="#" ui-sref=".show({id: record.id})" tooltip-placement="left" tooltip="View">
+        <a ng-if="!vm.options.popable" href="#" ui-sref=".show({id: record.id})" tooltip-placement="left" uib-tooltip="View">
           <span class="fa fa-lg fa-chevron-right"></span>
         </a>
-        <a ng-if="vm.options.popable" href="#" ui-sref=".showPop({id: record.id})" tooltip-placement="left" tooltip="View">
+        <a ng-if="vm.options.popable" href="#" ui-sref=".showPop({id: record.id})" tooltip-placement="left" uib-tooltip="View">
           <span class="fa fa-lg fa-chevron-right"></span>
         </a>
       </td>

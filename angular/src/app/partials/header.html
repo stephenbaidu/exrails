@@ -2,11 +2,20 @@
   <div class="col-md-12">
     <div id="page_header" class="clearfix content-header">
       <div class="row">
-        <div class="col-md-8">
-          <h3 class="pull-left"> 
-            <i class="glyphicon glyphicon-list"></i>
+        <div class="col-md-4">
+          <h3> 
+            <i class="{{vm.currentLink.icon || 'glyphicon glyphicon-list'}}"></i>
             {{ vm.model.title }}
           </h3>
+        </div>
+        <div class="col-md-4 form-group">
+          <button class="btn btn-default btn-sm" ng-click="vm.toggleSearch()">
+            <span class="fa fa-search"></span>
+          </button>
+          <button ng-if="vm.hasCreateAccess()" class="btn btn-default btn-sm" ng-click="vm.new()">
+            <span class="fa fa-plus"></span>
+            New
+          </button>
         </div>
         <div class="col-md-4 form-group hidden-sm hidden-xs">
           <div ng-include="partials.filterInput"></div>
