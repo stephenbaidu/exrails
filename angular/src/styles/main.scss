@@ -11,6 +11,10 @@ body {
   font-size: 14px;
 }
 
+.navbar-brand {
+  padding: 2px 5px;
+}
+
 #page {
   .modal-header {
     padding: 5.5px 0px;
@@ -23,7 +27,7 @@ body {
   }
 
   .modal-body {
-    padding: 0px;
+      padding: 5px 0px 0px 0px;
   }
 
   .modal-footer {
@@ -253,8 +257,13 @@ table {
   }
 }
 
-.ex-nav .navbar-nav > li > a:hover {
+.navbar-nav > li > a:hover {
   color: #fff;
+}
+
+.navbar-nav > .active > .dropdown > a .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
 }
 
 .grid-action-1 {
