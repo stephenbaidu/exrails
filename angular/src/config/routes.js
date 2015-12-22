@@ -2,6 +2,9 @@ angular.module('angularApp')
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $urlRouterProvider.when('/', '/main');
+    $urlRouterProvider.when('/main', '/main/dashboard');
+    $urlRouterProvider.when('/admin', '/admin/dashboard');
+    $urlRouterProvider.when('/reports', '/reports/dashboard');
     $stateProvider
       .state('app', {
         url: '/?q',
@@ -29,36 +32,41 @@ angular.module('angularApp')
         },
         controller: 'ModuleCtrl'
       })
+      .state('app.pages', {
+        url: 'pages',
+        template: '<ui-view></ui-view>'
+      })
+      .state('app.pages.page', {
+        url: '/:page',
+        templateUrl: function ($stateParams) {
+          return 'app/pages/' + $stateParams.page + '.html';
+        }
+      })
       .state('app.reports', {
         url: 'reports',
-        templateUrl: function ($stateParams) {
-          return 'app/layouts/reports_module.html';
-        }
+        templateUrl: 'app/modules/reports/layout.html'
+      })
+      .state('app.reports.dashboard', {
+        url: '/dashboard',
+        templateUrl: 'app/modules/reports/dashboard.html'
       })
       .state('app.reports.report', {
         url: '/:report',
-        templateUrl: function ($stateParams) {
-          return 'app/components/reports/show.html';
-        },
+        templateUrl: 'app/modules/reports/viewer.html',
         controller: 'ReportCtrl'
       })
       .state('app.module', {
         url: ':module',
         templateUrl: function ($stateParams) {
-          return 'app/layouts/' + $stateParams.module + '_module.html';
+          return 'app/modules/' + $stateParams.module + '/layout.html';
         },
         controller: 'ModuleCtrl'
       })
-      .state('app.module.reports', {
-        url: '/report',
-        template: '<div ui-view></div>'
-      })
-      .state('app.module.reports.report', {
-        url: '/:report',
+      .state('app.module.dashboard', {
+        url: '/dashboard',
         templateUrl: function ($stateParams) {
-          return 'app/components/reports/show.html';
-        },
-        controller: 'ReportCtrl'
+          return 'app/modules/' + $stateParams.module + '/dashboard.html';
+        }
       })
       .state('app.module.form', {
         url: '/form/:model',
@@ -100,6 +108,12 @@ angular.module('angularApp')
           });
         }
       })
+      .state('app.module.model.page', {
+        url: '/p/:page',
+        templateUrl: function ($stateParams) {
+          return 'app/components/' + $stateParams.model + '/' + $stateParams.page + '.html';
+        }
+      })
       .state('app.module.model.showPop', {
         url: '/:id/pop',
         onEnter: function ($stateParams, $state, $uibModal) {
@@ -109,12 +123,6 @@ angular.module('angularApp')
           }).result.finally(function() {
             $state.go('^');
           });
-        }
-      })
-      .state('app.module.model.page', {
-        url: '/p/:page',
-        templateUrl: function ($stateParams) {
-          return 'app/components/' + $stateParams.model + '/' + $stateParams.page + '.html';
         }
       })
       .state('app.module.model.bulk', {

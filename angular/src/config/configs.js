@@ -55,6 +55,12 @@ angular.module('angularApp')
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
+    formlyConfigProvider.setType({
+      name: 'ex-checkbox',
+      templateUrl: 'app/templates/ex-checkbox.html',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+      overwriteOk: true
+    });
 
     formlyConfigProvider.setWrapper({
       name: 'validation',

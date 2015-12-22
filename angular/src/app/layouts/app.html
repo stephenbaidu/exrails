@@ -8,27 +8,15 @@
         <span class="icon-bar"></span>
       </button>
       <a id="project_name" class="navbar-brand nav-h" href="#/">
-        eXRails App
+        <img src="images/logo.png" alt="" height="45px">
       </a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li ng-class='{ active: hasUrl("/main") }'>
-          <a href="#/main">
-            <span class="fa fa-home"></span>
-            Dashboard
-          </a>
-        </li>
-        <li ng-class='{ active: hasUrl("/reports") }'>
-          <a href="#/reports">
-            <span class="fa fa-bar-chart"></span>
-            Reports
-          </a>
-        </li>
-        <li ng-class='{ active: hasUrl("/admin") }'>
-          <a href="#/admin">
-            <span class="fa fa-cogs"></span>
-            Admin
+        <li ng-repeat="(key, value) in modules" ng-show="hasModuleAccess(key)" ng-class='{ active: hasUrl("/{{key}}") }'>
+          <a href="#/{{key}}">
+            <span class="{{value.icon}}"></span>
+            {{ value.title }}
           </a>
         </li>
       </ul>

@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('authService', function ($auth) {
+  .service('authService', function (APP, $auth, $stateParams, $http, exMsg) {
     var authSVC = {
       hasAccess: function (urlOrPermission) {
         var permission = urlOrPermission || '';
@@ -42,10 +42,7 @@ angular.module('angularApp')
           }
         }
 
-        var found = _.find($auth.user.permissions, function (p) {
-          return p === permission;
-        });
-        return (found === undefined)? false : true;
+        return (_.indexOf($auth.user.permissions, permission) >= 0);
       },
       hasCreateAccess: function (modelName) {
         return this.hasAccess(modelName + ':create');
@@ -58,6 +55,87 @@ angular.module('angularApp')
       },
       hasDeleteAccess: function (modelName) {
         return this.hasAccess(modelName + ':delete');
+      },
+      hasModuleAccess: function (moduleName) {
+        var module = APP.modules[moduleName];
+        if (!module) {
+          return false;
+        }
+        
+        if (module.hasAccess) {
+          return module.hasAccess($auth.user);
+        } else {
+          return true;
+        }
+      },
+      changePassword: function () {
+        exMsg.sweetAlert({
+          title: 'Change Password',
+          text: 'Current Password:',
+          type: 'input',
+          inputType: 'password',
+          showCancelButton: true,
+          closeOnConfirm: false,
+          animation: 'slide-from-top',
+          inputPlaceholder: 'Current Password'
+        }, function(currentPassword) {
+          if (currentPassword === false) return false;
+
+          if (currentPassword === '') {
+            exMsg.sweetAlert.showInputError('No password provided!');
+            return false
+          }
+
+          exMsg.sweetAlert({
+            title: 'Change Password',
+            text: 'New Password:',
+            type: 'input',
+            inputType: 'password',
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: 'slide-from-top',
+            inputPlaceholder: 'New Password'
+          }, function(password) {
+            if (password === false) return false;
+
+            if (password === '') {
+              exMsg.sweetAlert.showInputError('No password provided!');
+              return false
+            }
+
+            exMsg.sweetAlert({
+              title: 'Change Password',
+              text: 'New Password Again:',
+              type: 'input',
+              inputType: 'password',
+              showCancelButton: true,
+              closeOnConfirm: false,
+              animation: 'slide-from-top',
+              inputPlaceholder: 'New Password Again'
+            }, function(passwordConfirmation) {
+              if (passwordConfirmation === false) return false;
+
+              if (passwordConfirmation === '') {
+                exMsg.sweetAlert.showInputError('No password provided!');
+                return false
+              }
+
+              $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/change_password', {
+                current_password: currentPassword,
+                password: password,
+                password_confirmation: passwordConfirmation
+              }).success(function (data) {
+                if (data.error) {
+                  exMsg.sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
+                } else {
+                  exMsg.sweetAlert('Great!', 'Password changed successfully', 'success');
+                }
+              }).catch(function (data) {
+                exMsg.sweetAlert('Sorry!', 'Password changed failed', 'error');
+              });
+            })
+          });
+        });
       }
     };
     

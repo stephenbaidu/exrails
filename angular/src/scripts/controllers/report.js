@@ -14,6 +14,7 @@ angular.module('angularApp')
 
     vm.action = {generating: false};
 
+    vm.currentLink = {};
     vm.report = {};
     vm.filter = {};
 
@@ -49,6 +50,14 @@ angular.module('angularApp')
         fields: []
       }
     };
+
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      var module = APP.modules.reports;
+
+      if (module) {
+        vm.currentLink = _.first(_.where(module.links, {url: $stateParams.report}));
+      }
+    });
 
     vm.generateReport = function () {
       vm.action.generating = true;

@@ -12,13 +12,14 @@ angular.module('angularApp')
     var vm = this;
     $scope.vmRef = vm;
 
+    vm.currentLink = {};
     vm.model = {};
     vm.modelName = null;
     vm.recordsHash = {};
     vm.records = [];
     vm.currentRecord = {};
     vm.searchQuery = null;
-    vm.action = { loading: false, searching: false, deleting: false };
+    vm.action = { loading: false, searching: false, deleting: false, searched: false };
     vm.paging = {
       totalRecords: 0,
       recordsPerPage: 15,
@@ -33,7 +34,7 @@ angular.module('angularApp')
     vm.options = { openable: true, popable: true, collapsible: true };
 
     vm.initRoute = initRoute;
-    vm.configure = configure;
+    vm.config = config;
     vm.classes = classes;
     vm.column = column;
     vm.setCollapsedColumn = setCollapsedColumn;
@@ -58,12 +59,14 @@ angular.module('angularApp')
     vm.removeSearchParam = removeSearchParam;
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      updateCurrentLink();
       updateFABActions();
     });
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      updateFABActions();
-    });
+    // $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+    //   updateCurrentLink();
+    //   updateFABActions();
+    // });
 
     $scope.$on('exui:record-loaded', function (e, modelName, record) {
       if(vm.model.name != modelName) return;
@@ -110,7 +113,7 @@ angular.module('angularApp')
       });
     }
 
-    function configure (options) {
+    function config (options) {
       vm.options = _.merge(vm.options, options);
     }
 
@@ -151,6 +154,14 @@ angular.module('angularApp')
       };
     }
 
+    function updateCurrentLink () {
+      var module = APP.modules[$stateParams.module];
+
+      if (module) {
+        vm.currentLink = _.first(_.where(module.links, {url: $stateParams.model}));
+      }
+    }
+
     function updateFABActions () {
       if (!$scope.state.isIndex) return;
 
@@ -185,7 +196,19 @@ angular.module('angularApp')
     vm.hideSearch = function () {
       vm.action.searching = false;
       vm.paging.recordsPerPage = 15;
-      vm.reload();
+      
+      if (vm.action.searched) {
+        vm.action.searched = false;
+        vm.reload();
+      }
+    }
+
+    vm.toggleSearch = function () {
+      if (vm.action.searching) {
+        vm.hideSearch();
+      } else {
+        vm.showSearch();
+      }
     }
 
     vm.new = function () {
@@ -227,6 +250,7 @@ angular.module('angularApp')
 
       if (vm.action.searching) { // in search mode
         query = vm.getQueryParams();
+        vm.action.searched = true;
       } else if(! query) {
         query = vm.searchQuery || {};
       }

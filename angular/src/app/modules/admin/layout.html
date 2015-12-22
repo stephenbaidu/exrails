@@ -1,6 +1,6 @@
 <div id="sidebar" class="sidebar">
   <ul class="nav nav-pills nav-stacked">
-    <li ng-repeat="l in modules.admin" ng-class='{ active: hasUrl("#/admin/{{ l.url }}") }' ng-show="hasAccess(l.url)">
+    <li ng-repeat="l in modules.admin.links" ng-class='{ active: hasUrl("#/admin/{{ l.url }}") }' ng-show="hasAccess(l.url)">
       <a href="#/admin/{{ l.url }}">
         <span class="link-icon {{ l.icon }}"></span>
         <br><span class="link-text">{{ l.text }}</span>
@@ -9,8 +9,6 @@
   </ul>
 </div>
 <div id="content" class="content">
-  <ui-view>
-    <div ng-include="'app/layouts/admin_dashboard.html'" ng-controller="DashboardCtrl"></div>
-  </ui-view>
+  <ui-view></ui-view>
 </div>
 <div ng-include="partials.fab"></div>

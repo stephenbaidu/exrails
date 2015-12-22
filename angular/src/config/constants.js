@@ -17,5 +17,15 @@ angular.module('angularApp')
       bulkGrid: 'app/partials/bulk-grid.html',
       uploadsGrid: 'app/partials/uploads-grid.html',
       closeButton: 'app/partials/close-button.html'
+    },
+    modules: {},
+    setModule: function (moduleName, options) {
+      this.modules[moduleName] = {
+        name: moduleName,
+        title: options.title || _.startCase(moduleName),
+        icon: options.icon || 'fa fa-home',
+        links: options.links || [],
+        hasAccess: options.hasAccess || function () { return true; }
+      }
     }
   });

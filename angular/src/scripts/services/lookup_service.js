@@ -47,9 +47,6 @@ angular.module('angularApp')
         return loadedModels[modelName];
       }
     };
-    window.l = lookups;
-    window.m = loadedModels;
-    window.lookupSVC = lookupSVC;
     
     return lookupSVC;
   });

@@ -19,6 +19,6 @@ angular.module('angularApp')
         schemas[modelInSnakeCase] = schemaConfig;
       }
     };
-    window.s=schemaSVC
+    
     return schemaSVC;
   });

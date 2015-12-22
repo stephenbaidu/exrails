@@ -20,6 +20,7 @@ angular.module('angularApp')
     
     $rootScope.state = stateService;
     $rootScope.hasAccess = authService.hasAccess;
+    $rootScope.hasModuleAccess = authService.hasModuleAccess;
 
     vm.drpOptions = {
       showDropdowns: true,
@@ -79,66 +80,6 @@ angular.module('angularApp')
     };
 
     vm.showPasswordChange = function () {
-      exMsg.sweetAlert({
-        title: 'Change Password',
-        text: 'Current Password:',
-        type: 'input',
-        inputType: 'password',
-        showCancelButton: true,
-        closeOnConfirm: false,
-        animation: 'slide-from-top',
-        inputPlaceholder: 'Current Password'
-      }, function(currentPassword) {
-        if (currentPassword === false) return false;
-        if (currentPassword === '') {
-          exMsg.sweetAlert.showInputError('No password provided!');
-          return false
-        }
-        exMsg.sweetAlert({
-          title: 'Change Password',
-          text: 'New Password:',
-          type: 'input',
-          inputType: 'password',
-          showCancelButton: true,
-          closeOnConfirm: false,
-          animation: 'slide-from-top',
-          inputPlaceholder: 'New Password'
-        }, function(password) {
-          if (password === false) return false;
-          if (password === '') {
-            exMsg.sweetAlert.showInputError('No password provided!');
-            return false
-          }
-          exMsg.sweetAlert({
-            title: 'Change Password',
-            text: 'New Password Again:',
-            type: 'input',
-            inputType: 'password',
-            showCancelButton: true,
-            closeOnConfirm: false,
-            animation: 'slide-from-top',
-            inputPlaceholder: 'New Password Again'
-          }, function(passwordConfirmation) {
-            if (passwordConfirmation === false) return false;
-            if (passwordConfirmation === '') {
-              exMsg.sweetAlert.showInputError('No password provided!');
-              return false
-            }
-            $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/change_password', {
-              current_password: currentPassword,
-              password: password,
-              password_confirmation: passwordConfirmation
-            }).success(function (data) {
-              if (data.error) {
-                exMsg.sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
-              } else {
-                exMsg.sweetAlert('Great!', 'Password changed successfully', 'success');
-              }
-            }).catch(function (data) {
-              exMsg.sweetAlert('Sorry!', 'Password changed failed', 'error');
-            });
-          })
-        });
-      });
+      authService.changePassword();
     }
   });
