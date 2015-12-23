@@ -100,12 +100,11 @@ namespace :xui do
   end
 
   def xui_g_module_task(module_name, routes)
-    modules_dir = Rails.root.join('angular', 'src', 'app', 'modules').to_s
     module_route = xui_module_route(module_name)
     puts "Generating files for module: #{module_route} ..."
 
     begin
-      dir = File.join(modules_dir, module_route)
+      dir = File.join(xui_modules_directory, module_route)
       FileUtils.mkdir(dir) unless File.directory?(dir)
       files_tpls = xui_tpl_module_files(module_route, routes)
 
@@ -125,34 +124,50 @@ namespace :xui do
       end unless File.exists?(file_path)
 
       # Insert script tag
-      index_file = Rails.root.join('angular', 'src', 'index.html')
       pattern = '<script src="app/modules/reports/config.js"></script>'
-      xui_insert_line_into_file(index_file, pattern, xui_module_script_tag(module_route))
+      xui_insert_line_into_file(xui_index_file, pattern, xui_module_script_tag(module_route))
     rescue
     end
   end
 
   def xui_d_module_task(module_name)
-    modules_dir = Rails.root.join('angular', 'src', 'app', 'modules').to_s
     module_route = xui_module_route(module_name)
     puts "Deleting files for module: #{module_route} ..."
 
     begin
       # Destroy module files
-      dir = File.join(modules_dir, module_route)
+      dir = File.join(xui_modules_directory, module_route)
       FileUtils.rm_rf(dir) if File.directory?(dir)
 
       # Remove script tag
-      index_file = Rails.root.join('angular', 'src', 'index.html')
-      xui_delete_line_from_file(index_file, xui_module_script_tag(module_route))
+      xui_delete_line_from_file(xui_index_file, xui_module_script_tag(module_route))
     rescue
     end
   end
 
-  def xui_generate_component_files(klass)
-    components_dir = Rails.root.join('angular', 'src', 'app', 'components').to_s
+  def xui_components_directory
+    Rails.root.join('angular', 'src', 'app', 'components').to_s
+  end
 
-    component_dir = File.join(components_dir, xui_model_route(klass).dasherize)
+  def xui_modules_directory
+    Rails.root.join('angular', 'src', 'app', 'modules').to_s
+  end
+
+  def xui_index_file
+    Rails.root.join('angular', 'src', 'index.html').to_s
+  end
+
+  def xui_routes_file
+    Rails.root.join('config', 'routes.rb').to_s
+  end
+
+  def xui_controller_file(klass)
+    controller_dir = Rails.root.join('app', 'controllers').to_s
+    File.join(controller_dir, "#{xui_model_route(klass)}_controller.rb")
+  end
+
+  def xui_generate_component_files(klass)
+    component_dir = File.join(xui_components_directory, xui_model_route(klass).dasherize)
     FileUtils.mkdir(component_dir) unless File.directory?(component_dir)
 
     files_tpls = xui_tpl_component_files(klass)
@@ -175,40 +190,32 @@ namespace :xui do
 
   def xui_destroy_component(klass)
     # Delete component directory
-    components_dir = Rails.root.join('angular', 'src', 'app', 'components').to_s
-
-    component_dir = File.join(components_dir, xui_model_route(klass).dasherize)
+    component_dir = File.join(xui_components_directory, xui_model_route(klass).dasherize)
     FileUtils.rm_rf(component_dir) if File.directory?(component_dir)
 
     # Remove component script
-    index_file = Rails.root.join('angular', 'src', 'index.html')
-    xui_delete_line_from_file(index_file, xui_component_script_tag(klass))
+    xui_delete_line_from_file(xui_index_file, xui_component_script_tag(klass))
 
     # Delete controller
-    controllers_dir = Rails.root.join('app', 'controllers').to_s
-    controller_file = File.join(controllers_dir, "#{xui_model_route(klass)}_controller.rb")
-    File.delete(controller_file)
+    controller_file = xui_controller_file(klass)
+    File.delete(controller_file) if File.read(controller_file).include?('# This file was created by xui.');
 
     # Remove resources route
-    routes_file = Rails.root.join('config', 'routes.rb')
-    delete_str = "#{' ' * 4}resources :#{xui_model_route(klass)}\n"
-    xui_delete_line_from_file(index_file, delete_str)
+    xui_delete_line_from_file(xui_routes_file, xui_model_resources_route(klass))
   rescue
   end
 
   def xui_insert_component_scripts(klass)
-    index_file = Rails.root.join('angular', 'src', 'index.html')
     pattern = '<script src="app/components/roles/config.js"></script>'
-    xui_insert_line_into_file(index_file, pattern, xui_component_script_tag(klass))
+    xui_insert_line_into_file(xui_index_file, pattern, xui_component_script_tag(klass))
   end
 
   def xui_generate_controller_file(klass)
-    controllers_dir = Rails.root.join('app', 'controllers').to_s
-
-    controller_tpl = "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
+    controller_tpl = "# This file was created by xui. Keep this line to allow xui to modify this file.\n"
+    controller_tpl += "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
     controller_tpl += "  resourcify\n"
     controller_tpl += "end\n"
-    file_path = File.join(controllers_dir, "#{xui_model_route(klass)}_controller.rb")
+    file_path = xui_controller_file(klass)
     File.open(file_path, 'w') do |file|
       file.write(controller_tpl)
     end unless File.exists?(file_path)
@@ -223,11 +230,8 @@ namespace :xui do
 
   def xui_add_resources_route(klass)
     unless xui_route_exists?(xui_model_route(klass))
-      routes_file = Rails.root.join('config', 'routes.rb')
       pattern = 'resources :roles'
-      insert_str = "#{' ' * 4}resources :#{xui_model_route(klass)}\n"
-    
-      xui_insert_line_into_file(routes_file, pattern, insert_str)
+      xui_insert_line_into_file(xui_routes_file, pattern, xui_model_resources_route(klass))
     end
   end
 
@@ -250,6 +254,10 @@ namespace :xui do
     return unless lines.join.include? delete_str 
     lines = lines.reject { |line| line.strip == delete_str.strip }
     File.write(file, lines.join)
+  end
+
+  def xui_model_resources_route(klass)
+    "#{' ' * 4}resources :#{xui_model_route(klass)}\n"
   end
 
   def xui_component_script_tag(klass)
