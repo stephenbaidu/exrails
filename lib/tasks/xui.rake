@@ -80,6 +80,7 @@ namespace :xui do
         puts "Generating files for #{klass.name} ..."
         xui_generate_component_files(klass)
         xui_insert_component_scripts(klass)
+        xui_resourcify_model_file(klass)
         xui_generate_controller_file(klass)
         xui_add_resources_route(klass)
       rescue
@@ -161,9 +162,14 @@ namespace :xui do
     Rails.root.join('config', 'routes.rb').to_s
   end
 
+  def xui_model_file(klass)
+    model_dir = Rails.root.join('app', 'models').to_s
+    File.join(model_dir, "#{xui_model_key(klass)}.rb").to_s
+  end
+
   def xui_controller_file(klass)
     controller_dir = Rails.root.join('app', 'controllers').to_s
-    File.join(controller_dir, "#{xui_model_route(klass)}_controller.rb")
+    File.join(controller_dir, "#{xui_model_route(klass)}_controller.rb").to_s
   end
 
   def xui_generate_component_files(klass)
@@ -200,6 +206,13 @@ namespace :xui do
     controller_file = xui_controller_file(klass)
     File.delete(controller_file) if File.read(controller_file).include?('# This file was created by xui.');
 
+    # Remove resourcify line
+    model_file = xui_model_file(klass)
+    if File.readlines(model_file).grep(/# The line below was inserted by xui./).size > 0
+      xui_delete_line_from_file(model_file, '  # The line below was inserted by xui.')
+      xui_delete_line_from_file(model_file, '  resourcify')
+    end
+
     # Remove resources route
     xui_delete_line_from_file(xui_routes_file, xui_model_resources_route(klass))
   rescue
@@ -210,15 +223,29 @@ namespace :xui do
     xui_insert_line_into_file(xui_index_file, pattern, xui_component_script_tag(klass))
   end
 
+  def xui_resourcify_model_file(klass)
+    # No resourcify
+    model_file = xui_model_file(klass)
+    if File.readlines(model_file).grep(/\sresourcify\n/).size == 0
+      pattern = "class #{klass.name} < ActiveRecord::Base"
+      insert_str = "  # The line below was inserted by xui.\n  resourcify\n"
+      xui_insert_line_into_file(model_file, pattern, insert_str)
+    end
+  end
+
+  def xui_controller_template(klass)
+    tpl = "# This file was created by xui. Keep this line to allow xui to modify this file.\n"
+    tpl += "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
+    tpl += "  resourcify\n"
+    tpl += "end\n"
+    tpl
+  end
+
   def xui_generate_controller_file(klass)
-    controller_tpl = "# This file was created by xui. Keep this line to allow xui to modify this file.\n"
-    controller_tpl += "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
-    controller_tpl += "  resourcify\n"
-    controller_tpl += "end\n"
-    file_path = xui_controller_file(klass)
-    File.open(file_path, 'w') do |file|
-      file.write(controller_tpl)
-    end unless File.exists?(file_path)
+    controller_file = xui_controller_file(klass)
+    File.open(controller_file, 'w') do |file|
+      file.write(xui_controller_template(klass))
+    end unless File.exists?(controller_file)
   end
 
   def xui_route_exists?(routeName)
