@@ -234,11 +234,12 @@ namespace :xui do
   end
 
   def xui_controller_template(klass)
-    tpl = "# This file was created by xui. Keep this line to allow xui to modify this file.\n"
-    tpl += "class #{klass.name.classify.pluralize}Controller < ApplicationController\n"
-    tpl += "  resourcify\n"
-    tpl += "end\n"
-    tpl
+    [
+      "# This file was created by xui. Keep this line to allow xui to modify this file.\n",
+      "class #{klass.name.classify.pluralize}Controller < ApplicationController\n",
+      "  resourcify\n",
+      "end\n"
+    ].join
   end
 
   def xui_generate_controller_file(klass)
@@ -354,7 +355,7 @@ namespace :xui do
   end
 
   def xui_column_grid_visible?(column)
-    exclusion_list = ['id', 'updated_at', 'details', 'blocked_at']
+    exclusion_list = ['id', 'created_at', 'updated_at', 'details', 'blocked_at']
     !exclusion_list.include?(column.name)
   end
 
@@ -614,7 +615,7 @@ angular.module('angularApp')
   <div ng-include="partials.header"></div>
   <div ng-include="partials.searchForm"></div>
   <div class="row model-container">
-    <div ng-init="vm.configure({openable: true, popable: true})"></div>
+    <div ng-init="vm.config({openable: true, popable: true})"></div>
     #{xui_grid_config(klass)}
     <div ng-show="state.showGrid" ng-class="{'col-md-12': !state.collapsedGridMode, 'col-md-4': state.collapsedGridMode}">
       <div ng-include="partials.indexGrid"></div>
