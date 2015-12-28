@@ -27,6 +27,7 @@ var app = angular.module('angularApp', [
   'ui.bootstrap',
   'xeditable',
   'daterangepicker',
+  'pickadate',
   'angular-loading-bar',
   'pascalprecht.translate',
   'formly',

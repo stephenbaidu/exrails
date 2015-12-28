@@ -89,7 +89,7 @@ body {
 }
 
 :focus {
-  outline: 0;
+  outline: 0 !important;
 }
 
 .nav-arrow {
@@ -164,7 +164,7 @@ body {
     margin-left: -15px;
     margin-right: -15px;
   }
-  .formly-field-ex-input, .formly-field-ex-select, .formly-field-ex-datepicker {
+  .formly-field-ex-input, .formly-field-ex-select, .formly-field-ex-datepicker, .formly-field-ex-timepicker {
     .form-control {
       min-height: 38px;
       padding: 8px 8px;
@@ -177,7 +177,7 @@ body {
     }
     .ui-select-container {
       min-height: 38px;
-      padding: 4px 4px;
+      // padding: 4px 4px;
     }
     .ui-select-match-item {
       height: 25px;

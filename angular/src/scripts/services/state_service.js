@@ -21,7 +21,7 @@ angular.module('angularApp')
         if (!state) return;
         
         this.isIndex   = (state.name === 'app.module.model');
-        this.isNew     = (state.name === 'app.module.model.new' || state.name === 'app.module.form.model');
+        this.isNew     = (state.name === 'app.module.model.new' || state.name === 'app.module.form');
         this.isNewPop  = (state.name === 'app.module.model.newPop');
         this.isShow    = (state.name === 'app.module.model.show');
         this.isShowPop = (state.name === 'app.module.model.showPop');

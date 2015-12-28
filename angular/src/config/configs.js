@@ -56,6 +56,12 @@ angular.module('angularApp')
       overwriteOk: true
     });
     formlyConfigProvider.setType({
+      name: 'ex-timepicker',
+      templateUrl: 'app/templates/ex-timepicker.html',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+      overwriteOk: true
+    });
+    formlyConfigProvider.setType({
       name: 'ex-checkbox',
       templateUrl: 'app/templates/ex-checkbox.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
@@ -71,17 +77,10 @@ angular.module('angularApp')
   .run(function run(formlyConfig, formlyValidationMessages) {
     formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
     formlyValidationMessages.addStringMessage('required', 'This field is required'); 
+    formlyValidationMessages.addTemplateOptionValueMessage('pattern', 'patternValidationMessage', '', '', 'Invalid Input');
   })
   .filter('whereMulti', function() {
     return function(items, key, values) {
-      var out = [];
-      if (angular.isArray(values)) {
-        values.forEach(function(value) {
-          for (var i = 0; i < items.length; i++) {
-            if (value == items[i][key]) { out.push(items[i]); break; }
-          }
-        });
-      }
-      return out;
+      return _(items).indexBy(key).at(values).value();
     };
   });

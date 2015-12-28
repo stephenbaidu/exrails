@@ -9,10 +9,13 @@
           </h3>
         </div>
         <div class="col-md-4 form-group">
+          <button class="btn btn-default btn-sm" ng-click="vm.reload()">
+            <span class="fa fa-refresh"></span>
+          </button>
           <button class="btn btn-default btn-sm" ng-click="vm.toggleSearch()">
             <span class="fa fa-search"></span>
           </button>
-          <button ng-if="vm.hasCreateAccess()" class="btn btn-default btn-sm" ng-click="vm.new()">
+          <button ng-if="vm.hasCreateAccess() && state.isIndex" class="btn btn-default btn-sm" ng-click="vm.new()">
             <span class="fa fa-plus"></span>
             New
           </button>

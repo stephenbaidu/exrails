@@ -30,27 +30,27 @@
             </ui-select-choices>
           </ui-select>
         </div>
-        <div ng-show="vm.search.searchField.format" class="col-md-2">
+        <div ng-show="vm.search.searchValue" class="col-md-2">
           <button class="btn btn-primary" ng-click="vm.addSearchParam()">
-            <span class="fa fa-plus" aria-hidden="true"></span>
+            <span class="fa fa-plus" aria-hidden="true"></span> Add
           </button>
         </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-7">
           <div class="form-group has-feedback">
             <div class="input-group">
               <span class="input-group-addon">
-                <span class="fa fa-filter"></span>
+                <span class="fa fa-filter"></span> Date
               </span>
               <input date-range-picker class="form-control date-picker" type="text" ng-model="vm.search.dateRange" options="drpOptions" />
             </div>
             <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="form-group">
             <button class="btn btn-info" ng-click="vm.reload()">
               <span class="fa fa-search" aria-hidden="true"></span>
