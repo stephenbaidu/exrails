@@ -13,7 +13,8 @@
             <span class="fa fa-refresh"></span>
           </button>
           <button class="btn btn-default btn-sm" ng-click="vm.toggleSearch()">
-            <span class="fa fa-search"></span>
+            <span ng-hide="vm.action.searching" class="fa fa-search-plus"></span>
+            <span ng-show="vm.action.searching" class="fa fa-search-minus"></span>
           </button>
           <button ng-if="vm.hasCreateAccess() && state.isIndex" class="btn btn-default btn-sm" ng-click="vm.new()">
             <span class="fa fa-plus"></span>

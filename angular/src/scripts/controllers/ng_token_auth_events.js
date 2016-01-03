@@ -10,8 +10,6 @@
 angular.module('angularApp')
   .controller('NgTokenAuthEventsCtrl', function ($scope, $rootScope, $auth, exMsg, $state) {
     var vm = $scope;
-    window.ngTokenAuthEventsCtrl = vm;
-    window.exMsg = exMsg;
 
     PNotify.prototype.options.delay = 3000;
 

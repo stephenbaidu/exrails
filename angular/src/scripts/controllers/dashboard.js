@@ -8,14 +8,19 @@
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('DashboardCtrl', function ($scope, APP, $http) {
+  .controller('DashboardCtrl', function (APP, $http) {
     var vm = this;
-    window.dashboardCtrl = vm;
 
     vm.data = {};
+    vm.routeName = null;
 
     vm.initRoute = function (routeName) {
-      $http.get(APP.apiPrefix + 'dashboard/' + routeName)
+      vm.routeName = routeName;
+      vm.reload();
+    }
+
+    vm.reload = function () {
+      $http.get(APP.apiPrefix + 'dashboard/' + vm.routeName)
         .success(function (data) {
           vm.data = data;
         });
