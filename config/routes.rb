@@ -9,11 +9,14 @@ Rails.application.routes.draw do
 
     resources :users do
       post 'send_confirmation_instructions', on: :collection
-      post 'lock', on: :member
-      post 'unlock', on: :member
-      post 'reset_password', on: :member
-      post 'change_password', on: :member
-      post 'bulk_upload', on: :member
+      member do
+        post 'lock'
+        post 'unlock'
+        post 'reset_password'
+        post 'update_user'
+        post 'delete_user'
+        post 'bulk_upload'
+      end
     end
     resources :roles
 

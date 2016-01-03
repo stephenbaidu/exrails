@@ -8,7 +8,7 @@
  * Service in the angularApp.
  */
 angular.module('angularApp')
-  .service('authService', function (APP, $auth, $stateParams, $http, exMsg) {
+  .service('authService', function (APP, $auth, $stateParams, $http, $q, exMsg) {
     var authSVC = {
       hasAccess: function (urlOrPermission) {
         var permission = urlOrPermission || '';
@@ -68,7 +68,25 @@ angular.module('angularApp')
           return true;
         }
       },
-      changePassword: function () {
+      updateUser: function (data) {
+        var d = $q.defer();
+
+        $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/update_user', data)
+          .success(function (data) {
+            if (data.error) {
+              exMsg.sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
+            } else {
+              exMsg.sweetAlert('Great!', 'Account updated successfully', 'success');
+            }
+            d.resolve(data);
+          }).catch(function (data) {
+            exMsg.sweetAlert('Sorry!', 'Failed to update account', 'error');
+            d.reject(data);
+          });
+
+        return d.promise;
+      },
+      showChangePassword: function () {
         exMsg.sweetAlert({
           title: 'Change Password',
           text: 'Current Password:',
@@ -120,18 +138,10 @@ angular.module('angularApp')
                 return false
               }
 
-              $http.post(APP.apiPrefix + 'users/' + $auth.user.id + '/change_password', {
+              authSVC.updateUser({
                 current_password: currentPassword,
                 password: password,
                 password_confirmation: passwordConfirmation
-              }).success(function (data) {
-                if (data.error) {
-                  exMsg.sweetAlert(data.message, (data.messages || []).join('\n'), 'error');
-                } else {
-                  exMsg.sweetAlert('Great!', 'Password changed successfully', 'success');
-                }
-              }).catch(function (data) {
-                exMsg.sweetAlert('Sorry!', 'Password changed failed', 'error');
               });
             })
           });

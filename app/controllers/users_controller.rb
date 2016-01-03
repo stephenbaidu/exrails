@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
   resourcify
 
-  before_action :set_record, only: [:show, :update, :destroy, :lock, :unlock, :reset_password, :change_password, :permissions]
+  before_action :set_record, only: [:show, :update, :destroy, :lock, :unlock, :reset_password, :update_user, :delete_user]
   
   skip_before_filter :authenticate_user!, only: [:send_confirmation_instructions]
+  skip_before_action :check_password_expiration, only: [:update_user, :delete_user]
 
   def index
     authorize _RC.new
@@ -36,6 +37,7 @@ class UsersController < ApplicationController
     @record.provider = 'email'
     @record.password = user[:password]
     @record.password_confirmation = user[:password_confirmation]
+    @record.password_expired_at = Time.now
 
     unless user[:enforce_confirmation]
       @record.confirmation_sent_at = Date.today
@@ -128,36 +130,61 @@ class UsersController < ApplicationController
     render json: @error
   end
 
-  def change_password
+  def update_user
     authorize @record, :update?
 
-    data = {
-      current_password: params[:current_password],
-      password: params[:password],
-      password_confirmation: params[:password_confirmation]
-    }
+    data = {}
+    update_password = false
 
-    if @record.valid_password?(data[:current_password])
-      if @record.update_with_password(data)
-        render json: @record and return
+    # Set name if it exists
+    data[:name] = params[:name] unless params[:name].blank?
+
+    # Set password fields if they all exist
+    if params[:current_password] && params[:password] && params[:password_confirmation]
+      update_password = true
+      data[:current_password] = params[:current_password]
+      data[:password] = params[:password]
+      data[:password_confirmation] = params[:password_confirmation]
+    end
+
+    if update_password
+      if @record.valid_password?(data[:current_password])
+        if @record.update_with_password(data)
+          @record.update_column(:password_expired_at, nil)
+          render json: @record and return
+        else
+          @error[:type]     = 'Validation'
+          @error[:message]  = 'Sorry, there were errors.'
+          @error[:errors]   = @record.errors.messages
+          @error[:messages] = @record.errors.full_messages
+        end
       else
-        @error[:type]     = 'Validation'
-        @error[:message]  = 'Sorry, there were errors.'
-        @error[:errors]   = @record.errors.messages
-        @error[:messages] = @record.errors.full_messages
+        @error[:type]    = 'Validation'
+        @error[:message] = 'Your current password is invalid.'
       end
     else
-      @error[:type]    = 'Validation'
-      @error[:message] = 'Your current password is invalid.'
+      if data.length > 0
+        if @record.update(data)
+          render json: @record and return
+        else
+          @error[:type]     = 'Validation'
+          @error[:message]  = 'Sorry, there were errors.'
+          @error[:errors]   = @record.errors.messages
+          @error[:messages] = @record.errors.full_messages
+        end
+      else
+        @error[:type]    = 'Validation'
+        @error[:message] = 'Missing fields.'
+      end
     end
     
     render json: @error
   end
 
-  def permissions
+  def delete_user
     authorize @record, :update?
 
-    render json: @record.roles.map(&:permissions).flatten
+    render json: @record
   end
 
   private

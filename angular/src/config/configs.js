@@ -10,9 +10,10 @@ angular.module('angularApp')
       responseError: function(rejection) {
         if (rejection.status === 401) {
           $location.path('/login');
-        }
-        else if (rejection.status === 404) {
-          // exMsg.sweetAlert('Invalid request', '', 'error')
+        } else if (rejection.status === 404) {
+          // Not found
+        } else if (rejection.status === 601) { // Password expired
+          $location.path('/account');
         }
         return $q.reject(rejection);
       }

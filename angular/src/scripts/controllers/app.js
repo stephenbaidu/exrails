@@ -80,6 +80,6 @@ angular.module('angularApp')
     };
 
     vm.showPasswordChange = function () {
-      authService.changePassword();
+      authService.showChangePassword();
     }
   });

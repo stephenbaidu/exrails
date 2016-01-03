@@ -25,6 +25,10 @@ angular.module('angularApp')
         url: '/maintenance',
         templateUrl: 'app/layouts/maintenance.html'
       })
+      .state('app.account', {
+        url: 'account',
+        templateUrl: 'app/layouts/account.html'
+      })
       .state('app.dashboard', {
         url: 'dashboard',
         templateUrl: function ($stateParams) {
