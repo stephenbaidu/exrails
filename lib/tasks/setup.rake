@@ -8,6 +8,8 @@ namespace :app do
   end
 end
 
+# Some helpful commands
 # rake db:drop db:create db:migrate app:setup test:load_test_data
 # rake db:migrate VERSION=0
 # rake db:migrate app:setup test:load_test_data
+# sudo docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs sudo docker rm
