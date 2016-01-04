@@ -1,6 +1,6 @@
 
 angular.module('angularApp')
-  .controller('AccountCtrl', function (APP, $auth, $http, $state, exMsg, authService) {
+  .controller('AccountCtrl', function ($scope, APP, $auth, $http, $state, exMsg, authService, $uibModalStack) {
     var vm = this;
 
     vm.model = {}
@@ -17,7 +17,10 @@ angular.module('angularApp')
     }
 
     vm.close = function () {
-      $state.go('app');
+      if ($uibModalStack.getTop()) {
+        $scope.$dismiss();
+      }
+      $state.go('^');
     }
 
     vm.update = function () {

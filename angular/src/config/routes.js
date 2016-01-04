@@ -27,7 +27,14 @@ angular.module('angularApp')
       })
       .state('app.account', {
         url: 'account',
-        templateUrl: 'app/layouts/account.html'
+        onEnter: function ($stateParams, $state, $uibModal) {
+          $uibModal.open({
+            templateUrl: 'app/layouts/account.html',
+            size: 'lg'
+          }).result.finally(function() {
+            $state.go('^');
+          });
+        }
       })
       .state('app.dashboard', {
         url: 'dashboard',
