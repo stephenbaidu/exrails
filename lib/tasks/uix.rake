@@ -126,7 +126,7 @@ namespace :uix do
 
       # Insert script tag
       pattern = '<script src="app/modules/reports/config.js"></script>'
-      uix_insert_line_into_file(uix_index_file, pattern, uix_module_script_tag(module_route))
+      uix_insert_line_into_file(uix_index_file, pattern, uix_module_script_tag(module_route), true)
     rescue
     end
   end
@@ -263,13 +263,12 @@ namespace :uix do
     end
   end
 
-  def uix_insert_line_into_file(file, pattern, insert_str, after_pattern = true)
+  def uix_insert_line_into_file(file, pattern, insert_str, before_pattern = false)
     lines = File.readlines(file)
     return if lines.join.include? insert_str 
     lines.each_with_index do |line, index|
       if line.include? pattern
-        insert_at = (after_pattern)? index + 1 : index - 1
-        insert_at = (insert_at < 0)? 0 : insert_at
+        insert_at = (before_pattern)? index : index + 1
         lines.insert(insert_at, insert_str)
         break
       end
@@ -616,6 +615,7 @@ angular.module('angularApp')
   <div ng-include="partials.searchForm"></div>
   <div class="row model-container">
     <div ng-init="vm.config({openable: true, popable: true})"></div>
+    <!-- <div ng-init="vm.classes('field-here', {1: 'warning', 2: 'info', 3: 'success', 4: 'danger'})"></div> -->
     #{uix_grid_config(klass)}
     <div ng-show="state.showGrid" ng-class="{'col-md-12': !state.collapsedGridMode, 'col-md-4': state.collapsedGridMode}">
       <div ng-include="partials.indexGrid"></div>
@@ -698,7 +698,7 @@ angular.module('angularApp')
 angular.module('angularApp')
   .controller('#{uix_model_name(klass)}IndexCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
     
-    $scope.$on('euix:index-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
       // Do something
     });
@@ -707,12 +707,12 @@ angular.module('angularApp')
 angular.module('angularApp')
   .controller('#{uix_model_name(klass)}FormCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
     
-    $scope.$on('euix:form-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
       // Do something
     });
 
-    $scope.$on('euix:record-loaded', function (evt, modelName, record, scope) {
+    $scope.$on('uix:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
       // Do something
     });
