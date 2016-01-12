@@ -73,7 +73,7 @@ angular.module('angularApp')
       $rootScope.$broadcast('fab:load-actions', vm.model.name, actionsConfig, mainActionConfig);
     });
 
-    $scope.$on('exui:reload-record', function(evt, modelName, record) {
+    $scope.$on('uix:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord(vm.record.id);
       }
@@ -90,7 +90,7 @@ angular.module('angularApp')
       
       lookupService.load(vm.model.key, options.lookups, true).then(function () {
         vm.setRecord();
-        $rootScope.$broadcast('exui:form-ready', vm.model.name, vm, $scope);
+        $rootScope.$broadcast('uix:form-ready', vm.model.name, vm, $scope);
       });
 
       if (options.loadRecord && $stateParams.id) {
@@ -120,7 +120,7 @@ angular.module('angularApp')
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
           vm.sanitizeRecord();
-          $rootScope.$broadcast('exui:record-loaded', vm.model.name, vm.record, $scope);
+          $rootScope.$broadcast('uix:record-loaded', vm.model.name, vm.record, $scope);
           vm.action.loading = false;
           vm.formly.options.formState.readOnly = true;
         })
@@ -143,7 +143,7 @@ angular.module('angularApp')
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
         });
-        $rootScope.$broadcast('exui:record-set', vm.model.name, vm.record, $scope);
+        $rootScope.$broadcast('uix:record-set', vm.model.name, vm.record, $scope);
       }
     };
 
@@ -167,7 +167,7 @@ angular.module('angularApp')
           // vm.formly.model.id = data.id;
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
-          $rootScope.$broadcast('exui:record-created', vm.model.name, data, $scope);
+          $rootScope.$broadcast('uix:record-created', vm.model.name, data, $scope);
           exMsg.success(vm.model.title + ' created successfully');
           
           vm.close();
@@ -217,7 +217,7 @@ angular.module('angularApp')
         .then(function (data) {
           vm.record = data;
           vm.formly.model = angular.copy(vm.record);
-          $rootScope.$broadcast('exui:record-updated', vm.model.name, data, $scope);
+          $rootScope.$broadcast('uix:record-updated', vm.model.name, data, $scope);
           exMsg.success(vm.model.title + ' updated successfully');
 
           vm.close();
@@ -255,7 +255,7 @@ angular.module('angularApp')
         data[vm.model.key] = vm.record;
         resourceManager.delete(vm.model.name, data)
           .then(function (data) {
-          $rootScope.$broadcast('exui:record-deleted', vm.model.name, vm.record, $scope);
+          $rootScope.$broadcast('uix:record-deleted', vm.model.name, vm.record, $scope);
             exMsg.success(vm.model.title + " deleted successfully");
             vm.close();
           })

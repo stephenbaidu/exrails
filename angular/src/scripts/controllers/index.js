@@ -68,7 +68,7 @@ angular.module('angularApp')
     //   updateFABActions();
     // });
 
-    $scope.$on('exui:record-loaded', function (e, modelName, record) {
+    $scope.$on('uix:record-loaded', function (e, modelName, record) {
       if(vm.model.name != modelName) return;
 
       vm.currentRecord = record;
@@ -76,7 +76,7 @@ angular.module('angularApp')
       vm.updateRecordInRecords(record);
     });
 
-    $scope.$on('exui:record-created', function (evt, modelName, record) {
+    $scope.$on('uix:record-created', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.records.unshift(angular.copy(record));
         vm.recordsHash[record.id] = true;
@@ -84,13 +84,13 @@ angular.module('angularApp')
       }
     });
 
-    $scope.$on('exui:record-updated', function (evt, modelName, record) {
+    $scope.$on('uix:record-updated', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.updateRecordInRecords(record);
       }
     });
 
-    $scope.$on('exui:record-deleted', function (evt, modelName, record) {
+    $scope.$on('uix:record-deleted', function (evt, modelName, record) {
       if (vm.model.name === modelName) {
         vm.removeRecordInRecords(record);
       }
@@ -109,7 +109,7 @@ angular.module('angularApp')
 
       lookupService.load(vm.model.key, options.lookups).then(function () {
         initSearch();
-        $rootScope.$broadcast('exui:index-ready', vm.model.name, vm, $scope);
+        $rootScope.$broadcast('uix:index-ready', vm.model.name, vm, $scope);
       });
     }
 
@@ -263,7 +263,7 @@ angular.module('angularApp')
         })
         .then(function (data) {
           vm.updateRecords(data);
-          $rootScope.$broadcast('exui:records-loaded', vm.model.name, vm.records, $scope);
+          $rootScope.$broadcast('uix:records-loaded', vm.model.name, vm.records, $scope);
         })
         .catch(function (error) {
           console.log(error);

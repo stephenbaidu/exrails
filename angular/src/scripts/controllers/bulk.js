@@ -49,10 +49,10 @@ angular.module('angularApp')
 
       vm.upload.selectedHeaders = _.chain(rows[0]).keys().pull('$$hashKey').value();
       vm.upload.records = rows;
-      $rootScope.$broadcast('exui:bulk-automatch-fields', vm.model.name, {}, $scope);
+      $rootScope.$broadcast('uix:bulk-automatch-fields', vm.model.name, {}, $scope);
     });
 
-    $scope.$on('exui:bulk-automatch-fields', function (evt, modelName, config, scope) {
+    $scope.$on('uix:bulk-automatch-fields', function (evt, modelName, config, scope) {
       if (vm.model.name !== modelName) return;
 
       scope.vmRef.upload.matchedFields = {};
@@ -83,7 +83,7 @@ angular.module('angularApp')
           return (['created_at', 'updated_at'].indexOf(field.key) < 0);
         })
         .value();
-      $rootScope.$broadcast('exui:bulk-view-ready', vm.model.name, {}, $scope);
+      $rootScope.$broadcast('uix:bulk-view-ready', vm.model.name, {}, $scope);
     }
 
     function bulkUpload () {

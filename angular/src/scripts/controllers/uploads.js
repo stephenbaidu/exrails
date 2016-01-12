@@ -39,7 +39,7 @@ angular.module('angularApp')
         .then(function (data) {
           vm.record = data;
           vm.sanitizeRecord();
-          $rootScope.$broadcast('exui:record-loaded', vm.model.name, vm.record, vm);
+          $rootScope.$broadcast('uix:record-loaded', vm.model.name, vm.record, vm);
           vm.action.loading = false;
         })
         .catch(function (error) {
@@ -52,7 +52,7 @@ angular.module('angularApp')
       return vm.hasAccess(vm.model.name + ':update');
     }
 
-    vm.$on('exui:reload-record', function(evt, modelName, record) {
+    vm.$on('uix:reload-record', function(evt, modelName, record) {
       if (modelName === vm.model.name && record.id === vm.record.id) {
         vm.loadRecord(vm.record.id);
       }
@@ -71,7 +71,7 @@ angular.module('angularApp')
         _.each(vm.splitQ($stateParams.q), function (v, k) {
           vm.record[k] = v;
         });
-        $rootScope.$broadcast('exui:record-set', vm.model.name, vm.record, vm);
+        $rootScope.$broadcast('uix:record-set', vm.model.name, vm.record, vm);
       }
     };
 
