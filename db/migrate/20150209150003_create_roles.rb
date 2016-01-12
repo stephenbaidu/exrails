@@ -2,6 +2,7 @@ class CreateRoles < ActiveRecord::Migration
   def change
     create_table :roles do |t|
       t.string :name
+      t.string :description
       t.text :permissions, default: [].to_yaml
       t.string :status
 

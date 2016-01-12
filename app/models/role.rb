@@ -4,6 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  name        :string
+#  description :string
 #  permissions :text             default([])
 #  status      :string
 #  created_at  :datetime         not null
@@ -22,6 +23,6 @@ class Role < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
 
   def users
-    User.all.select { |e| e.role_ids.include?(self.id) }.count
+    User.pluck(:role_ids).select { |e| e.include?(1) }.count
   end
 end

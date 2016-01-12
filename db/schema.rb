@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20150209150005) do
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
+    t.string   "description"
     t.text     "permissions", default: "--- []\n"
     t.string   "status"
     t.datetime "created_at",                       null: false

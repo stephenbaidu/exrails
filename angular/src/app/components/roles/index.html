@@ -4,9 +4,9 @@
   <div class="row model-container">
     <div ng-init="vm.configure({openable: true, popable: true})"></div>
     <div ng-init="vm.column('name', 'Name')"></div>
+    <div ng-init="vm.column('description', 'Description')"></div>
     <div ng-init="vm.column('permissions', 'Permissions', 'size')"></div>
-    <div ng-init="vm.column('status', 'Status')"></div>
-    <div ng-init="vm.column('created_at', 'Created At', 'date', 'yyyy-MM-dd HH:mm:ss')"></div>
+    <div ng-init="vm.column('users')"></div>
     <div ng-show="state.showGrid" ng-class="{'col-md-12': !state.collapsedGridMode, 'col-md-4': state.collapsedGridMode}">
       <div ng-include="partials.indexGrid"></div>
       <div ng-include="partials.loadMoreButton"></div>

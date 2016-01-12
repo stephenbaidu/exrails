@@ -4,6 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  name        :string
+#  description :string
 #  permissions :text             default([])
 #  status      :string
 #  created_at  :datetime         not null

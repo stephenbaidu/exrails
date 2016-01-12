@@ -42,11 +42,11 @@ angular.module('angularApp')
             },
             {
               "className": "col-xs-6",
-              "key": "status",
+              "key": "description",
               "type": "ex-input",
               "templateOptions": {
                 "required": false,
-                "label": "Status"
+                "label": "Description"
               }
             }
           ]
