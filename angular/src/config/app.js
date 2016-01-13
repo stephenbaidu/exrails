@@ -25,6 +25,7 @@ var app = angular.module('angularApp', [
   'ng-mfb',
   'ui.select',
   'ui.bootstrap',
+  'mwl.calendar',
   'xeditable',
   'daterangepicker',
   'pickadate',

@@ -11,15 +11,42 @@ angular.module('angularApp')
         templateUrl: 'app/layouts/app.html',
         controller: 'AppCtrl',
         resolve: {
-          auth: function($auth, $state, $rootScope) {
-            return $auth.validateUser().catch(function() { $state.go('login'); });
+          auth: function($auth, $state) {
+            return $auth.validateUser().catch(function() {
+              $state.go('auth.signin');
+            });
           }
         }
       })
-      .state('login', {
-        url: '/login',
-        templateUrl: 'app/layouts/login.html',
-        controller: 'LoginCtrl'
+      .state('auth', {
+        url: '/auth',
+        templateUrl: 'app/layouts/home.html'
+      })
+      .state('auth.signin', {
+        url: '/signin',
+        onEnter: function ($state, $uibModal, $auth) {
+          $auth.validateUser().then(function() {
+            $state.go('app');
+          }).catch(function() {
+            $uibModal.open({
+              templateUrl: 'app/layouts/signin.html',
+              size: 'sm',
+              backdrop: 'static',
+              keyboard: false
+            })
+          });
+        }
+      })
+      .state('auth.signup', {
+        url: '/signup',
+        onEnter: function ($uibModal) {
+          $uibModal.open({
+            templateUrl: 'app/layouts/signup.html',
+            size: 'sm',
+            backdrop: 'static',
+            keyboard: false
+          });
+        }
       })
       .state('maintenance', {
         url: '/maintenance',
@@ -27,18 +54,18 @@ angular.module('angularApp')
       })
       .state('app.account', {
         url: 'account',
-        onEnter: function ($stateParams, $state, $uibModal) {
+        onEnter: function ($uibModal) {
           $uibModal.open({
             templateUrl: 'app/layouts/account.html',
-            size: 'lg'
-          }).result.finally(function() {
-            $state.go('^');
+            size: 'lg',
+            backdrop: 'static',
+            keyboard: false
           });
         }
       })
       .state('app.dashboard', {
         url: 'dashboard',
-        templateUrl: function ($stateParams) {
+        templateUrl: function () {
           return 'app/layouts/dashboard.html';
         },
         controller: 'ModuleCtrl'
@@ -81,12 +108,12 @@ angular.module('angularApp')
       })
       .state('app.module.form', {
         url: '/form/:model',
-        onEnter: function ($stateParams, $state, $uibModal) {
+        onEnter: function ($stateParams, $uibModal) {
           $uibModal.open({
             templateUrl: 'app/components/' + $stateParams.model + '/new.html',
-            size: 'lg'
-          }).result.finally(function() {
-            $state.go('^');
+            size: 'lg',
+            backdrop: 'static',
+            keyboard: false
           });
         }
       })
@@ -110,12 +137,12 @@ angular.module('angularApp')
       })
       .state('app.module.model.newPop', {
         url: '/new/pop',
-        onEnter: function ($stateParams, $state, $uibModal) {
+        onEnter: function ($stateParams, $uibModal) {
           $uibModal.open({
             templateUrl: 'app/components/' + $stateParams.model + '/new.html',
-            size: 'lg'
-          }).result.finally(function() {
-            $state.go('^');
+            size: 'lg',
+            backdrop: 'static',
+            keyboard: false
           });
         }
       })
@@ -127,12 +154,12 @@ angular.module('angularApp')
       })
       .state('app.module.model.showPop', {
         url: '/:id/pop',
-        onEnter: function ($stateParams, $state, $uibModal) {
+        onEnter: function ($stateParams, $uibModal) {
           $uibModal.open({
             templateUrl: 'app/components/' + $stateParams.model + '/show.html',
-            size: 'lg'
-          }).result.finally(function() {
-            $state.go('^');
+            size: 'lg',
+            backdrop: 'static',
+            keyboard: false
           });
         }
       })

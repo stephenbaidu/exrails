@@ -15,24 +15,23 @@ angular.module('angularApp')
 
     vm.$on('auth:login-success', function(ev, user) {
       console.log('auth:login-success');
-      exMsg.info('Welcome, ' + user.name);
-      $state.go('app');
+      // exMsg.info('Welcome, ' + user.name);
+      // $state.go('app');
     });
 
     vm.$on('auth:login-error', function(ev, resp) {
       console.log('auth:login-error');
-      var text = resp.errors[0];
-      exMsg.sweetAlert({title: 'Login Failed', text: text, type: 'error', animation: 'slide-from-top'});
+      // var text = resp.errors[0];
+      // exMsg.sweetAlert({title: 'Login Failed', text: text, type: 'error', animation: 'slide-from-top'});
     });
 
     vm.$on('auth:invalid', function (ev) {
-      console.log('auth:invalid');
-      // exMsg.error('auth:invalid');
+      // console.log('auth:invalid');
     });
 
     vm.$on('auth:validation-success', function (ev) {
       console.log('auth:validation-success');
-      if ($state.$current.name === 'login') {
+      if ($state.$current.name === 'auth.signin') {
         $state.go('app');
       }
     });
@@ -44,9 +43,9 @@ angular.module('angularApp')
 
     vm.$on('auth:logout-success', function(ev) {
       console.log('auth:logout-success');
-      exMsg.info('Goodbye');
-      if ($state.$current.name !== 'login') {
-        $state.go('login');
+      // exMsg.info('Goodbye');
+      if ($state.$current.name !== 'auth.signin') {
+        $state.go('auth.signin');
       }
     });
 
@@ -181,8 +180,8 @@ angular.module('angularApp')
     vm.$on('auth:session-expired', function(ev) {
       console.log('auth:session-expired');
       // exMsg.info('Session has expired');
-      if ($state.$current.name !== 'login') {
-        $state.go('login');
+      if ($state.$current.name !== 'auth.signin') {
+        $state.go('auth.signin');
       }
     });
   });

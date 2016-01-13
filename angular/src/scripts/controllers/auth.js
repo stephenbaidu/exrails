@@ -2,15 +2,39 @@
 
 /**
  * @ngdoc function
- * @name angularApp.controller:MainCtrl
+ * @name angularApp.controller:AuthCtrl
  * @description
- * # MainCtrl
+ * # AuthCtrl
  * Controller of the angularApp
  */
 angular.module('angularApp')
-  .controller('LoginCtrl', function ($scope, $rootScope, $auth, $http, $state, exMsg, APP) {
-    var vm = $scope;
-    window.loginCtrl = vm;
+  .controller('AuthCtrl', function ($scope, $rootScope, APP, $auth, $http, $state, exMsg, $uibModalStack) {
+    var vm = this;
+
+    vm.user = {};
+    vm.showLoginError = false;
+
+    vm.submitLogin = function (user) {
+      $auth.submitLogin(vm.user);
+    }
+
+    $rootScope.$on('auth:login-success', function(ev, resp) {
+      $uibModalStack.dismissAll();
+      $state.go('app');
+    });
+
+    $rootScope.$on('auth:login-error', function(ev, resp) {
+      vm.showLoginError = true;
+    });
+
+    vm.submitRegistration = function (user) {
+      $auth.submitRegistration(vm.user);
+    }
+
+    vm.backToSignIn = function () {
+      $uibModalStack.dismissAll();
+      $state.go('auth.signin');
+    }
 
     vm.sendPasswordResetEmail = function () {
       exMsg.sweetAlert({
@@ -53,5 +77,9 @@ angular.module('angularApp')
             }
           });
       });
+    }
+
+    vm.sendUnlockInstructions = function () {
+      // 
     }
   });
