@@ -8,6 +8,21 @@ namespace :uix do
   end
   task :c => :create # alias
 
+  desc 'Serves the angular app'
+  task :serve => :environment do |t, args|
+    uix_serve
+  end
+
+  desc 'Builds the angular app'
+  task :build => :environment do |t, args|
+    uix_build
+  end
+
+  desc 'Publishes the angular app in public directory'
+  task :publish => :environment do |t, args|
+    uix_publish
+  end
+
   desc 'Generates module/component files in the angular app'
   task :generate => :environment do |t, args|
     uix_generate
@@ -22,6 +37,29 @@ namespace :uix do
 
   def uix_create
     puts "Not yet implemented"
+  end
+
+  def uix_serve
+    FileUtils.cd(Rails.root.join('_uix')) {
+      system('grunt serve')
+    }
+  end
+
+  def uix_build
+    FileUtils.cd(Rails.root.join('_uix')) {
+      system('grunt build')
+    }
+  end
+
+  def uix_publish
+    FileUtils.rm_rf(Dir.glob(Rails.root.join('public', '*')))
+    FileUtils.cp_r(Rails.root.join('_uix', 'dist/.'), Rails.root.join('public'))
+
+    FileUtils.cd(Rails.root) {
+      system('precompile')
+      system("git add #{Rails.root.join('public')}")
+      system('git commit -m "Published updated uix angular app"')
+    }
   end
 
   def uix_generate
