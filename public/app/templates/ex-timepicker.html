@@ -1,0 +1,1 @@
+<div> <input ng-if="!formState.readOnly" pick-a-time="model[options.key]" type="text" class="form-control" style="background-color: #fff !important"> <p ng-if="formState.readOnly" class="form-control-static"> {{(model[options.key] | date:'shortTime') || '...'}} </p> </div>
