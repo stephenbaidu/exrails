@@ -56,9 +56,10 @@ namespace :uix do
     FileUtils.cp_r(Rails.root.join('_uix', 'dist/.'), Rails.root.join('public'))
 
     FileUtils.cd(Rails.root) {
-      system('precompile')
-      system("git add #{Rails.root.join('public')}")
-      system('git commit -m "Published updated uix angular app"')
+      command = 'precompile'
+      command += " && git add #{Rails.root.join('public')}"
+      command += ' && git commit -m "Published updated uix angular app"'
+      system(command)
     }
   end
 
