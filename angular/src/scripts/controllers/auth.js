@@ -31,6 +31,11 @@ angular.module('angularApp')
       $auth.submitRegistration(vm.user);
     }
 
+    vm.goToSignUp = function () {
+      $uibModalStack.dismissAll();
+      $state.go('auth.signup');
+    }
+
     vm.backToSignIn = function () {
       $uibModalStack.dismissAll();
       $state.go('auth.signin');
