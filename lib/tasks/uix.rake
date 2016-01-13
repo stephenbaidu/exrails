@@ -147,15 +147,15 @@ namespace :uix do
   end
 
   def uix_components_directory
-    Rails.root.join('angular', 'src', 'app', 'components').to_s
+    Rails.root.join('_uix', 'src', 'app', 'components').to_s
   end
 
   def uix_modules_directory
-    Rails.root.join('angular', 'src', 'app', 'modules').to_s
+    Rails.root.join('_uix', 'src', 'app', 'modules').to_s
   end
 
   def uix_index_file
-    Rails.root.join('angular', 'src', 'index.html').to_s
+    Rails.root.join('_uix', 'src', 'index.html').to_s
   end
 
   def uix_routes_file
@@ -297,7 +297,7 @@ namespace :uix do
   end
 
   def uix_fa_icon
-    file = Rails.root.join('angular', 'bower_components', 'font-awesome', 'scss', '_icons.scss')
+    file = Rails.root.join('_uix', 'bower_components', 'font-awesome', 'scss', '_icons.scss')
     lines = File.readlines(file)
     blacklist1 = [
       'twitter', 'facebook', 'github', 'linkedin', 'pinterest', 'google', 'skype',
@@ -312,7 +312,7 @@ namespace :uix do
   end
 
   def uix_material_color
-    file = Rails.root.join('angular', 'src', 'styles', 'material-colors.scss')
+    file = Rails.root.join('_uix', 'src', 'styles', 'material-colors.scss')
     lines = File.readlines(file)
     blacklist1 = ['50', '100', 'a100', '200', 'a200']
     blacklist2 = ['amber', 'yellow']
