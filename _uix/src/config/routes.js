@@ -13,44 +13,33 @@ angular.module('uixApp')
         resolve: {
           auth: function($auth, $state) {
             return $auth.validateUser().catch(function() {
-              $state.go('auth.signin');
+              $state.go('auth.login');
             });
           }
         }
+      })
+      .state('maintenance', {
+        url: '/maintenance',
+        templateUrl: 'app/layouts/maintenance.html'
       })
       .state('auth', {
         url: '/auth',
         templateUrl: 'app/layouts/home.html'
       })
-      .state('auth.signin', {
-        url: '/signin',
+      .state('auth.login', {
+        url: '/login',
         onEnter: function ($state, $uibModal, $auth) {
           $auth.validateUser().then(function() {
             $state.go('app');
           }).catch(function() {
             $uibModal.open({
-              templateUrl: 'app/layouts/signin.html',
+              templateUrl: 'app/layouts/login.html',
               size: 'sm',
               backdrop: 'static',
               keyboard: false
             })
           });
         }
-      })
-      .state('auth.signup', {
-        url: '/signup',
-        onEnter: function ($uibModal) {
-          $uibModal.open({
-            templateUrl: 'app/layouts/signup.html',
-            size: 'sm',
-            backdrop: 'static',
-            keyboard: false
-          });
-        }
-      })
-      .state('maintenance', {
-        url: '/maintenance',
-        templateUrl: 'app/layouts/maintenance.html'
       })
       .state('app.account', {
         url: 'account',

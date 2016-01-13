@@ -8,54 +8,74 @@
  * Controller of the uixApp
  */
 angular.module('uixApp')
-  .controller('AuthCtrl', function ($scope, $rootScope, APP, $auth, $http, $state, exMsg, $uibModalStack) {
+  .controller('AuthCtrl', function (APP, $auth, $http, $state, exMsg, $uibModalStack) {
     var vm = this;
 
     vm.user = {};
-    vm.showLoginError = false;
+    vm.view = 'signin';
+    vm.action = { executed: false, success: false, message: '' };
 
-    vm.submitLogin = function (user) {
-      $auth.submitLogin(vm.user);
+    vm.submitUserLogin = function (user) {
+      vm.action = {};
+
+      $auth.submitLogin(vm.user).then(function () {
+        $uibModalStack.dismissAll();
+        $state.go('app');
+      }).catch(function (data) {
+        vm.action.executed = true;
+        vm.action.success = false;
+      });
     }
 
-    $rootScope.$on('auth:login-success', function(ev, resp) {
-      $uibModalStack.dismissAll();
-      $state.go('app');
-    });
+    vm.submitUserRegistration = function (user) {
+      vm.action = {};
+      user.name = user.email;
 
-    $rootScope.$on('auth:login-error', function(ev, resp) {
-      vm.showLoginError = true;
-    });
-
-    vm.submitRegistration = function (user) {
-      $auth.submitRegistration(vm.user);
+      $auth.submitRegistration(vm.user).then(function (data) {
+        console.log(data);
+        vm.action.success = true;
+        var message = 'A registration email was sent to ' + data.data.data.email + '. Follow the instructions contained in the email to complete registration.'
+        vm.action.message = message;
+      }).catch(function (data) {
+        console.log(data);
+        vm.action.success = false;
+        vm.action.message = data.data.errors.full_messages[0];
+      }).finally(function () {
+        vm.action.executed = true;
+      });
     }
 
     vm.goToSignUp = function () {
-      $uibModalStack.dismissAll();
-      $state.go('auth.signup');
+      vm.user = {};
+      vm.action = {};
+      vm.view = 'signup';
+    }
+
+    vm.goToResetPassword = function () {
+      vm.user = {};
+      vm.action = {};
+      vm.view = 'reset-password';
     }
 
     vm.backToSignIn = function () {
-      $uibModalStack.dismissAll();
-      $state.go('auth.signin');
+      vm.user = {};
+      vm.action = {};
+      vm.view = 'signin';
     }
 
-    vm.sendPasswordResetEmail = function () {
-      exMsg.sweetAlert({
-        title: 'Password Reset',
-        text: 'Email',
-        type: 'input',
-        showCancelButton: true,
-        animation: 'slide-from-top'
-      }, function (email) {
-        if (email === false) return false;
-        if (email === '') {
-          exMsg.sweetAlert.showInputError('No email provided!');
-          return false
-        }
+    vm.sendPasswordResetEmail = function (email) {
+      vm.action = {};
 
-        $auth.requestPasswordReset({email: email});
+      $auth.requestPasswordReset({email: email}).then(function (data) {
+        console.log(data);
+        vm.action.success = true;
+        vm.action.message = data.data;
+      }).catch(function (data) {
+        console.log(data);
+        vm.action.success = false;
+        vm.action.message = data.data.errors[0];
+      }).finally(function () {
+        vm.action.executed = true;
       });
     }
 
@@ -78,7 +98,7 @@ angular.module('uixApp')
             if(data.error) {
               exMsg.sweetAlert('Error', data.message, 'error');
             } else {
-              exMsg.sweetAlert('Successful', data.message, 'success');
+              exMsg.sweetAlert('success', data.message, 'success');
             }
           });
       });

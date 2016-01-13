@@ -31,9 +31,9 @@ angular.module('uixApp')
 
     vm.$on('auth:validation-success', function (ev) {
       console.log('auth:validation-success');
-      if ($state.$current.name === 'auth.signin') {
-        $state.go('app');
-      }
+      // if ($state.$current.name === 'auth.login') {
+      //   $state.go('app');
+      // }
     });
 
     vm.$on('auth:validation-error', function (ev) {
@@ -44,8 +44,8 @@ angular.module('uixApp')
     vm.$on('auth:logout-success', function(ev) {
       console.log('auth:logout-success');
       // exMsg.info('Goodbye');
-      if ($state.$current.name !== 'auth.signin') {
-        $state.go('auth.signin');
+      if ($state.$current.name !== 'auth.login') {
+        $state.go('auth.login');
       }
     });
 
@@ -62,15 +62,15 @@ angular.module('uixApp')
     vm.$on('auth:registration-email-success', function(ev, resp) {
       console.log('auth:registration-email-success');
       var text = 'A registration email was sent to ' + resp.email + '. Follow the instructions contained in the email to complete registration.';
-      exMsg.sweetAlert({title: 'Registration Successful', text: text, type: 'success', animation: 'slide-from-top'}, function () {
-        $state.go('.', {}, { reload: true });
-      });
+      // exMsg.sweetAlert({title: 'Registration Successful', text: text, type: 'success', animation: 'slide-from-top'}, function () {
+      //   $state.go('.', {}, { reload: true });
+      // });
     });
 
     vm.$on('auth:registration-email-error', function(ev, resp) {
       console.log('auth:registration-email-error');
-      var text = resp.errors.full_messages[0];
-      exMsg.sweetAlert({title: 'Registration Failed', text: text, type: 'error', animation: 'slide-from-top'});
+      // var text = resp.errors.full_messages[0];
+      // exMsg.sweetAlert({title: 'Registration Failed', text: text, type: 'error', animation: 'slide-from-top'});
     });
 
     $rootScope.$on('auth:email-confirmation-success', function(ev, user) {
@@ -86,14 +86,14 @@ angular.module('uixApp')
 
     vm.$on('auth:password-reset-request-success', function(ev, resp) {
       console.log('auth:password-reset-request-success');
-      var text = 'Password reset instructions were sent to ' + resp.email
-      exMsg.sweetAlert({title: 'Password Reset', text: text, type: 'info', animation: 'slide-from-top'});
+      // var text = 'Password reset instructions were sent to ' + resp.email
+      // exMsg.sweetAlert({title: 'Password Reset', text: text, type: 'info', animation: 'slide-from-top'});
     });
 
     vm.$on('auth:password-reset-request-error', function(ev, resp) {
       console.log('auth:password-reset-request-error');
-      var text = resp.errors[0];
-      exMsg.sweetAlert({title: 'Failed', text: text, type: 'error', animation: 'slide-from-top'});
+      // var text = resp.errors[0];
+      // exMsg.sweetAlert({title: 'Failed', text: text, type: 'error', animation: 'slide-from-top'});
     });
 
     vm.$on('auth:password-reset-confirm-success', function() {
@@ -180,8 +180,8 @@ angular.module('uixApp')
     vm.$on('auth:session-expired', function(ev) {
       console.log('auth:session-expired');
       // exMsg.info('Session has expired');
-      if ($state.$current.name !== 'auth.signin') {
-        $state.go('auth.signin');
+      if ($state.$current.name !== 'auth.login') {
+        $state.go('auth.login');
       }
     });
   });

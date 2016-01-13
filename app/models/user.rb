@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   validates :name, presence: true
+  validates_confirmation_of :password
 
   def admin?
     has_role? 'Admin'
