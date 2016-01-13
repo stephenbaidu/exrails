@@ -1,0 +1,146 @@
+<div ng-controller="AuthCtrl as vm">
+
+  <div ng-if="vm.view === 'signin'">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div style="text-align: center;">
+          <img src="images/logo.png" alt="" class="img-circle" style="height: 55px"><br><br>
+          <span style="font-size: 24px; font-weight: 300;">eXRails App</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div ng-if="vm.action.executed && !vm.action.success" class="alert alert-danger">
+            Invalid credentials. Please try again.
+          </div>
+          <h4>
+            Sign in
+            <span style="font-size: 12px; margin-top: -5px;" class="pull-right">
+              New user?<a ng-click="vm.goToSignUp()" class="btn btn-default- btn-xs">Sign up</a>
+            </span>
+          </h4>
+          <form method="post" name="loginForm" class="formly-form login-form">
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="email" name="email" ng-model="vm.user.email" placeholder="Email" required
+              ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
+              <span class="fa fa-envelope-o form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="password" name="password" ng-model="vm.user.password" placeholder="Password" required>
+              <span class="fa fa-lock form-control-feedback"></span>
+            </div>
+            <p class="text-center">
+              <a href="" ng-click="vm.goToResetPassword()">Forgot your password?</a><br>
+              <a href="" ng-click="vm.sendConfirmationInstructions()">Resend confirmation instructions</a><br>
+              <!-- <a href="" ng-click="vm.sendUnlockInstructions()">Send unlock instructions</a> -->
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-block btn-primary btn-lg" ng-click="vm.submitUserLogin(vm.user)">
+        Log in
+      </button>
+    </div>
+  </div>
+
+  <div ng-if="vm.view === 'signup'">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div style="text-align: center;">
+          <img src="images/logo.png" alt="" class="img-circle" style="height: 55px"><br><br>
+          <span style="font-size: 24px; font-weight: 300;">eXRails App</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Sign up</h4>
+          <div ng-if="vm.action.executed" class="alert"
+            ng-class="{'alert-success': vm.action.success, 'alert-danger': !vm.action.success}">
+            {{ vm.action.message }}
+          </div>
+          <form ng-if="!vm.action.success" method="post" name="loginForm" class="formly-form login-form">
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="email" ng-model="vm.user.email" placeholder="Email" required
+              ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
+              <span class="fa fa-envelope-o form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="password" ng-model="vm.user.password" placeholder="Password" required>
+              <span class="fa fa-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="password" ng-model="vm.user.password_confirmation" placeholder="Confirm Password" required>
+              <span class="fa fa-lock form-control-feedback"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-4">
+          <a ng-click="vm.backToSignIn()" class="btn btn-block btn-primary btn-md">
+            <span class="fa fa-angle-double-left"></span> Back 
+          </a>
+        </div>
+        <div class="col-md-8">
+          <button ng-disabled="vm.action.success" type="button" class="btn btn-block btn-primary btn-md" ng-click="vm.submitUserRegistration(vm.user)">
+            <span class="fa fa-user-plus"></span> Register
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="vm.view === 'reset-password'">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div style="text-align: center;">
+          <img src="images/logo.png" alt="" class="img-circle" style="height: 55px"><br><br>
+          <span style="font-size: 24px; font-weight: 300;">eXRails App</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Reset Password</h4>
+          <div ng-if="!vm.action.executed" class="alert alert-info">
+            Please enter your email. We will send you an email to procced with the password change.
+          </div>
+          <div ng-if="vm.action.executed" class="alert"
+            ng-class="{'alert-success': vm.action.success, 'alert-danger': !vm.action.success}">
+            {{ vm.action.message }}
+          </div>
+          <form ng-if="!vm.action.success" method="post" name="loginForm" class="formly-form login-form">
+            <div class="form-group has-feedback formly-field-ex-input">
+              <input class="form-control" type="email" ng-model="vm.user.email" placeholder="eg: name@gmail.com" required
+              ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
+              <span class="fa fa-envelope-o form-control-feedback"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-4">
+          <a ng-click="vm.backToSignIn()" class="btn btn-block btn-primary btn-md">
+            <span class="fa fa-angle-double-left"></span> Back 
+          </a>
+        </div>
+        <div class="col-md-8">
+          <button ng-disabled="vm.action.success" type="button" class="btn btn-block btn-primary btn-md" ng-click="vm.sendPasswordResetEmail(vm.user.email)">
+            <span class="fa fa-angle-double-right"></span> Proceed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
