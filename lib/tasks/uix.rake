@@ -40,7 +40,7 @@ namespace :uix do
   end
 
   def uix_serve
-    FileUtils.cd(Rails.root.join('_uix')) {
+    Dir.chdir(Rails.root.join('_uix')) {
       system('grunt serve')
     }
   end
