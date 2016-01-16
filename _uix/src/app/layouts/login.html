@@ -21,15 +21,15 @@
               New user?<a ng-click="vm.goToSignUp()" class="btn btn-xs">Sign up</a>
             </span>
           </h4>
-          <form name="vm.loginForm" class="formly-form login-form" ng-init="vm.loginForm.$setPristine()">
+          <form name="vm.signinForm" class="formly-form signin-form">
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control input-login" type="email" name="email" ng-model="vm.user.email" placeholder="yourname@domain.com"
               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
-              <span class="fa fa-envelope-o form-control-feedback"></span>
+              <span class="fa fa-envelope-o fa-lg form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control input-login" type="password" name="password" ng-model="vm.user.password" placeholder="password">
-              <span class="fa fa-lock form-control-feedback"></span>
+              <span class="fa fa-lock fa-lg form-control-feedback"></span>
             </div>
             <p class="text-center">
               <a class="btn" href="" ng-click="vm.goToResetPassword()">Forgot your password?</a><br>
@@ -45,19 +45,19 @@
             ng-class="{'alert-success': vm.action.success, 'alert-danger': !vm.action.success}">
             {{ vm.action.message }}
           </div>
-          <form ng-if="!vm.action.success" method="post" name="loginForm" class="formly-form login-form">
+          <form ng-if="!vm.action.success" name="vm.signupForm" class="formly-form login-form">
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control" type="email" ng-model="vm.user.email" placeholder="yourname@domain.com" required
               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
-              <span class="fa fa-envelope-o form-control-feedback"></span>
+              <span class="fa fa-envelope-o fa-lg form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control" type="password" ng-model="vm.user.password" placeholder="Password" required>
-              <span class="fa fa-lock form-control-feedback"></span>
+              <span class="fa fa-lock fa-lg form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control" type="password" ng-model="vm.user.password_confirmation" placeholder="Confirm Password" required>
-              <span class="fa fa-lock form-control-feedback"></span>
+              <span class="fa fa-lock fa-lg form-control-feedback"></span>
             </div>
           </form>
         </div>
@@ -71,11 +71,11 @@
             ng-class="{'alert-success': vm.action.success, 'alert-danger': !vm.action.success}">
             {{ vm.action.message }}
           </div>
-          <form ng-if="!vm.action.success" method="post" name="loginForm" class="formly-form login-form">
+          <form ng-if="!vm.action.success" name="vm.resetPasswordForm" class="formly-form login-form">
             <div class="form-group has-feedback formly-field-ex-input">
               <input class="form-control" type="email" ng-model="vm.user.email" placeholder="yourname@domain.com" required
               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/">
-              <span class="fa fa-envelope-o form-control-feedback"></span>
+              <span class="fa fa-envelope-o fa-lg form-control-feedback"></span>
             </div>
           </form>
         </div>
