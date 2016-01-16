@@ -21,10 +21,19 @@ rails s
 ## Starting your grunt angular app
 From another terminal, navigate to the root directory of your app, then
 ```
-cd angular
+cd _uix
 sudo npm install && bower install
 grunt serve
 ```
+
+## Generating components
+After adding a model, you can generate a component (in _uix/src/app/components) like below
+```
+rake uix:g component customer # _uix/src/app/components/customers
+rake uix:g component order    # _uix/src/app/components/orders
+```
+
+There are several tasks in the uix.rake will help simplify the generation of ui components
 
 Because a defualt user was created from the `rake app:setup` task, login with `admin@exrails.com` and `admin123` as username and password respectively
 
