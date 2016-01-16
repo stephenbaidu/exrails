@@ -2,7 +2,7 @@
 angular.module('uixApp')
   .controller('UserIndexCtrl', function ($scope, APP, $http, exMsg) {
     
-    $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'User') return;
       // Do something
     });
@@ -11,12 +11,12 @@ angular.module('uixApp')
 angular.module('uixApp')
   .controller('UserFormCtrl', function ($scope, APP, $http, exMsg) {
 
-    $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'User') return;
       // Do something
     });
 
-    $scope.$on('exui:record-loaded', function (evt, modelName, record, scope) {
+    $scope.$on('uix:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== 'User') return;
 
       scope.vmRef.lockUser = function () {

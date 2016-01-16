@@ -11,8 +11,28 @@ body {
   font-size: 14px;
 }
 
+input, .btn, .ui-select-container {
+  border-radius: 2px !important;
+}
+
 .navbar-brand {
   padding: 2px 5px;
+}
+
+#project_name {
+  img {
+    height: 45px;
+  }
+}
+
+.link-text {
+  font-size: 16px;
+  font-weight: 200;
+}
+
+li.active .link-text {
+  font-size: 18px;
+  font-weight: 500;
 }
 
 #page {
@@ -33,13 +53,6 @@ body {
   .modal-footer {
     padding: 15px 0px;
     border-top: 2px solid rgba(0, 0, 0, 0.1);
-  }
-}
-
-.login-form {
-  a {
-    color: black;
-    text-decoration: none
   }
 }
 
@@ -354,11 +367,6 @@ table {
 
 .table-bordered thead th {
   background-color: rgba(0, 0, 0, 0.1);
-}
-
-.schema-form-checkbox > label {
-  line-height: 3.4;
-  font-weight: bold;
 }
 
 .mfb-component__list {

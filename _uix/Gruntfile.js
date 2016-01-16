@@ -18,7 +18,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'src',
-    dist: 'dist'
+    dist: '../public'
   };
 
   // Define the configuration for all the tasks
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/**/*.js', '<%= yeoman.app %>/config/**/*.js', '<%= yeoman.app %>/app/components/**/*.js'],
+        files: ['<%= yeoman.app %>/scripts/**/*.js', '<%= yeoman.app %>/config/**/*.js', '<%= yeoman.app %>/app/**/*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: '<%= connect.options.livereload %>'

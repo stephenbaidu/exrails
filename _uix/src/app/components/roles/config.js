@@ -2,7 +2,7 @@
 angular.module('uixApp')
   .controller('RoleIndexCtrl', function ($scope, APP, $http, exMsg) {
     
-    $scope.$on('exui:index-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'Role') return;
       // Do something
     });
@@ -11,12 +11,12 @@ angular.module('uixApp')
 angular.module('uixApp')
   .controller('RoleFormCtrl', function ($scope, APP, $http, exMsg) {
     
-    $scope.$on('exui:form-ready', function (evt, modelName, config, scope) {
+    $scope.$on('uix:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== 'Role') return;
       // Do something
     });
 
-    $scope.$on('exui:record-loaded', function (evt, modelName, record, scope) {
+    $scope.$on('uix:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== 'Role') return;
       // Do something
     });

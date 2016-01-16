@@ -8,15 +8,15 @@
         <span class="icon-bar"></span>
       </button>
       <a id="project_name" class="navbar-brand nav-h" href="#/">
-        <img src="images/logo.png" alt="" height="45px">
+        <img src="images/logo.png" alt="" height-="119px" class="img-rounded">
       </a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li ng-repeat="(key, value) in modules" ng-show="hasModuleAccess(key)" ng-class='{ active: hasUrl("/{{key}}") }'>
-          <a href="#/{{key}}">
-            <span class="{{value.icon}}"></span>
-            {{ value.title }}
+        <li ng-repeat="(name, module) in modules" ng-show="hasModuleAccess(name)" ng-class='{ active: hasUrl("/{{name}}") }'>
+          <a href="#/{{name}}">
+            <span class="{{module.icon}}"></span>
+            {{ module.title }}
           </a>
         </li>
       </ul>
@@ -33,10 +33,25 @@
               <b>{{ user.email }}</b>
             </li>
             <li class="divider"></li>
-            <li><a href="#/account" >Manage Account</a></li>
-            <li><a href="" ng-click="showPasswordChange()">Change Password</a></li>
+            <li>
+              <a href="#/account">
+                <span class="fa fa-cog"></span>
+                Account Settings
+              </a>
+            </li>
+            <li>
+              <a href="" ng-click="showPasswordChange()">
+                <span class="fa fa-lock"></span>
+                Change Password
+              </a>
+            </li>
             <li class="divider"></li>
-            <li><a href="" ng-click="signOut()">Logout</a></li>
+            <li>
+              <a href="" ng-click="signOut()">
+                <span class="fa fa-sign-out"></span>
+                Logout
+              </a>
+            </li>
           </ul>
         </li>
       </ul>
