@@ -15,6 +15,10 @@ input, .btn, .ui-select-container {
   border-radius: 2px !important;
 }
 
+.btn.btn-default, .btn.btn-primary, .btn.btn-success, .btn.btn-info, .btn.btn-warning, .btn.btn-danger {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
 .navbar-brand {
   padding: 2px 5px;
 }
