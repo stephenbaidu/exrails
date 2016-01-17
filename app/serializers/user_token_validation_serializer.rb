@@ -41,7 +41,7 @@
 #
 
 class UserTokenValidationSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid, :status
+  attributes :id, :name, :email, :nickname, :provider, :role_ids, :uid, :status, :password_expired_at
   attributes :sign_in_count, :current_sign_in_ip, :last_sign_in_ip, :current_sign_in_at, :last_sign_in_at, :failed_attempts
   attributes :permissions, :has_admin_role, :has_manager_role, :has_clerk_role
 

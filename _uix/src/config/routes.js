@@ -46,7 +46,7 @@ angular.module('uixApp')
         onEnter: function ($uibModal) {
           $uibModal.open({
             templateUrl: 'app/layouts/account.html',
-            size: 'lg',
+            size: 'md',
             backdrop: 'static',
             keyboard: false
           });

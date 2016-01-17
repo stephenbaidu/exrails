@@ -10,6 +10,11 @@ angular.module('uixApp')
       vm.reset();
     }
 
+    vm.signOutUser = function () {
+      $uibModalStack.dismissAll();
+      $auth.signOut();
+    }
+
     vm.reset = function () {
       vm.model = {};
       vm.model.name = $auth.user.name;
@@ -28,8 +33,6 @@ angular.module('uixApp')
 
       authService.updateUser(vm.model).finally(function () {
         $auth.validateToken().finally(function () {
-          // vm.action.updating = false;
-          // vm.model = angular.copy($auth.user);
           vm.close();
         });
       });
