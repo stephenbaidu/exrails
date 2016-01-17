@@ -599,7 +599,7 @@ namespace :uix do
 
     data[:config] = <<-eos
 // Module config setup
-angular.module('angularApp')
+angular.module('uixApp')
   .run(function run(APP) {
     APP.setModule('#{module_name}', {
       title: '#{module_name.titleize}',
