@@ -712,7 +712,7 @@ angular.module('angularApp')
 
     data[:config] = <<-eos
 
-angular.module('angularApp')
+angular.module('uixApp')
   .controller('#{uix_model_name(klass)}IndexCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
     
     $scope.$on('uix:index-ready', function (evt, modelName, config, scope) {
@@ -721,7 +721,7 @@ angular.module('angularApp')
     });
   });
 
-angular.module('angularApp')
+angular.module('uixApp')
   .controller('#{uix_model_name(klass)}FormCtrl', function ($scope, $rootScope, APP, $http, exMsg) {
     
     $scope.$on('uix:form-ready', function (evt, modelName, config, scope) {
@@ -735,7 +735,7 @@ angular.module('angularApp')
     });
   });
 
-angular.module('angularApp')
+angular.module('uixApp')
   .run(function (fieldService) {
     // Set config for angular-formly
     fieldService.set('#{uix_model_key(klass)}', fieldConfig());
@@ -745,7 +745,7 @@ angular.module('angularApp')
     }
   });
 
-angular.module('angularApp')
+angular.module('uixApp')
   .run(function (schemaService) {
     // Set config for json-schema
     schemaService.set('#{uix_model_key(klass)}', schemaConfig());
