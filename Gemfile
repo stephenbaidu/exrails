@@ -22,6 +22,7 @@ gem 'rest-client'
 gem 'delayed_job_active_record'
 gem 'pdfkit'
 gem 'wkhtmltopdf-binary'
+gem 'slack-notifier'
 
 group :development, :test do
   gem 'sqlite3'
