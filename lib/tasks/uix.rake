@@ -56,6 +56,8 @@ namespace :uix do
       uix_g_component_task(tasks)
     elsif uix_module_task?(sub_task) # module task
       uix_g_module_task(tasks.shift, tasks)
+    elsif uix_spec_task?(sub_task) # spec task
+      uix_g_spec_task(tasks)
     else                              # no task found
       puts "#{'*' * 25}\nNo compatible task found\n#{'*' * 25}\n"
     end
@@ -76,6 +78,8 @@ namespace :uix do
       uix_d_component_task(tasks)
     elsif uix_module_task?(sub_task) # module task
       uix_d_module_task(tasks.shift)
+    elsif uix_spec_task?(sub_task) # spec task
+      uix_d_spec_task(tasks)
     else                              # no task found
       puts "#{'*' * 25}\nNo compatible task found\n#{'*' * 25}\n"
     end
@@ -87,6 +91,10 @@ namespace :uix do
 
   def uix_module_task?(task_name)
     ['module', 'm'].include?(task_name)
+  end
+
+  def uix_spec_task?(task_name)
+    ['spec', 'rspec', 'test'].include?(task_name)
   end
 
   def uix_g_component_task(components)
@@ -163,12 +171,52 @@ namespace :uix do
     end
   end
 
+  def uix_g_spec_task(models)
+    # Generate spec files
+    models.each do |model|
+      begin
+        klass = model.underscore.classify.constantize
+        puts "Generating spec files for #{klass.name} ..."
+        files_tpls = uix_tpl_spec_files(klass)
+        spec_dir = Rails.root.join(uix_spec_directory, uix_model_route(klass))
+        FileUtils.mkdir(spec_dir) unless File.directory?(spec_dir)
+
+        [:index, :create, :show, :update, :destroy].each { |action|
+          file_path = File.join(spec_dir, "#{action.to_s}_spec.rb")
+          File.open(file_path, 'w') do |file|
+            file_content = files_tpls[action.to_sym]
+            file.write(file_content)
+          end unless File.exists?(file_path)
+        }
+      rescue Exception => e
+        p e
+      end
+    end
+  end
+
+  def uix_d_spec_task(models)
+    # Destroy spec files
+    models.each do |model|
+      begin
+        klass = model.underscore.classify.constantize
+        puts "Deleting spec files for #{klass.name} ..."
+        spec_dir = Rails.root.join(uix_spec_directory, uix_model_route(klass))
+        FileUtils.rm_rf(spec_dir) if File.directory?(spec_dir)
+      rescue
+      end
+    end
+  end
+
   def uix_components_directory
     Rails.root.join('_uix', 'src', 'app', 'components').to_s
   end
 
   def uix_modules_directory
     Rails.root.join('_uix', 'src', 'app', 'modules').to_s
+  end
+
+  def uix_spec_directory
+    Rails.root.join('spec', 'requests').to_s
   end
 
   def uix_index_file
@@ -453,15 +501,15 @@ namespace :uix do
     name = field[:key]
     title = field[:templateOptions][:label]
 
-    if input_type == 'ex-input'
+    if input_type == 'uix-input'
       html = "<div ng-init=\"vm.column('#{name}', '#{title}')\"></div>"
-    elsif input_type == 'ex-checkbox'
+    elsif input_type == 'uix-checkbox'
       html = "<div ng-init=\"vm.column('#{name}', '#{title}')\"></div>"
-    elsif input_type == 'ex-datepicker'
+    elsif input_type == 'uix-datepicker'
       html = "<div ng-init=\"vm.column('#{name}', '#{title}', 'date', 'yyyy-MM-dd HH:mm:ss')\"></div>"
-    elsif input_type == 'ex-select'
+    elsif input_type == 'uix-select'
       html = "<div ng-init=\"vm.column('#{field[:templateOptions][:lookup]}_name', '#{title}')\"></div>"
-    elsif input_type == 'ex-select-multiple'
+    elsif input_type == 'uix-select-multiple'
       html = "<div ng-init=\"vm.column('#{field[:templateOptions][:lookup]}_names', '#{title}')\"></div>"
     end
 
@@ -484,7 +532,7 @@ namespace :uix do
     field = {
       className: 'col-xs-6',
       key: column.name,
-      type: 'ex-input',
+      type: 'uix-input',
       templateOptions: {
         required: required_fields.include?(column.name.to_sym),
         label: column.name.titleize
@@ -493,11 +541,11 @@ namespace :uix do
 
     # Check if boolean
     if column.type == :boolean
-      field[:type] = 'ex-checkbox'
+      field[:type] = 'uix-checkbox'
     
     # Check if date
     elsif column.type == :date || column.type == :datetime
-      field[:type] = 'ex-datepicker'
+      field[:type] = 'uix-datepicker'
 
     # Check if lookup
     elsif foreign_keys.keys.include?(column.name) || (klass.respond_to?(:acts_as_nested_set) && column.name == 'parent_id')
@@ -508,7 +556,7 @@ namespace :uix do
         lookup = 'parent'
       end
 
-      field[:type] = 'ex-select'
+      field[:type] = 'uix-select'
       field[:templateOptions][:lookup] = lookup
       field[:templateOptions][:valueProp] = 'value'
       field[:templateOptions][:labelProp] = 'name'
@@ -518,7 +566,7 @@ namespace :uix do
       begin
         lookup_klass = column.name[0, column.name.length - 4].classify.constantize
         label = lookup_klass.name.titleize.pluralize
-        field[:type] = 'ex-select-multiple'
+        field[:type] = 'uix-select-multiple'
         field[:templateOptions][:lookup] = lookup_klass.name.underscore
         field[:templateOptions][:label] = label
         field[:templateOptions][:placeholder] = "Select #{label.pluralize.downcase} ..."
@@ -531,7 +579,7 @@ namespace :uix do
     elsif column.name == 'tags'
       begin
         lookup_klass = "#{klass.name}Tag".constantize
-        field[:type] = 'ex-select-multiple'
+        field[:type] = 'uix-select-multiple'
         field[:templateOptions][:lookup] = lookup_klass.name.underscore
         field[:templateOptions][:placeholder] = 'Select tags ...'
         field[:templateOptions][:valueProp] = 'name'
@@ -540,6 +588,10 @@ namespace :uix do
         field[:controller] = 'CONTROLLERFUNCTION'
       rescue
       end
+    
+    # Check if numeric
+    elsif column.type == :integer || column.type == :decimal
+      field[:templateOptions][:type] = 'number'
     end
 
     field
@@ -717,6 +769,8 @@ angular.module('uixApp')
     
     $scope.$on('uix:index-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
+      
+      var vm = scope.vmRef;
       // Do something
     });
   });
@@ -726,11 +780,15 @@ angular.module('uixApp')
     
     $scope.$on('uix:form-ready', function (evt, modelName, config, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
+      
+      var vm = scope.vmRef;
       // Do something
     });
 
     $scope.$on('uix:record-loaded', function (evt, modelName, record, scope) {
       if (modelName !== '#{uix_model_name(klass)}') return;
+      
+      var vm = scope.vmRef;
       // Do something
     });
   });
@@ -758,4 +816,221 @@ angular.module('uixApp')
 
     data
   end
+
+  def uix_tpl_spec_files(klass)
+    data = {}
+
+    data[:index] = <<-eos
+require 'rails_helper'
+
+RSpec.describe 'GET /api/#{uix_model_route(klass)}', :type => :request do
+  let(:auth_headers)   { {} }
+
+  before { @record_count = #{uix_model_name(klass)}.count }
+  
+  let!(:resources) { FactoryGirl.create_list(:#{uix_model_key(klass)}, 10) }
+  
+  let(:request_params) { {} }
+  
+  before { get "/api/#{uix_model_route(klass)}", request_params, auth_headers }
+
+  context 'with invalid credentials' do
+    it { expect(response.status).to eq 401 }
+  end
+
+  context 'with valid credentials without permissions' do
+    let(:auth_user)    { valid_user_without_permissions }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 403 }
+    it { expect(json_body['type']).to eq 'UserNotAuthorized' }
+  end
+
+  context 'with valid credentials and permissions' do
+    let(:auth_user)    { user_with_index_permission_for(#{uix_model_name(klass)}) }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 200 }
+    it { expect(json_body.count).to eq resources.count }
+    it { expect(#{uix_model_name(klass)}.count).to eq (@record_count + resources.count) }
+  end
+end
+    eos
+
+    data[:create] = <<-eos
+require 'rails_helper'
+
+RSpec.describe 'POST /api/#{uix_model_route(klass)}', :type => :request do
+  let(:auth_headers)   { {} }
+  
+  before { @record_count = #{uix_model_name(klass)}.count }
+  
+  let!(:resource) { FactoryGirl.attributes_for(:#{uix_model_key(klass)}) }
+  
+  let(:request_params) { {#{uix_model_key(klass)}: resource} }
+
+  before { post "/api/#{uix_model_route(klass)}", request_params, auth_headers }
+
+  context 'with invalid credentials' do
+    it { expect(response.status).to eq 401 }
+  end
+
+  context 'with valid credentials without permissions' do
+    let(:auth_user)    { valid_user_without_permissions }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 403 }
+    it { expect(json_body['type']).to eq 'UserNotAuthorized' }
+  end
+
+  context 'with valid credentials and permissions' do
+    let(:auth_user)    { user_with_create_permission_for(#{uix_model_name(klass)}) }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 200 }
+    it { expect(json_body['id']).to_not eq nil }
+    it { expect(#{uix_model_name(klass)}.count).to eq (@record_count + 1) }
+  end
+end
+    eos
+
+    data[:show] = <<-eos
+require 'rails_helper'
+
+RSpec.describe 'GET /api/#{uix_model_route(klass)}/:id', :type => :request do
+  let(:auth_headers)   { {} }
+  
+  let(:resource) { FactoryGirl.create(:#{uix_model_key(klass)}) }
+  
+  let(:id) { resource.id }
+  let(:request_params) { {} }
+  
+  before { get "/api/#{uix_model_route(klass)}/\#{id}", request_params, auth_headers }
+
+  context 'with invalid credentials' do
+    it { expect(response.status).to eq 401 }
+  end
+
+  context 'with valid credentials without permissions' do
+    let(:auth_user)    { valid_user_without_permissions }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 403 }
+    it { expect(json_body['type']).to eq 'UserNotAuthorized' }
+  end
+
+  context 'with valid credentials and permissions' do
+    let(:auth_user)    { user_with_show_permission_for(#{uix_model_name(klass)}) }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    context 'when resource id does not exist' do
+      let(:id) { -1 }
+
+      it { expect(response.status).to eq 404 }
+    end
+
+    context 'when resource id exists' do
+      it { expect(response.status).to eq 200 }
+      it { expect(json_body['id']).to eq resource.id }
+    end
+  end
+end
+    eos
+
+    data[:update] = <<-eos
+require 'rails_helper'
+
+RSpec.describe 'PUT /api/#{uix_model_route(klass)}/:id', :type => :request do
+  let(:auth_headers)   { {} }
+  
+  let!(:resource) { FactoryGirl.create(:#{uix_model_key(klass)}) }
+
+  before { @record_count = #{uix_model_name(klass)}.count }
+  
+  let(:id) { resource.id }
+  let(:request_params) { {#{uix_model_key(klass)}: FactoryGirl.attributes_for(:#{uix_model_key(klass)}) } }
+  
+  before { put "/api/#{uix_model_route(klass)}/\#{id}", request_params, auth_headers }
+
+  context 'with invalid credentials' do
+    it { expect(response.status).to eq 401 }
+  end
+
+  context 'with valid credentials without permissions' do
+    let(:auth_user)    { valid_user_without_permissions }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 403 }
+    it { expect(json_body['type']).to eq 'UserNotAuthorized' }
+  end
+
+  context 'with valid credentials and permissions' do
+    let(:auth_user)    { user_with_update_permission_for(#{uix_model_name(klass)}) }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    context 'when resource id does not exist' do
+      let(:id) { -1 }
+
+      it { expect(response.status).to eq 404 }
+    end
+
+    context 'when resource id exists' do
+      it { expect(response.status).to eq 200 }
+      it { expect(json_body['id']).to eq resource.id }
+      it { expect(#{uix_model_name(klass)}.count).to eq (@record_count) }
+    end
+  end
+end
+    eos
+
+    data[:destroy] = <<-eos
+require 'rails_helper'
+
+RSpec.describe 'DELETE /api/#{uix_model_route(klass)}/:id', :type => :request do
+  let(:auth_headers)   { {} }
+
+  before { @record_count = #{uix_model_name(klass)}.count }
+  
+  let!(:resource) { FactoryGirl.create(:#{uix_model_key(klass)}) }
+  
+  let(:id) { resource.id }
+  let(:request_params) { {} }
+  
+  before { delete "/api/#{uix_model_route(klass)}/\#{id}", request_params, auth_headers }
+
+  context 'with invalid credentials' do
+    it { expect(response.status).to eq 401 }
+  end
+
+  context 'with valid credentials without permissions' do
+    let(:auth_user)    { valid_user_without_permissions }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    it { expect(response.status).to eq 403 }
+    it { expect(json_body['type']).to eq 'UserNotAuthorized' }
+  end
+
+  context 'with valid credentials and permissions' do
+    let(:auth_user)    { user_with_delete_permission_for(#{uix_model_name(klass)}) }
+    let(:auth_headers) { auth_user.create_new_auth_token }
+
+    context 'when resource id does not exist' do
+      let(:id) { -1 }
+
+      it { expect(response.status).to eq 404 }
+    end
+
+    context 'when resource id exists' do
+      it { expect(response.status).to eq 200 }
+      it { expect(json_body['id']).to eq resource.id }
+      it { expect(#{uix_model_name(klass)}.count).to eq (@record_count) }
+    end
+  end
+end
+    eos
+  
+  data
+
+  end
+
 end

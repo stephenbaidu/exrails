@@ -16,7 +16,7 @@
 FactoryGirl.define do
   factory :permission do
     name "MyString"
-status "MyString"
+    status "MyString"
   end
 
 end

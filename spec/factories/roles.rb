@@ -18,9 +18,9 @@
 FactoryGirl.define do
   factory :role do
     name "MyString"
-description "MyText"
-permissions "MyText"
-status "MyString"
+    description "MyText"
+    permissions ["MyText"]
+    status "MyString"
   end
 
 end
