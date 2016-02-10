@@ -8,8 +8,8 @@ namespace :app do
     end
 
     # Create admin user
-    user = User.where(:email => 'admin@exrails.com').first_or_create do |u|
-      u.uid = 'admin@exrails.com'
+    user = User.where(:email => 'exrails@example.com').first_or_create do |u|
+      u.uid = 'exrails@example.com'
       u.provider = 'email'
       u.name = 'System Admin'
       u.password = 'admin123'
