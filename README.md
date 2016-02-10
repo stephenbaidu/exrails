@@ -9,7 +9,6 @@ git clone https://github.com/stephenbaidu/exrails exrailsapp
 cd exrailsapp
 rake db:create db:migrate app:setup
 ```
-Note that two models (Sample & SampleStatus) have been added for testing. Feel free to remove them after you are conversant with how they were used.
 
 ## Starting the rails api
 
@@ -22,7 +21,7 @@ rails s
 From another terminal, navigate to the root directory of your app, then
 ```
 cd _uix
-sudo npm install && bower install
+npm install && bower install
 grunt serve
 ```
 
@@ -33,11 +32,9 @@ rake uix:g component customer # _uix/src/app/components/customers
 rake uix:g component order    # _uix/src/app/components/orders
 ```
 
-There are several tasks in the uix.rake will help simplify the generation of ui components
+There are several tasks in `uix.rake` that will help simplify the generation of views for the angular app
 
 Because a defualt user was created from the `rake app:setup` task, login with `admin@exrails.com` and `admin123` as username and password respectively
-
-### This is still work in progress, but production ready.
 
 # License
 
