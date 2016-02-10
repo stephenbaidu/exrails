@@ -13,6 +13,6 @@
     </ui-select-choices>
   </ui-select>
   <p ng-if="formState.readOnly" class="form-control-static">
-    {{ ((to.options | filter : { value : model[options.key]} | map : 'name')[0]) || '...' }}
+    {{ ((to.options | filter : { value : model[options.key] } | map : 'name')[0]) || '...' }}
   </p>
 </div>

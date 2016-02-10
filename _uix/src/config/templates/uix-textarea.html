@@ -1,0 +1,6 @@
+<div>
+  <textarea ng-if="!formState.readOnly" ng-disabled="{{to.disabled}}" class="form-control" ng-model="model[options.key]">
+  </textarea>
+  <textarea ng-if="formState.readOnly" disabled class="form-control" ng-model="model[options.key]" style="background-color: #fff;">
+  </textarea>
+</div>

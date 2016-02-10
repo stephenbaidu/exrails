@@ -9,7 +9,7 @@ angular.module('uixApp')
     return {
       responseError: function(rejection) {
         if (rejection.status === 401) {
-          $location.path('/login');
+          $location.path('/auth/login');
         } else if (rejection.status === 404) {
           // Not found
         } else if (rejection.status === 601) { // Password expired
@@ -33,46 +33,58 @@ angular.module('uixApp')
   })
   .config(function(formlyConfigProvider) {
     formlyConfigProvider.setType({
-      name: 'ex-input',
-      templateUrl: 'app/templates/ex-input.html',
+      name: 'uix-input',
+      templateUrl: 'config/templates/uix-input.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
     formlyConfigProvider.setType({
-      name: 'ex-select',
-      templateUrl: 'app/templates/ex-select.html',
+      name: 'uix-select',
+      templateUrl: 'config/templates/uix-select.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
     formlyConfigProvider.setType({
-      name: 'ex-select-multiple',
-      templateUrl: 'app/templates/ex-select-multiple.html',
+      name: 'uix-select-multiple',
+      templateUrl: 'config/templates/uix-select-multiple.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
     formlyConfigProvider.setType({
-      name: 'ex-datepicker',
-      templateUrl: 'app/templates/ex-datepicker.html',
+      name: 'uix-datepicker',
+      templateUrl: 'config/templates/uix-datepicker.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
     formlyConfigProvider.setType({
-      name: 'ex-timepicker',
-      templateUrl: 'app/templates/ex-timepicker.html',
+      name: 'uix-timepicker',
+      templateUrl: 'config/templates/uix-timepicker.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
     formlyConfigProvider.setType({
-      name: 'ex-checkbox',
-      templateUrl: 'app/templates/ex-checkbox.html',
+      name: 'uix-checkbox',
+      templateUrl: 'config/templates/uix-checkbox.html',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+      overwriteOk: true
+    });
+    formlyConfigProvider.setType({
+      name: 'uix-textarea',
+      templateUrl: 'config/templates/uix-textarea.html',
+      wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+      overwriteOk: true
+    });
+    formlyConfigProvider.setType({
+      name: 'uix-file',
+      templateUrl: 'config/templates/uix-file.html',
       wrapper: ['bootstrapLabel', 'bootstrapHasError'],
       overwriteOk: true
     });
 
     formlyConfigProvider.setWrapper({
       name: 'validation',
-      types: ['ex-input', 'ex-select', 'ex-select-multiple', 'ex-datepicker'],
-      templateUrl: 'app/templates/error-messages.html'
+      types: ['uix-input', 'uix-select', 'uix-select-multiple', 'uix-datepicker', 'uix-file'],
+      templateUrl: 'config/templates/error-messages.html'
     });
   })
   .run(function run(formlyConfig, formlyValidationMessages) {
