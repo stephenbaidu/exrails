@@ -18,12 +18,21 @@ body {
 }
 
 .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:first-child>.btn-group:not(:first-child)>.btn {
-  border-bottom-left-radius: 0 !important;
-  border-top-left-radius: 0 !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
 }
 
-input, .btn, .ui-select-container {
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child>.btn, .input-group-btn:first-child>.btn-group>.btn, .input-group-btn:first-child>.dropdown-toggle, .input-group-btn:last-child>.btn:not(:last-child), .input-group-btn:last-child>.btn-group:not(:last-child)>.btn {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+input, textarea, .btn, .ui-select-container {
   border-radius: 2px !important;
+}
+
+.no-shadow {
+  box-shadow: none !important;
 }
 
 .btn.btn-default, .btn.btn-primary, .btn.btn-success, .btn.btn-info, .btn.btn-warning, .btn.btn-danger {
@@ -199,13 +208,13 @@ li.active .link-text {
     margin-left: -15px;
     margin-right: -15px;
   }
-  .formly-field-ex-input, .formly-field-ex-select, .formly-field-ex-datepicker, .formly-field-ex-timepicker {
+  .formly-field-uix-input, .formly-field-uix-select, .formly-field-uix-datepicker, .formly-field-uix-timepicker {
     .form-control {
       min-height: 38px;
       padding: 8px 8px;
     }
   }
-  .formly-field-ex-select-multiple {
+  .formly-field-uix-select-multiple {
     input.ui-select-search {
       height: 1.666666em !important;
       margin-bottom: 0px;
@@ -237,7 +246,7 @@ li.active .link-text {
   .panel-body {
     padding: 5px 15px;
   }
-  .formly-field-ex-input, .formly-field-ex-select, .formly-field-ex-datepicker {
+  .formly-field-uix-input, .formly-field-uix-select, .formly-field-uix-datepicker {
     .form-control {
       min-height: 30px;
       padding: 5px 5px;

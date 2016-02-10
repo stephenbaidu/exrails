@@ -34,7 +34,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "name",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": true,
                 "label": "Name"
@@ -43,7 +43,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "description",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": false,
                 "label": "Description"
@@ -56,7 +56,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-12 large-tags",
               "key": "permissions",
-              "type": "ex-select-multiple",
+              "type": "uix-select-multiple",
               "templateOptions": {
                 "required": false,
                 "label": "Permissions",

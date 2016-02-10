@@ -1,5 +1,5 @@
 <div class="pull-left">
-  <button ng-show="vm.hasDeleteAccess() && vm.isEditMode()" ng-disabled="vm.action.deleting" class="btn btn-danger btn-sm" ng-click="vm.delete(record.id)">
+  <button ng-show="vm.hasDeleteAccess() && vm.isEditMode()" ng-disabled="vm.action.deleting" class="btn btn-danger btn-sm" ng-click="vm.delete(vm.formly.model.id)">
     <span class="fa fa-trash"></span>
     Delete
   </button>

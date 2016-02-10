@@ -67,7 +67,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "name",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": true,
                 "label": "Name"
@@ -76,7 +76,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "email",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": true,
                 "label": "Email"
@@ -89,7 +89,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "password",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "type": "password",
                 "required": true,
@@ -100,7 +100,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "password_confirmation",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": { 
                 "type": "password",
                 "required": true,
@@ -115,7 +115,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "sign_in_count",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": true,
                 "label": "Sign In Count"
@@ -125,7 +125,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "failed_attempts",
-              "type": "ex-input",
+              "type": "uix-input",
               "templateOptions": {
                 "required": true,
                 "label": "Failed Attempts"
@@ -139,7 +139,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "current_sign_in_at",
-              "type": "ex-datepicker",
+              "type": "uix-datepicker",
               "templateOptions": {
                 "required": true,
                 "label": "Current Sign In At"
@@ -149,7 +149,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "last_sign_in_at",
-              "type": "ex-datepicker",
+              "type": "uix-datepicker",
               "templateOptions": {
                 "required": true,
                 "label": "Last Sign In At"
@@ -163,7 +163,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "current_sign_in_ip",
-              "type": "ex-datepicker",
+              "type": "uix-datepicker",
               "templateOptions": {
                 "required": true,
                 "label": "Current Sign In IP"
@@ -173,7 +173,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-6",
               "key": "last_sign_in_ip",
-              "type": "ex-datepicker",
+              "type": "uix-datepicker",
               "templateOptions": {
                 "required": true,
                 "label": "Last Sign In IP"
@@ -187,7 +187,7 @@ angular.module('uixApp')
             {
               "className": "col-xs-12",
               "key": "role_ids",
-              "type": "ex-select-multiple",
+              "type": "uix-select-multiple",
               "templateOptions": {
                 "required": false,
                 "label": "Roles",

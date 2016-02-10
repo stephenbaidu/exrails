@@ -1,0 +1,26 @@
+#project_name {
+  min-width: 150px;
+}
+
+.sidebar {
+  width: 150px;
+}
+
+.content {
+  margin-left: 150px;
+}
+
+.sidebar {
+  padding-top: 75px;
+}
+
+#project_name {
+  padding: 13px 0px 0px 14px;
+
+  img {
+    height: 105px;
+    -webkit-box-shadow: 10px 11px 26px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 10px 11px 26px 0px rgba(0,0,0,0.25);
+    box-shadow: 10px 11px 26px 0px rgba(0,0,0,0.25);
+  }
+}

@@ -23,6 +23,7 @@ angular.module('uixApp')
     vm.loadRecord = loadRecord;
     vm.sanitizeRecord = sanitizeRecord;
     vm.setRecord = setRecord;
+    vm.lookupData = lookupData;
     vm.close = close;
     vm.create = create;
     vm.edit = edit;
@@ -33,6 +34,9 @@ angular.module('uixApp')
     vm.update = update;
     vm.save = save;
     vm.delete = deleteRecord;
+    vm.error = error;
+
+    vm.hasAccess = authService.hasAccess;
 
     vm.hasCreateAccess = function () {
       return authService.hasCreateAccess(vm.model.name);
@@ -146,6 +150,10 @@ angular.module('uixApp')
         $rootScope.$broadcast('uix:record-set', vm.model.name, vm.record, $scope);
       }
     };
+
+    function lookupData(lookupName) {
+      return lookupService.get(lookupName);
+    }
 
     function close () {
       vm.record = {};
@@ -268,4 +276,10 @@ angular.module('uixApp')
         vm.action.deleting = false;
       });
     };
+
+    function error (error) {
+      error = error || {};
+      error.message  && exMsg.error(error.message, error.type || 'Error');
+      error.messages && exMsg.errorSummary(error.messages);
+    }
   });
